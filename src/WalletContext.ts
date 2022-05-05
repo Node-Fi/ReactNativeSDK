@@ -4,14 +4,25 @@ import { Wallet, SmartWallet, EOA, ChainId } from '@node-fi/node-sdk';
 import type { WalletConfig } from '@node-fi/node-sdk/dist/src/wallet/Wallet';
 import { asyncWriteObject } from './utils/asyncStorage';
 import { DEFAULT_PREFIX, WALLET_KEY_SUFFIX } from './utils/storageKeys';
+import { createWallet } from './utils/accounts';
+import { Alert } from 'react-native';
 
 export interface UseWalletProps {
   noSmartWallet?: boolean;
   walletConfig?: WalletConfig;
+  onMnemonicChanged: (mnemonic: string) => Promise<void>;
+}
+
+interface UseWalletInnerType {
+  wallet: Wallet;
+  initialized: boolean;
+  noSmartWallet?: boolean;
+  onMnemonicChanged?: (mnemonic: string) => Promise<void>;
+  setWallet: (wallet: Wallet) => void;
 }
 
 function useWalletInner(initialState: UseWalletProps | undefined) {
-  const { noSmartWallet, walletConfig } = initialState ?? {};
+  const { noSmartWallet, walletConfig, onMnemonicChanged } = initialState ?? {};
   const apiKey = '';
   const chain = ChainId.Celo;
   const [initialized, setInitialized] = React.useState(false);
@@ -48,11 +59,12 @@ function useWalletInner(initialState: UseWalletProps | undefined) {
       );
     };
   });
-  return { wallet, initialized };
+
+  return { wallet, initialized, onMnemonicChanged, noSmartWallet, setWallet };
 }
 
 export const WalletContainer = createContainer<
-  { wallet: Wallet; initialized: boolean },
+  UseWalletInnerType,
   UseWalletProps
 >(useWalletInner);
 
@@ -64,4 +76,30 @@ export const useWallet = () => {
 export const useWalletAddress = () => {
   const { wallet } = WalletContainer.useContainer();
   return wallet.address;
+};
+
+export const useCreateWallet = () => {
+  const { noSmartWallet, onMnemonicChanged, setWallet } =
+    WalletContainer.useContainer();
+  const apiKey = '';
+  const chain = ChainId.Celo;
+  return React.useMemo(
+    () => async () => {
+      const { wallet, mnemonic } = await createWallet(
+        apiKey,
+        chain,
+        !noSmartWallet
+      );
+      setWallet(wallet);
+      if (!onMnemonicChanged) {
+        Alert.alert(
+          'Cant Save Mnemonic',
+          'No method was provided to save mnemonic to secure storage'
+        );
+      } else {
+        await onMnemonicChanged(mnemonic);
+      }
+    },
+    [chain, noSmartWallet, setWallet, onMnemonicChanged]
+  );
 };

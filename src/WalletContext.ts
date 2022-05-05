@@ -13,7 +13,7 @@ export interface UseWalletProps {
   onMnemonicChanged: (mnemonic: string) => Promise<void>;
 }
 
-interface UseWalletInnerType {
+export interface UseWalletInnerType {
   wallet: Wallet;
   initialized: boolean;
   noSmartWallet?: boolean;
@@ -67,6 +67,8 @@ export const WalletContainer = createContainer<
   UseWalletInnerType,
   UseWalletProps
 >(useWalletInner);
+
+export const useWalletBase = WalletContainer.useContainer;
 
 export const useWallet = () => {
   const { wallet } = WalletContainer.useContainer();

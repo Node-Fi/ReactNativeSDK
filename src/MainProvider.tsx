@@ -3,7 +3,7 @@ import * as React from 'react';
 import { TokenContainer } from './TokensContext';
 import { WalletContainer } from './WalletContext';
 import { PriceContainer } from './PriceContext';
-import type { Address } from '@node-fi/node-sdk';
+import { Address, Token } from '@node-fi/node-sdk';
 import type { WalletConfig } from '@node-fi/node-sdk/dist/src/wallet/Wallet';
 import ECEncryption from 'react-native-ec-encryption';
 import * as Keychain from 'react-native-keychain';
@@ -15,6 +15,7 @@ import {
 } from './utils/storageKeys';
 import invariant from 'tiny-invariant';
 import { asyncReadObject } from './utils/asyncStorage';
+import DEFAULT_TOKENS from '@node-fi/default-token-list';
 
 export interface TokenConfig {
   address: Address;
@@ -105,7 +106,14 @@ export default function NodeKitProvider(props: NodeKitProviderProps) {
           await saveMnemonic(storagePrefix, mnemonic),
       }}
     >
-      <TokenContainer.Provider>
+      <TokenContainer.Provider
+        initialState={{
+          initialTokens: DEFAULT_TOKENS.tokens.map(
+            ({ address, name, symbol, chainId, decimals }) =>
+              new Token(chainId, address, decimals, symbol, name)
+          ),
+        }}
+      >
         <PriceContainer.Provider>{children}</PriceContainer.Provider>
       </TokenContainer.Provider>
     </WalletContainer.Provider>

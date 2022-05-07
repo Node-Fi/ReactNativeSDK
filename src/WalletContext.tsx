@@ -105,3 +105,5 @@ export const useCreateWallet = () => {
     [chain, noSmartWallet, setWallet, onMnemonicChanged]
   );
 };
+
+// export WalletContainer as  React.ReactComponentElement<any, {initalValues: UseWalletInnerType}>

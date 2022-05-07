@@ -25,7 +25,7 @@ export interface TokenConfig {
 }
 
 export interface NodeKitProviderProps {
-  children: React.ReactChild | React.ReactChild[];
+  children: React.ReactElement | React.ReactElement[];
   supportedTokens?: TokenConfig[];
   tokenDetailsOverride?: TokenConfig[];
   tokenBlacklist?: Address[];

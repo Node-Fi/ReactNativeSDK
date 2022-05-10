@@ -1,17 +1,14 @@
-const path = require('path');
-const pak = require('../package.json');
-
-module.exports = {
-  presets: ['module:metro-react-native-babel-preset'],
-  plugins: [
-    [
-      'module-resolver',
-      {
-        extensions: ['.tsx', '.ts', '.js', '.json'],
-        alias: {
-          [pak.name]: path.join(__dirname, '..', pak.source),
-        },
-      },
+module.exports = function(api) {
+  api.cache(true);
+  return {
+    presets: [
+      'babel-preset-expo',
+      ['@babel/preset-env', {targets: {node: 'current'}}],
+      '@babel/preset-typescript',
     ],
-  ],
+    plugins: [
+      ['@babel/plugin-proposal-private-property-in-object', {loose: true}],
+      ['module:react-native-dotenv'],
+    ],
+  };
 };

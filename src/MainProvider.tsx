@@ -1,9 +1,9 @@
 // @ts-ignore
 import * as React from 'react';
-import { TokenContainer } from './TokensContext';
+// import { TokenContainer } from './TokensContext';
 import { WalletContainer } from './WalletContext';
-import { PriceContainer } from './PriceContext';
-import { Address, Token } from '@node-fi/node-sdk';
+// import { PriceContainer } from './PriceContext';
+import type { Address } from '@node-fi/node-sdk';
 import type { WalletConfig } from '@node-fi/node-sdk/dist/src/wallet/Wallet';
 import ECEncryption from 'react-native-ec-encryption';
 import * as Keychain from 'react-native-keychain';
@@ -15,7 +15,7 @@ import {
 } from './utils/storageKeys';
 import invariant from 'tiny-invariant';
 import { asyncReadObject } from './utils/asyncStorage';
-import DEFAULT_TOKENS from '@node-fi/default-token-list';
+// import DEFAULT_TOKENS from '@node-fi/default-token-list';
 
 export interface TokenConfig {
   address: Address;
@@ -32,6 +32,7 @@ export interface NodeKitProviderProps {
   storagePrefix?: string;
   walletConfig?: WalletConfig;
   eoaOnly?: boolean;
+  loadingComponent?: React.ReactElement;
 }
 
 interface PersistedData {
@@ -51,6 +52,10 @@ export const getMnemonic = async (service: string) => {
   return mnemonic;
 };
 
+export const clearMnemonic = async (service: string) => {
+  await Keychain.resetGenericPassword(KEYCHAIN_SETTINGS(service));
+};
+
 export const saveMnemonic = async (service: string, mnemonic: string) => {
   const existingCredentials = await getMnemonic(service);
   invariant(
@@ -68,23 +73,24 @@ export const saveMnemonic = async (service: string, mnemonic: string) => {
   );
 };
 
-export default function NodeKitProvider(props: NodeKitProviderProps) {
+export function NodeKitProvider(props: NodeKitProviderProps) {
   const {
     children,
     storagePrefix = DEFAULT_PREFIX,
     eoaOnly,
     walletConfig,
+    loadingComponent,
   } = props;
 
   const [persistedData, setPersistedData] = React.useState<PersistedData>();
   const [loaded, setLoaded] = React.useState(false);
 
   React.useEffect(() => {
-    async () => {
+    (async () => {
       const persistedWalletConfig = (await asyncReadObject(
         `${storagePrefix}${WALLET_KEY_SUFFIX}`
       )) as WalletConfig;
-
+      console.log(persistedWalletConfig);
       if (persistedWalletConfig) {
         setPersistedData({
           wallet: {
@@ -94,19 +100,25 @@ export default function NodeKitProvider(props: NodeKitProviderProps) {
         });
       }
       setLoaded(true);
-    };
-  });
+    })();
+  }, [setLoaded, storagePrefix]);
 
-  return !loaded ? null : (
+  console.log({ loaded });
+
+  return !loaded ? (
+    loadingComponent ?? null
+  ) : (
     <WalletContainer.Provider
       initialState={{
         walletConfig: walletConfig ?? persistedData?.wallet,
+        onWalletDeletion: () => clearMnemonic(storagePrefix),
         noSmartWallet: eoaOnly,
         onMnemonicChanged: async (mnemonic: string) =>
           await saveMnemonic(storagePrefix, mnemonic),
       }}
     >
-      <TokenContainer.Provider
+      {children}
+      {/* <TokenContainer.Provider
         initialState={{
           initialTokens: DEFAULT_TOKENS.tokens.map(
             ({ address, name, symbol, chainId, decimals }) =>
@@ -115,7 +127,7 @@ export default function NodeKitProvider(props: NodeKitProviderProps) {
         }}
       >
         <PriceContainer.Provider>{children}</PriceContainer.Provider>
-      </TokenContainer.Provider>
+      </TokenContainer.Provider> */}
     </WalletContainer.Provider>
   );
 }

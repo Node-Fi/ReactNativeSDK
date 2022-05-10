@@ -8,6 +8,14 @@ export const asyncWriteString = async (key: string, value: string) => {
   }
 };
 
+export const asyncClear = async (key: string) => {
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (e) {
+    console.error(e);
+  }
+};
+
 export const asyncWriteObject = async (
   key: string,
   value: { [field: string]: any }

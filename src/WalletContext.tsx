@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createContainer } from 'unstated-next';
 import { Wallet, SmartWallet, EOA, ChainId } from '@node-fi/node-sdk';
 import type { WalletConfig } from '@node-fi/node-sdk/dist/src/wallet/Wallet';
-import { asyncWriteObject } from './utils/asyncStorage';
+import { asyncClear, asyncWriteObject } from './utils/asyncStorage';
 import { DEFAULT_PREFIX, WALLET_KEY_SUFFIX } from './utils/storageKeys';
 import { createWallet } from './utils/accounts';
 import { Alert } from 'react-native';
@@ -11,6 +11,7 @@ export interface UseWalletProps {
   noSmartWallet?: boolean;
   walletConfig?: WalletConfig;
   onMnemonicChanged: (mnemonic: string) => Promise<void>;
+  onWalletDeletion: () => Promise<void>;
 }
 
 export interface UseWalletInnerType {
@@ -18,11 +19,13 @@ export interface UseWalletInnerType {
   initialized: boolean;
   noSmartWallet?: boolean;
   onMnemonicChanged?: (mnemonic: string) => Promise<void>;
+  onWalletDeletion?: () => Promise<void>;
   setWallet: (wallet: Wallet) => void;
 }
 
 function useWalletInner(initialState: UseWalletProps | undefined) {
-  const { noSmartWallet, walletConfig, onMnemonicChanged } = initialState ?? {};
+  const { noSmartWallet, walletConfig, onMnemonicChanged, onWalletDeletion } =
+    initialState ?? {};
   const apiKey = '';
   const chain = ChainId.Celo;
   const [initialized, setInitialized] = React.useState(false);
@@ -60,7 +63,14 @@ function useWalletInner(initialState: UseWalletProps | undefined) {
     };
   });
 
-  return { wallet, initialized, onMnemonicChanged, noSmartWallet, setWallet };
+  return {
+    wallet,
+    initialized,
+    onMnemonicChanged,
+    noSmartWallet,
+    setWallet,
+    onWalletDeletion,
+  };
 }
 
 export const WalletContainer = createContainer<
@@ -104,6 +114,16 @@ export const useCreateWallet = () => {
     },
     [chain, noSmartWallet, setWallet, onMnemonicChanged]
   );
+};
+
+export const useDeleteWallet = () => {
+  const { onWalletDeletion, setWallet, noSmartWallet } =
+    WalletContainer.useContainer();
+  return async () => {
+    setWallet(noSmartWallet ? new EOA() : new SmartWallet());
+    await asyncClear(`${DEFAULT_PREFIX}${WALLET_KEY_SUFFIX}`);
+    onWalletDeletion && (await onWalletDeletion());
+  };
 };
 
 // export WalletContainer as  React.ReactComponentElement<any, {initalValues: UseWalletInnerType}>

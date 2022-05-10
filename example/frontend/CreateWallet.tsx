@@ -13,6 +13,7 @@ export function CreateWallet() {
   const wallet = useWallet();
   const createWallet = useCreateWallet();
   const deleteWallet = useDeleteWallet();
+
   return wallet?.address ? (
     <View style={[styles.center]}>
       <Text style={{ textAlign: 'center' }}>{`Wallet: ${wallet.address}`}</Text>

@@ -10,12 +10,8 @@ npm install @node-fi/node-sdk-react-native
 
 ## Usage
 
-```js
-import { multiply } from "@node-fi/node-sdk-react-native";
-
-// ...
-
-const result = await multiply(3, 7);
+```
+Coming Soon...
 ```
 
 ## Contributing

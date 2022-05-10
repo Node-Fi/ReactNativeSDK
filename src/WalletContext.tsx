@@ -6,6 +6,7 @@ import { asyncClear, asyncWriteObject } from './utils/asyncStorage';
 import { DEFAULT_PREFIX, WALLET_KEY_SUFFIX } from './utils/storageKeys';
 import { createWallet } from './utils/accounts';
 import { Alert } from 'react-native';
+import { useOnClose } from './hooks';
 
 export interface UseWalletProps {
   noSmartWallet?: boolean;
@@ -34,6 +35,8 @@ function useWalletInner(initialState: UseWalletProps | undefined) {
       ? new EOA(apiKey, chain, walletConfig?.eoa)
       : new SmartWallet(apiKey, chain, walletConfig?.smartWallet)
   );
+  const address = wallet.address;
+  const eoaAddress = wallet instanceof SmartWallet && wallet.eoa?.address;
 
   React.useEffect(() => {
     (async () => {
@@ -49,18 +52,17 @@ function useWalletInner(initialState: UseWalletProps | undefined) {
   }, [noSmartWallet, setWallet, setInitialized, apiKey, chain, walletConfig]);
 
   // Save to async storage when finished.
-  React.useEffect(() => {
-    return () => {
-      asyncWriteObject(
-        `${DEFAULT_PREFIX}${WALLET_KEY_SUFFIX}`,
-        noSmartWallet
-          ? { eoa: wallet.address }
-          : {
-              eoa: (wallet as SmartWallet).eoa?.address,
-              smartWallet: wallet.address,
-            }
-      );
-    };
+  useOnClose(async () => {
+    console.log({ address });
+    asyncWriteObject(
+      `${DEFAULT_PREFIX}${WALLET_KEY_SUFFIX}`,
+      noSmartWallet
+        ? { eoa: address }
+        : {
+            eoa: eoaAddress,
+            smartWallet: address,
+          }
+    );
   });
 
   return {

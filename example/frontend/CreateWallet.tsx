@@ -1,8 +1,14 @@
 import * as React from 'react';
-import { useCreateWallet, useWallet } from '@node-fi/node-sdk-react-native';
+import {
+  useCreateWallet,
+  useWallet,
+  useDeleteWallet,
+  clearMnemonic,
+  asyncClear,
+  DEFAULT_PREFIX,
+} from '@node-fi/node-sdk-react-native';
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './App';
-import { useDeleteWallet } from '@node-fi/node-sdk-react-native/lib/typescript/WalletContext';
 export function CreateWallet() {
   const wallet = useWallet();
   const createWallet = useCreateWallet();
@@ -29,23 +35,51 @@ export function CreateWallet() {
       </TouchableOpacity>
     </View>
   ) : (
-    <TouchableOpacity onPress={createWallet}>
-      <View
-        style={{
-          paddingVertical: 15,
-          width: Dimensions.get('screen').width * 0.9,
-          display: 'flex',
-          alignContent: 'center',
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: 'green',
-          borderRadius: 16,
+    <View>
+      <TouchableOpacity onPress={createWallet}>
+        <View
+          style={{
+            paddingVertical: 15,
+            width: Dimensions.get('screen').width * 0.9,
+            display: 'flex',
+            alignContent: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'green',
+            borderRadius: 16,
+          }}
+        >
+          <Text style={{ color: 'white', fontSize: 20, lineHeight: 25 }}>
+            Create Wallet
+          </Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={async () => {
+          await Promise.all([
+            asyncClear(DEFAULT_PREFIX),
+            clearMnemonic(DEFAULT_PREFIX),
+          ]);
         }}
       >
-        <Text style={{ color: 'white', fontSize: 20, lineHeight: 25 }}>
-          Create Wallet
-        </Text>
-      </View>
-    </TouchableOpacity>
+        <View
+          style={{
+            paddingVertical: 15,
+            width: Dimensions.get('screen').width * 0.9,
+            display: 'flex',
+            alignContent: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'green',
+            borderRadius: 16,
+            marginTop: 10,
+          }}
+        >
+          <Text style={{ color: 'white', fontSize: 20, lineHeight: 25 }}>
+            Clear Async Storage
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 }

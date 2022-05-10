@@ -1,21 +1,14 @@
 // @ts-ignore
 import * as React from 'react';
 import { WalletContainer } from './WalletContext';
-import { PriceContainer } from './PriceContext';
-import { Address, Token } from '@node-fi/node-sdk';
+// import { PriceContainer } from './PriceContext';
+import type { Address } from '@node-fi/node-sdk';
 import type { WalletConfig } from '@node-fi/node-sdk/dist/src/wallet/Wallet';
-import ECEncryption from 'react-native-ec-encryption';
-import * as Keychain from 'react-native-keychain';
-import {
-  DEFAULT_PREFIX,
-  KEYCHAIN_SETTINGS,
-  SECURE_ENCLAVE_LABEL,
-  WALLET_KEY_SUFFIX,
-} from './utils/storageKeys';
-import invariant from 'tiny-invariant';
+import { DEFAULT_PREFIX, WALLET_KEY_SUFFIX } from './utils/storageKeys';
 import { asyncReadObject } from './utils/asyncStorage';
-import { TokenContainer } from './TokensContext';
-import DEFAULT_TOKENS from '@node-fi/default-token-list';
+import { clearMnemonic, getMnemonic, saveMnemonic } from './utils/security';
+// import { TokenContainer } from './TokensContext';
+// import DEFAULT_TOKENS from '@node-fi/default-token-list';
 
 export interface TokenConfig {
   address: Address;
@@ -38,40 +31,6 @@ export interface NodeKitProviderProps {
 interface PersistedData {
   wallet: WalletConfig;
 }
-
-export const getMnemonic = async (service: string) => {
-  const existingCredentials = await Keychain.getGenericPassword(
-    KEYCHAIN_SETTINGS(service)
-  );
-  if (!existingCredentials) return undefined;
-  const { mnemonicCipher } = JSON.parse(existingCredentials.password);
-  const mnemonic: string = await ECEncryption.decrypt({
-    data: mnemonicCipher,
-    label: SECURE_ENCLAVE_LABEL,
-  });
-  return mnemonic;
-};
-
-export const clearMnemonic = async (service: string) => {
-  await Keychain.resetGenericPassword(KEYCHAIN_SETTINGS(service));
-};
-
-export const saveMnemonic = async (service: string, mnemonic: string) => {
-  const existingCredentials = await getMnemonic(service);
-  invariant(
-    !!existingCredentials,
-    'Mnemonic already exists here, delete mnemonic before overriding'
-  );
-  const mnemonicCipher: string = await ECEncryption.encrypt({
-    data: mnemonic,
-    label: SECURE_ENCLAVE_LABEL,
-  });
-  await Keychain.setGenericPassword(
-    service,
-    mnemonicCipher,
-    KEYCHAIN_SETTINGS(service)
-  );
-};
 
 export function NodeKitProvider(props: NodeKitProviderProps) {
   const {
@@ -115,7 +74,8 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
           await saveMnemonic(storagePrefix, mnemonic),
       }}
     >
-      <TokenContainer.Provider
+      {children}
+      {/* <TokenContainer.Provider
         initialState={{
           initialTokens: DEFAULT_TOKENS.tokens.map(
             ({ address, name, symbol, chainId, decimals }) =>
@@ -124,7 +84,7 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
         }}
       >
         <PriceContainer.Provider>{children}</PriceContainer.Provider>
-      </TokenContainer.Provider>
+      </TokenContainer.Provider> */}
     </WalletContainer.Provider>
   );
 }

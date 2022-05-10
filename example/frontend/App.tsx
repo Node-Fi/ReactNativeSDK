@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NodeKitProvider } from '@node-fi/node-sdk-react-native';
 import { CreateWallet } from './CreateWallet';
+import { env } from 'process';
 
 export const styles = StyleSheet.create({
   center: { alignItems: 'center', justifyContent: 'center' },
@@ -20,7 +21,11 @@ export default function App(): JSX.Element {
   );
 
   return (
-    <NodeKitProvider loadingComponent={loadingComponent} eoaOnly>
+    <NodeKitProvider
+      loadingComponent={loadingComponent}
+      eoaOnly
+      apiKey={env.NODE_API_KEY}
+    >
       <View style={[StyleSheet.absoluteFill, styles.center, styles.white]}>
         <CreateWallet />
       </View>

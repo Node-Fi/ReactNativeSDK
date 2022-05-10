@@ -103,8 +103,6 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
     })();
   }, [setLoaded, storagePrefix]);
 
-  console.log({ loaded });
-
   return !loaded ? (
     loadingComponent ?? null
   ) : (

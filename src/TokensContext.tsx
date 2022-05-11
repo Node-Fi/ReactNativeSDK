@@ -41,11 +41,10 @@ function useTokensInner(props?: UseTokensInnerProps) {
   );
   const [balances, setBalances] = React.useState<TokenBalances>({});
   const walletAddress = useWalletAddress();
-  const tokenAddresses = Object.keys(tokens);
-
+  const tokenAddresses = React.useMemo(() => Object.keys(tokens), [tokens]);
+  console.log('render');
   React.useEffect(() => {
     if (!walletAddress || tokenAddresses.length === 0) return;
-
     (async () => {
       const fetchedBalances = await getBalances(walletAddress, tokenAddresses);
       setBalances(
@@ -62,7 +61,7 @@ function useTokensInner(props?: UseTokensInnerProps) {
     const subscription = subscribeToTokenTransfers(
       walletAddress,
       ChainId.Celo,
-      Object.keys(tokenAddresses),
+      tokenAddresses,
       (token, balance) => {
         setBalances((b) => ({
           ...b,
@@ -75,7 +74,7 @@ function useTokensInner(props?: UseTokensInnerProps) {
     );
 
     return subscription;
-  }, [walletAddress, tokenAddresses, tokens]);
+  }, [walletAddress, tokens, setBalances, tokenAddresses]);
 
   const addToken = React.useCallback(
     (newToken: Token) => {

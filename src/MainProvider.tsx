@@ -1,14 +1,15 @@
 // @ts-ignore
 import * as React from 'react';
 import { WalletContainer } from './WalletContext';
-// import { PriceContainer } from './PriceContext';
-import type { Address } from '@node-fi/node-sdk';
+import { PriceContainer } from './PriceContext';
+import { Address, Token } from '@node-fi/node-sdk';
 import type { WalletConfig } from '@node-fi/node-sdk/dist/src/wallet/Wallet';
 import { DEFAULT_PREFIX, WALLET_KEY_SUFFIX } from './utils/storageKeys';
 import { asyncReadObject } from './utils/asyncStorage';
 import { clearMnemonic, getMnemonic, saveMnemonic } from './utils/security';
-// import { TokenContainer } from './TokensContext';
-// import DEFAULT_TOKENS from '@node-fi/default-token-list';
+import { TokenContainer } from './TokensContext';
+import DEFAULT_TOKENS from '@node-fi/default-token-list';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 export interface TokenConfig {
   address: Address;
@@ -31,6 +32,8 @@ export interface NodeKitProviderProps {
 interface PersistedData {
   wallet: WalletConfig;
 }
+
+const queryClient = new QueryClient();
 
 export function NodeKitProvider(props: NodeKitProviderProps) {
   const {
@@ -65,26 +68,27 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
   return !loaded ? (
     loadingComponent ?? null
   ) : (
-    <WalletContainer.Provider
-      initialState={{
-        walletConfig: walletConfig ?? persistedData?.wallet,
-        onWalletDeletion: () => clearMnemonic(storagePrefix),
-        noSmartWallet: eoaOnly,
-        onMnemonicChanged: async (mnemonic: string) =>
-          await saveMnemonic(storagePrefix, mnemonic),
-      }}
-    >
-      {children}
-      {/* <TokenContainer.Provider
+    <QueryClientProvider client={queryClient}>
+      <WalletContainer.Provider
         initialState={{
-          initialTokens: DEFAULT_TOKENS.tokens.map(
-            ({ address, name, symbol, chainId, decimals }) =>
-              new Token(chainId, address, decimals, symbol, name)
-          ),
+          walletConfig: walletConfig ?? persistedData?.wallet,
+          onWalletDeletion: () => clearMnemonic(storagePrefix),
+          noSmartWallet: eoaOnly,
+          onMnemonicChanged: async (mnemonic: string) =>
+            await saveMnemonic(storagePrefix, mnemonic),
         }}
       >
-        <PriceContainer.Provider>{children}</PriceContainer.Provider>
-      </TokenContainer.Provider> */}
-    </WalletContainer.Provider>
+        <TokenContainer.Provider
+          initialState={{
+            initialTokens: DEFAULT_TOKENS.tokens.map(
+              ({ address, name, symbol, chainId, decimals, logoURI }) =>
+                new Token(chainId, address, decimals, symbol, name, logoURI)
+            ),
+          }}
+        >
+          <PriceContainer.Provider>{children}</PriceContainer.Provider>
+        </TokenContainer.Provider>
+      </WalletContainer.Provider>
+    </QueryClientProvider>
   );
 }

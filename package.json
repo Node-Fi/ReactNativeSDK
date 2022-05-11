@@ -157,6 +157,7 @@
     "react-native-ec-encryption": "^1.1.0",
     "react-native-get-random-values": "^1.8.0",
     "react-native-securerandom": "^1.0.0",
+    "react-query": "^3.39.0",
     "tiny-invariant": "^1.2.0",
     "unstated-next": "^1.1.0"
   }

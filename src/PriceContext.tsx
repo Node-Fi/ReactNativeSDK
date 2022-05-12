@@ -52,3 +52,8 @@ export const useSetDefaultCurrency = () => {
   const { setDefaultCurrency } = PriceContainer.useContainer();
   return setDefaultCurrency;
 };
+
+export const useDefaultCurrency = () => {
+  const { defaultCurrency } = PriceContainer.useContainer();
+  return defaultCurrency;
+};

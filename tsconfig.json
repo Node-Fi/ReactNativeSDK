@@ -1,4 +1,5 @@
 {
+  "exclude": ["example", "node_modules"],
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {

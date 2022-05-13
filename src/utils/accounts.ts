@@ -1,6 +1,6 @@
 import { generateSecureRandom } from 'react-native-securerandom';
 import * as bip39 from 'bip39';
-import { ChainId, EOA, SmartWallet } from '@node-fi/node-sdk';
+import { ChainId, EOA, SmartWallet } from '@node-fi/sdk-core';
 
 export const generateMnemonic = async () => {
   const bytes = await generateSecureRandom(32);

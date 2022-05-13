@@ -14,10 +14,16 @@ export interface UseTokensInnerProps {
   initialTokens: Token[];
 }
 
+/**
+ * Maps addresses to TokenAmount (Token, balance)
+ */
 interface TokenBalances {
   [address: Address]: TokenAmount;
 }
 
+/**
+ * Maps addresses to a Token object (address, name, symbol, decimals)
+ */
 interface TokenMap {
   [address: Address]: Token;
 }
@@ -28,7 +34,6 @@ interface UseTokensInnerType {
   addToken: (token: Token) => void;
   removeToken: (token: Address) => void;
 }
-
 function useTokensInner(props?: UseTokensInnerProps) {
   const [tokens, setTokens] = React.useState<TokenMap>(
     props?.initialTokens?.reduce(
@@ -102,6 +107,18 @@ export const TokenContainer = createContainer<
   UseTokensInnerType,
   UseTokensInnerProps
 >(useTokensInner);
+
+/**
+ *
+ * @param token Address or Token object to fetch balance for
+ * @returns Token
+ */
+export const useBalance = (token: Token | Address): TokenAmount => {
+  const { balances } = TokenContainer.useContainer();
+  const tokenAddress = typeof token === 'string' ? token : token.address;
+  const balance = balances[tokenAddress];
+  return React.useMemo(() => balance, [balance]);
+};
 
 export const useBalances = (): TokenBalances => {
   const { balances } = TokenContainer.useContainer();

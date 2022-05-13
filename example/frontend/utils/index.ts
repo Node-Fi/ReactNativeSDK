@@ -2,7 +2,7 @@ import { getAddress } from '@ethersproject/address';
 import { AddressZero } from '@ethersproject/constants';
 import { Contract } from '@ethersproject/contracts';
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
-import { TokenAmount } from '@node-fi/node-sdk';
+import { TokenAmount } from '@node-fi/sdk-core';
 import Web3 from 'web3';
 import { BigNumber } from 'bignumber.js';
 

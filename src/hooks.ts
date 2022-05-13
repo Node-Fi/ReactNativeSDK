@@ -4,7 +4,7 @@ import {
   dateRangeToReadable,
   formatHistoricalPortfolioQuery,
   formatHistoricalPricesQuery,
-} from '@node-fi/node-sdk';
+} from '@node-fi/sdk-core';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { AppState, AppStateStatus } from 'react-native';

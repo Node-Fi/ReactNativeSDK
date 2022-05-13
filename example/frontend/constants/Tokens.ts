@@ -1,4 +1,4 @@
-import { TokenConfig } from '@node-fi/node-sdk-react-native';
+import { TokenConfig } from '@node-fi/sdk-core-react-native';
 export const SUPPORTED_TOKENS: string[] = [
   '0x122013fd7dF1C6F636a5bb8f03108E876548b455',
   '0x46c9757C5497c5B1f2eb73aE79b6B67D119B0B58',

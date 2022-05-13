@@ -1,4 +1,4 @@
-# @node-fi/node-sdk-react-native
+# @node-fi/react-native-sdk
 
 A React Native wrapper for the Node Core SDK
 

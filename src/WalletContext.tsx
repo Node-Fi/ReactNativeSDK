@@ -13,6 +13,7 @@ export interface UseWalletProps {
   walletConfig?: WalletConfig;
   onMnemonicChanged: (mnemonic: string) => Promise<void>;
   onWalletDeletion: () => Promise<void>;
+  apiKey: string;
 }
 
 export interface UseWalletInnerType {
@@ -25,9 +26,13 @@ export interface UseWalletInnerType {
 }
 
 function useWalletInner(initialState: UseWalletProps | undefined) {
-  const { noSmartWallet, walletConfig, onMnemonicChanged, onWalletDeletion } =
-    initialState ?? {};
-  const apiKey = '';
+  const {
+    noSmartWallet,
+    walletConfig,
+    onMnemonicChanged,
+    onWalletDeletion,
+    apiKey,
+  } = initialState ?? {};
   const chain = ChainId.Celo;
   const [initialized, setInitialized] = React.useState(false);
   const [wallet, setWallet] = React.useState<Wallet>(

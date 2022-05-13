@@ -1,10 +1,12 @@
 {
   "dependencies": {
+    "@expo/vector-icons": "^13.0.0",
     "@node-fi/node-sdk": "file:../../SDK_Core",
     "@node-fi/node-sdk-react-native": "file:../",
     "@react-native-async-storage/async-storage": "1.13.4",
     "@walletconnect/react-native-dapp": "1.6.1",
     "base-64": "1.0.0",
+    "bignumber.js": "^9.0.2",
     "buffer": "6.0.3",
     "expo": "^44.0.0",
     "expo-splash-screen": "~0.14.1",
@@ -20,6 +22,7 @@
     "react-native-get-random-values": "1.5.0",
     "react-native-keychain": "^8.0.0",
     "react-native-localhost": "1.0.0",
+    "react-native-modal": "^13.0.1",
     "react-native-securerandom": "^1.0.0",
     "react-native-stream": "0.1.9",
     "react-native-svg": "9.6.4",

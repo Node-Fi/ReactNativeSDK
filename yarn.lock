@@ -1836,7 +1836,34 @@
   integrity sha512-EGCXvyx9uXlx1vrDr2Jt4YBxHolIxHPwebfheltAZ1Y/A+30tnyJS/ZgP7ur2KP3MP2vs2h/5Jk7Kw4OiVXoZw==
 
 "@node-fi/node-sdk@file:../SDK_Core":
-  version "1.0.0"
+  version "0.0.1"
+  dependencies:
+    "@babel/core" "^7.17.5"
+    "@babel/preset-env" "^7.16.11"
+    "@babel/preset-typescript" "^7.16.7"
+    "@celo/utils" "~1.2.4"
+    "@ethersproject/abi" "^5.5.0"
+    "@typechain/web3-v1" "^5.0.0"
+    axios "^0.27.2"
+    babel-jest "^27.5.1"
+    big.js "^6.1.1"
+    bignumber.js "^9.0.2"
+    decimal.js-light "^2.5.1"
+    dotenv "^16.0.0"
+    jest "^27.5.1"
+    minimist "^1.2.5"
+    p-map "^5.3.0"
+    prettier "^2.6.2"
+    tiny-invariant "^1.2.0"
+    tiny-warning "^1.0.3"
+    toformat "^2.0.0"
+    typechain "^7.0.0"
+    web3 "^1.7.0"
+
+"@node-fi/sdk-core@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.1.tgz#d8d189ac2935322608c4c1070ff74789acb06e9f"
+  integrity sha512-vCtmXPnnjeBE8Mlo9z9Si+vqPWlYdeJFVbrzlJWpv34shOq37NAKQPurZMe6J5M/Y64+VKyrvPhCOxRMbHBrvg==
   dependencies:
     "@babel/core" "^7.17.5"
     "@babel/preset-env" "^7.16.11"

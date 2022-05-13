@@ -1,11 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { NodeKitProvider } from '@node-fi/node-sdk-react-native';
 import { CreateWallet } from './CreateWallet';
 import { env } from 'process';
+import { TokenList } from './TokenList';
+import { SUPPORTED_TOKENS, TOKEN_OVERRIDES } from './constants/Tokens';
 
 export const styles = StyleSheet.create({
-  center: { alignItems: 'center', justifyContent: 'center' },
+  center: { alignItems: 'center' },
   // eslint-disable-next-line react-native/no-color-literals
   white: { backgroundColor: 'white' },
   red: { backgroundColor: 'red' },
@@ -25,10 +27,14 @@ export default function App(): JSX.Element {
       loadingComponent={loadingComponent}
       eoaOnly
       apiKey={env.NODE_API_KEY}
+      tokenWhitelist={new Set(SUPPORTED_TOKENS)}
+      tokenDetailsOverride={TOKEN_OVERRIDES}
+      customTokens={[]}
     >
-      <View style={[StyleSheet.absoluteFill, styles.center, styles.white]}>
+      <SafeAreaView style={[styles.center, styles.white]}>
         <CreateWallet />
-      </View>
+        <TokenList />
+      </SafeAreaView>
     </NodeKitProvider>
   );
 }

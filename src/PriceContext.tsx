@@ -3,7 +3,10 @@ import { Address, fetchPrices } from '@node-fi/node-sdk';
 import { createContainer } from 'unstated-next';
 
 interface PriceMap {
-  [address: Address]: number;
+  [address: Address]: {
+    current: number;
+    yesterday: number;
+  };
 }
 
 type CurrencyType = 'usd' | 'euro' | 'real';
@@ -14,14 +17,19 @@ interface UsePriceInnerType {
   setDefaultCurrency: (ct: CurrencyType) => void;
 }
 
-function usePricesInner(): UsePriceInnerType {
+function usePricesInner(
+  initialState = {
+    apiKey: '',
+  }
+): UsePriceInnerType {
+  const { apiKey } = initialState;
   const [prices, setPrices] = React.useState<PriceMap>();
   const [defaultCurrency, setDefaultCurrency] =
     React.useState<CurrencyType>('usd');
 
   React.useEffect(() => {
     const fetchAndSetPrices = async () => {
-      const fetchedPrices = await fetchPrices();
+      const fetchedPrices = await fetchPrices(apiKey);
       setPrices(fetchedPrices);
     };
     fetchAndSetPrices();
@@ -29,13 +37,14 @@ function usePricesInner(): UsePriceInnerType {
     return () => {
       clearInterval(intervalId);
     };
-  });
+  }, [setPrices, apiKey]);
   return { prices, defaultCurrency, setDefaultCurrency };
 }
 
-export const PriceContainer = createContainer<UsePriceInnerType, void>(
-  usePricesInner
-);
+export const PriceContainer = createContainer<
+  UsePriceInnerType,
+  { apiKey: string }
+>(usePricesInner);
 
 export const useTokenPrices = () => {
   const { prices } = PriceContainer.useContainer();
@@ -44,7 +53,7 @@ export const useTokenPrices = () => {
 
 export const useTokenPrice = (address: Address) => {
   const { prices } = PriceContainer.useContainer();
-  const tokenPrice = prices?.[address];
+  const tokenPrice = prices?.[address.toLowerCase()];
   return React.useMemo(() => tokenPrice, [tokenPrice]);
 };
 

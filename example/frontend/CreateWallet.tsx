@@ -36,7 +36,7 @@ export function CreateWallet() {
       </TouchableOpacity>
     </View>
   ) : (
-    <View>
+    <View style={{ height: 100, backgroundColor: 'red' }}>
       <TouchableOpacity onPress={createWallet}>
         <View
           style={{

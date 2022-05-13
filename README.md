@@ -5,7 +5,7 @@ A React Native wrapper for the Node Core SDK
 ## Installation
 
 ```sh
-npm install @node-fi/node-sdk-react-native
+npm install @node-fi/react-native-sdk
 ```
 
 ## Usage

@@ -10,23 +10,26 @@ import { clearMnemonic, getMnemonic, saveMnemonic } from './utils/security';
 import { TokenContainer } from './TokensContext';
 import DEFAULT_TOKENS from '@node-fi/default-token-list';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { reduceArrayToMap } from './utils';
 
-export interface TokenConfig {
+export type TokenConfig = {
   address: Address;
   name?: string;
   symbol?: string;
   decimals?: number;
-}
+};
 
 export interface NodeKitProviderProps {
   children: React.ReactElement | React.ReactElement[];
-  supportedTokens?: TokenConfig[];
+  customTokens: Token[];
+  tokenWhitelist?: Set<Address>;
   tokenDetailsOverride?: TokenConfig[];
-  tokenBlacklist?: Address[];
+  tokenBlacklist?: Set<Address>;
   storagePrefix?: string;
   walletConfig?: WalletConfig;
   eoaOnly?: boolean;
   loadingComponent?: React.ReactElement;
+  apiKey: string;
 }
 
 interface PersistedData {
@@ -42,10 +45,20 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
     eoaOnly,
     walletConfig,
     loadingComponent,
+    apiKey,
+    tokenDetailsOverride,
+    tokenWhitelist,
+    tokenBlacklist,
+    customTokens,
   } = props;
 
   const [persistedData, setPersistedData] = React.useState<PersistedData>();
   const [loaded, setLoaded] = React.useState(false);
+
+  const tokenOverride = React.useMemo(
+    () => reduceArrayToMap(tokenDetailsOverride ?? [], 'address'),
+    [tokenDetailsOverride]
+  );
 
   React.useEffect(() => {
     (async () => {
@@ -71,6 +84,7 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
     <QueryClientProvider client={queryClient}>
       <WalletContainer.Provider
         initialState={{
+          apiKey,
           walletConfig: walletConfig ?? persistedData?.wallet,
           onWalletDeletion: () => clearMnemonic(storagePrefix),
           noSmartWallet: eoaOnly,
@@ -80,13 +94,32 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
       >
         <TokenContainer.Provider
           initialState={{
-            initialTokens: DEFAULT_TOKENS.tokens.map(
-              ({ address, name, symbol, chainId, decimals, logoURI }) =>
-                new Token(chainId, address, decimals, symbol, name, logoURI)
-            ),
+            initialTokens: DEFAULT_TOKENS.tokens
+              .filter(({ address }) => {
+                if (tokenBlacklist) return !tokenBlacklist.has(address);
+                if (tokenWhitelist) return tokenWhitelist.has(address);
+                return true;
+              })
+              .map((t) => {
+                const { address, name, symbol, chainId, decimals, logoURI } = {
+                  ...t,
+                  ...tokenOverride[t.address],
+                };
+                return new Token(
+                  chainId,
+                  address,
+                  decimals,
+                  symbol,
+                  name,
+                  logoURI
+                );
+              })
+              .concat(customTokens ?? []),
           }}
         >
-          <PriceContainer.Provider>{children}</PriceContainer.Provider>
+          <PriceContainer.Provider initialState={{ apiKey }}>
+            {children}
+          </PriceContainer.Provider>
         </TokenContainer.Provider>
       </WalletContainer.Provider>
     </QueryClientProvider>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Address, fetchPrices } from '@node-fi/node-sdk';
+import { Address, fetchPrices } from '@node-fi/sdk-core';
 import { createContainer } from 'unstated-next';
 
 interface PriceMap {

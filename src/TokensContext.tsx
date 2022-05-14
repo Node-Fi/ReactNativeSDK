@@ -6,7 +6,7 @@ import {
   subscribeToTokenTransfers,
   ChainId,
   getBalances,
-} from '@node-fi/node-sdk';
+} from '@node-fi/sdk-core';
 import { createContainer } from 'unstated-next';
 import { useWalletAddress } from './WalletContext';
 

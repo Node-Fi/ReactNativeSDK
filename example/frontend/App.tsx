@@ -1,6 +1,6 @@
 import React from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { NodeKitProvider } from '@node-fi/node-sdk-react-native';
+import { NodeKitProvider } from '@node-fi/react-native-sdk';
 import { CreateWallet } from './CreateWallet';
 import { env } from 'process';
 import { TokenList } from './TokenList';

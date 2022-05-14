@@ -6,7 +6,7 @@ import {
   clearMnemonic,
   asyncClear,
   DEFAULT_PREFIX,
-} from '@node-fi/node-sdk-react-native';
+} from '@node-fi/react-native-sdk';
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './App';
 export function CreateWallet() {

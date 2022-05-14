@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { WalletContainer } from './WalletContext';
 import { PriceContainer } from './PriceContext';
-import { Address, Token } from '@node-fi/node-sdk';
-import type { WalletConfig } from '@node-fi/node-sdk/dist/src/wallet/Wallet';
+import { Address, Token } from '@node-fi/sdk-core';
+import type { WalletConfig } from '@node-fi/sdk-core/dist/src/wallet/Wallet';
 import { DEFAULT_PREFIX, WALLET_KEY_SUFFIX } from './utils/storageKeys';
 import { asyncReadObject } from './utils/asyncStorage';
 import { clearMnemonic, getMnemonic, saveMnemonic } from './utils/security';
@@ -104,7 +104,7 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
                 const { address, name, symbol, chainId, decimals, logoURI } = {
                   ...t,
                   ...tokenOverride[t.address],
-                };
+                } as TokenConfig & { chainId: number; logoURI: string };
                 return new Token(
                   chainId,
                   address,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createContainer } from 'unstated-next';
-import { Wallet, SmartWallet, EOA, ChainId } from '@node-fi/node-sdk';
-import type { WalletConfig } from '@node-fi/node-sdk/dist/src/wallet/Wallet';
+import { Wallet, SmartWallet, EOA, ChainId } from '@node-fi/sdk-core';
+import type { WalletConfig } from '@node-fi/sdk-core/dist/src/wallet/Wallet';
 import { asyncClear, asyncWriteObject } from './utils/asyncStorage';
 import { DEFAULT_PREFIX, WALLET_KEY_SUFFIX } from './utils/storageKeys';
 import { createWallet } from './utils/accounts';

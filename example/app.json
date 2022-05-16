@@ -11,6 +11,9 @@
     ],
     "ios": {
       "bundleIdentifier": "com.dmooers.nodefi-example"
+    },
+    "android": {
+      "package": "com.dmooers.nodefiexample"
     }
   }
 }

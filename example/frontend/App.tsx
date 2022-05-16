@@ -5,7 +5,7 @@ import { CreateWallet } from './CreateWallet';
 import { env } from 'process';
 import { TokenList } from './TokenList';
 import { SUPPORTED_TOKENS, TOKEN_OVERRIDES } from './constants/Tokens';
-import { ChainId } from '@node-fi/sdk-core';
+import { ChainId, Token } from '@node-fi/sdk-core';
 
 export const styles = StyleSheet.create({
   center: { alignItems: 'center' },
@@ -30,7 +30,15 @@ export default function App(): JSX.Element {
       apiKey={env.NODE_API_KEY}
       tokenWhitelist={new Set(SUPPORTED_TOKENS)}
       tokenDetailsOverride={TOKEN_OVERRIDES}
-      customTokens={[]}
+      customTokens={[
+        new Token(
+          44787,
+          '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1',
+          18,
+          'cUSD',
+          'Cello Dollar'
+        ),
+      ]}
       chainId={ChainId.Alfajores}
     >
       <SafeAreaView style={[styles.center, styles.white]}>

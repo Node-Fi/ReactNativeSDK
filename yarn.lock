@@ -1835,10 +1835,10 @@
   resolved "https://registry.yarnpkg.com/@node-fi/default-token-list/-/default-token-list-4.1.81.tgz#2909ef1af60859d4e92bf0b2b0fea7f3c2d841de"
   integrity sha512-EGCXvyx9uXlx1vrDr2Jt4YBxHolIxHPwebfheltAZ1Y/A+30tnyJS/ZgP7ur2KP3MP2vs2h/5Jk7Kw4OiVXoZw==
 
-"@node-fi/sdk-core@0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.12.tgz#fa4dbe7ac5de87a325608f61394c5e3a30d4438b"
-  integrity sha512-SySQ7OrA8EB7sOBlEBjUdYWu/hQui3N6Q+3tTVCJ81JN/jI7cwDq9YvKinV16lqMR+vQgLSl+jBzCBFde5AnMg==
+"@node-fi/sdk-core@0.0.15":
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.15.tgz#3903f8173f3850ca4733bb67b16fa1370fefe849"
+  integrity sha512-80fUw9WYXUG2XxLu26npGnzEajoX7H/V/PHxSmmHZAMbcWk6SWxXFJyEHRiIyqRyGoM6ZxAMc+4D0z0Sec5jUA==
   dependencies:
     "@babel/core" "^7.17.5"
     "@babel/preset-env" "^7.16.11"
@@ -1852,6 +1852,7 @@
     bignumber.js "^9.0.2"
     decimal.js-light "^2.5.1"
     dotenv "^16.0.0"
+    format-number "^3.0.0"
     jest "^27.5.1"
     minimist "^1.2.5"
     p-map "^5.3.0"
@@ -5278,6 +5279,11 @@ form-data@~2.3.2:
     asynckit "^0.4.0"
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
+
+format-number@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/format-number/-/format-number-3.0.0.tgz#92bbf34ce5e04eb637a9a3a4f65980d5af137393"
+  integrity sha512-RWcbtINcRZ2DWCo4EcJgOJUYIwtsY5LKlTtL5OX1vfGsxEEK5mKaGxZC0p4Mgy63vXR12rut3lnjwCQ8YIlRMw==
 
 forwarded@0.2.0:
   version "0.2.0"

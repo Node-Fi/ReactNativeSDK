@@ -7,9 +7,8 @@ export const getMnemonic = async (service: string) => {
   const existingCredentials = await Keychain.getGenericPassword(
     KEYCHAIN_SETTINGS(service)
   );
-  console.log({ existingCredentials });
   if (!existingCredentials) return undefined;
-  const { mnemonicCipher } = JSON.parse(existingCredentials.password);
+  const mnemonicCipher = existingCredentials.password;
   const mnemonic: string = await ECEncryption.decrypt({
     data: mnemonicCipher,
     label: SECURE_ENCLAVE_LABEL,

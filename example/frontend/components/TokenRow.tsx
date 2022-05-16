@@ -11,6 +11,7 @@ import {
   useBalances,
   useRemoveToken,
   useTokenPrice,
+  useWallet,
 } from '@node-fi/react-native-sdk';
 import { Token } from '@node-fi/sdk-core';
 import { layout, text } from '../styles/styles';
@@ -69,6 +70,7 @@ const TokenDetails = ({ token }: { token: Token }) => {
   const balances = useBalances();
   const balance =
     balances[token.address] ?? balances[token.address.toLowerCase()];
+  const wallet = useWallet();
 
   return (
     <View style={{ paddingHorizontal: 20 }}>
@@ -85,6 +87,64 @@ const TokenDetails = ({ token }: { token: Token }) => {
         }}
       >
         <Text style={{ color: 'white', textAlign: 'center' }}>Remove</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={async () => {
+          try {
+            const resp = await wallet.transferToken(
+              token,
+              new BigNumber('1000'),
+              wallet.address
+            );
+            console.log(resp);
+          } catch (e) {
+            console.error(e);
+            try {
+              const resp = await wallet.transferToken(
+                token.address,
+                new BigNumber('1000'),
+                wallet.address
+              );
+              console.log(resp);
+            } catch (e) {
+              console.error(e);
+            }
+          }
+        }}
+        style={{
+          backgroundColor: getColor('green', 0.9),
+          marginTop: 10,
+          padding: 10,
+          borderRadius: 13,
+        }}
+      >
+        <Text style={{ color: 'white', textAlign: 'center' }}>
+          Send from Wallet
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={async () => {
+          try {
+            const resp = await token.send(
+              new BigNumber('100'),
+              wallet,
+              wallet.address
+            );
+            console.log(resp);
+          } catch (e) {
+            console.error(e);
+          }
+        }}
+        style={{
+          backgroundColor: getColor('blue', 0.9),
+          marginTop: 10,
+          padding: 10,
+          borderRadius: 13,
+        }}
+      >
+        <Text style={{ color: 'white', textAlign: 'center' }}>
+          Send from Token
+        </Text>
       </TouchableOpacity>
     </View>
   );

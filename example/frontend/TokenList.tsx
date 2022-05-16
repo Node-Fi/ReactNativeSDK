@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { useTokens, usePricedBalances } from '@node-fi/react-native-sdk';
+import {
+  useTokens,
+  usePricedBalances,
+  useWallet,
+} from '@node-fi/react-native-sdk';
 import { FlatList, TouchableOpacity, View } from 'react-native';
 import { Token } from '@node-fi/sdk-core';
 import TokenRow from './components/TokenRow';
@@ -14,7 +18,6 @@ const RenderRow = ({ item: token }: { item: Token }) => (
 export function TokenList() {
   const tokens = useTokens();
   const [showModal, setShowModal] = React.useState(false);
-  const pricedBalance = usePricedBalances();
   const RenderToggleModal = () => (
     <TouchableOpacity onPress={() => setShowModal(true)}>
       <Text>Add Token</Text>

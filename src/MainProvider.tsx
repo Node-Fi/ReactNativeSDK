@@ -55,7 +55,6 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
     customTokens,
     chainId = ChainId.Celo,
   } = props;
-
   const [persistedData, setPersistedData] = React.useState<PersistedData>();
   const [loaded, setLoaded] = React.useState(false);
 
@@ -110,7 +109,7 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
                   address,
                   name,
                   symbol,
-                  chainId,
+                  chainId: tokenChainId,
                   decimals,
                   logoURI,
                   newAddress,
@@ -119,7 +118,7 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
                   ...tokenOverride[t.address],
                 } as TokenConfig & { chainId: number; logoURI: string };
                 return new Token(
-                  chainId,
+                  tokenChainId,
                   newAddress ?? address,
                   decimals,
                   symbol,
@@ -127,7 +126,8 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
                   logoURI
                 );
               })
-              .concat(customTokens ?? []),
+              .concat(customTokens ?? [])
+              .filter((el) => el.chainId === chainId),
           }}
         >
           <PriceContainer.Provider initialState={{ apiKey }}>

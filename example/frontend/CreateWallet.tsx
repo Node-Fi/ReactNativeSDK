@@ -14,9 +14,7 @@ export function CreateWallet() {
   const wallet = useWallet();
   const createWallet = useCreateWallet();
   const deleteWallet = useDeleteWallet();
-  const transfers = useHistoricalTransfers(undefined, true);
   console.log(wallet.address);
-  console.log(transfers);
   return wallet?.address ? (
     <View style={[styles.center]}>
       <Text style={{ textAlign: 'center' }}>{`Wallet: ${wallet.address}`}</Text>

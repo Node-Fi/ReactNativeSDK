@@ -1,6 +1,6 @@
 {
   "name": "@node-fi/react-native-sdk",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "A React Native wrapper for the Node Core SDK",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -67,6 +67,7 @@
     "typescript": "^4.1.3"
   },
   "peerDependencies": {
+    "@node-fi/sdk-core": "*",
     "react": ">=16.8.1 <=17.0.x",
     "react-native": ">=0.60.0-rc.0 <1.0.x",
     "react-native-keychain": "*"
@@ -150,7 +151,7 @@
   },
   "dependencies": {
     "@node-fi/default-token-list": "^4.1.81",
-    "@node-fi/sdk-core": "^0.0.1",
+    "@node-fi/sdk-core": "0.0.12",
     "@react-native-async-storage/async-storage": "^1.17.3",
     "axios": "^0.27.2",
     "react-native-crypto": "^2.2.0",

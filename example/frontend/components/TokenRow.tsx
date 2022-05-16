@@ -11,8 +11,8 @@ import {
   useBalances,
   useRemoveToken,
   useTokenPrice,
-} from '@node-fi/node-sdk-react-native';
-import { Token } from '@node-fi/node-sdk';
+} from '@node-fi/react-native-sdk';
+import { Token } from '@node-fi/sdk-core';
 import { layout, text } from '../styles/styles';
 import { formatTokenAmount, shortenAddress } from '../utils';
 

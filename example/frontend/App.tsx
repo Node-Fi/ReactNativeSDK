@@ -1,10 +1,11 @@
 import React from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { NodeKitProvider } from '@node-fi/node-sdk-react-native';
+import { NodeKitProvider } from '@node-fi/react-native-sdk';
 import { CreateWallet } from './CreateWallet';
 import { env } from 'process';
 import { TokenList } from './TokenList';
 import { SUPPORTED_TOKENS, TOKEN_OVERRIDES } from './constants/Tokens';
+import { ChainId } from '@node-fi/sdk-core';
 
 export const styles = StyleSheet.create({
   center: { alignItems: 'center' },
@@ -30,6 +31,7 @@ export default function App(): JSX.Element {
       tokenWhitelist={new Set(SUPPORTED_TOKENS)}
       tokenDetailsOverride={TOKEN_OVERRIDES}
       customTokens={[]}
+      chainId={ChainId.Alfajores}
     >
       <SafeAreaView style={[styles.center, styles.white]}>
         <CreateWallet />

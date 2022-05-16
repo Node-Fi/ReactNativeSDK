@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useAddToken } from '@node-fi/node-sdk-react-native';
+import { useAddToken } from '@node-fi/react-native-sdk';
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { DEVICE_HEIGHT, DEVICE_WIDTH, layout, text } from '../styles/styles';
@@ -12,7 +12,7 @@ import {
   TextInput,
 } from './ThemedComponents';
 import { FontAwesome } from '@expo/vector-icons';
-import { ChainId, Token, validateAndParseAddress } from '@node-fi/node-sdk';
+import { ChainId, Token, validateAndParseAddress } from '@node-fi/sdk-core';
 
 const RenderHeader = ({ onClose }: { onClose: () => void }) => (
   <View

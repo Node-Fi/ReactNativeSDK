@@ -42,7 +42,6 @@ interface UseTokensInnerType {
 }
 function useTokensInner(props?: UseTokensInnerProps) {
   const chainId = props?.chainId ?? ChainId.Celo;
-  const [transferCounter, setTransferCounter] = React.useState(0);
   const [tokens, setTokens] = React.useState<TokenMap>(
     props?.initialTokens?.reduce(
       (accum: TokenMap, cur: Token) => ({
@@ -53,6 +52,9 @@ function useTokensInner(props?: UseTokensInnerProps) {
     ) ?? {}
   );
   const [balances, setBalances] = React.useState<TokenBalances>({});
+  const [newTransfers, setNewTransfers] = React.useState<TransferTransaction[]>(
+    []
+  );
   const walletAddress = useWalletAddress();
   const tokenAddresses = React.useMemo(() => Object.keys(tokens), [tokens]);
 
@@ -74,7 +76,7 @@ function useTokensInner(props?: UseTokensInnerProps) {
         )
       );
     })();
-    const subscription = subscribeToTokenTransfers(
+    const endSubscription = subscribeToTokenTransfers(
       walletAddress,
       chainId,
       tokenAddresses,
@@ -86,11 +88,11 @@ function useTokensInner(props?: UseTokensInnerProps) {
             balance
           ),
         }));
-        setTransferCounter((t) => t + 1);
+        setNewTransfers((transfers) => [...transfers]);
       }
     );
 
-    return subscription;
+    return endSubscription;
   }, [walletAddress, tokens, setBalances, tokenAddresses, chainId]);
 
   const addToken = React.useCallback(

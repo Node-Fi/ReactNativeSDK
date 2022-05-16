@@ -17,6 +17,8 @@ export type TokenConfig = {
   name?: string;
   symbol?: string;
   decimals?: number;
+  newAddress?: Address;
+  chainId?: ChainId;
 };
 
 export interface NodeKitProviderProps {
@@ -104,13 +106,21 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
                 return true;
               })
               .map((t) => {
-                const { address, name, symbol, chainId, decimals, logoURI } = {
+                const {
+                  address,
+                  name,
+                  symbol,
+                  chainId,
+                  decimals,
+                  logoURI,
+                  newAddress,
+                } = {
                   ...t,
                   ...tokenOverride[t.address],
                 } as TokenConfig & { chainId: number; logoURI: string };
                 return new Token(
                   chainId,
-                  address,
+                  newAddress ?? address,
                   decimals,
                   symbol,
                   name,

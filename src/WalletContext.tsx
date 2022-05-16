@@ -111,7 +111,6 @@ export const useCreateWallet = () => {
         chain ?? ChainId.Celo,
         !noSmartWallet
       );
-      console.log(wallet.address);
       setWallet(wallet);
       if (!onMnemonicChanged) {
         Alert.alert(

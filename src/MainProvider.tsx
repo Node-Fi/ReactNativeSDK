@@ -67,7 +67,6 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
       const persistedWalletConfig = (await asyncReadObject(
         `${storagePrefix}${WALLET_KEY_SUFFIX}`
       )) as WalletConfig;
-      console.log(persistedWalletConfig);
       if (persistedWalletConfig) {
         setPersistedData({
           wallet: {

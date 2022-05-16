@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { WalletContainer } from './WalletContext';
 import { PriceContainer } from './PriceContext';
-import { Address, Token } from '@node-fi/sdk-core';
+import { Address, ChainId, Token } from '@node-fi/sdk-core';
 import type { WalletConfig } from '@node-fi/sdk-core/dist/src/wallet/Wallet';
 import { DEFAULT_PREFIX, WALLET_KEY_SUFFIX } from './utils/storageKeys';
 import { asyncReadObject } from './utils/asyncStorage';
@@ -30,6 +30,7 @@ export interface NodeKitProviderProps {
   eoaOnly?: boolean;
   loadingComponent?: React.ReactElement;
   apiKey: string;
+  chainId?: ChainId;
 }
 
 interface PersistedData {
@@ -50,6 +51,7 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
     tokenWhitelist,
     tokenBlacklist,
     customTokens,
+    chainId = ChainId.Celo,
   } = props;
 
   const [persistedData, setPersistedData] = React.useState<PersistedData>();
@@ -90,10 +92,12 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
           noSmartWallet: eoaOnly,
           onMnemonicChanged: async (mnemonic: string) =>
             await saveMnemonic(storagePrefix, mnemonic),
+          chainId,
         }}
       >
         <TokenContainer.Provider
           initialState={{
+            chainId,
             initialTokens: DEFAULT_TOKENS.tokens
               .filter(({ address }) => {
                 if (tokenBlacklist) return !tokenBlacklist.has(address);

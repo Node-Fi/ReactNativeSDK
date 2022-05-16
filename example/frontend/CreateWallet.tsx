@@ -6,6 +6,7 @@ import {
   clearMnemonic,
   asyncClear,
   DEFAULT_PREFIX,
+  useHistoricalTransfers,
 } from '@node-fi/react-native-sdk';
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './App';
@@ -13,7 +14,9 @@ export function CreateWallet() {
   const wallet = useWallet();
   const createWallet = useCreateWallet();
   const deleteWallet = useDeleteWallet();
-
+  const transfers = useHistoricalTransfers(undefined, true);
+  console.log(wallet.address);
+  console.log(transfers);
   return wallet?.address ? (
     <View style={[styles.center]}>
       <Text style={{ textAlign: 'center' }}>{`Wallet: ${wallet.address}`}</Text>

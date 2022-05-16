@@ -14,6 +14,7 @@ export interface UseWalletProps {
   onMnemonicChanged: (mnemonic: string) => Promise<void>;
   onWalletDeletion: () => Promise<void>;
   apiKey: string;
+  chainId?: ChainId;
 }
 
 export interface UseWalletInnerType {
@@ -23,6 +24,7 @@ export interface UseWalletInnerType {
   onMnemonicChanged?: (mnemonic: string) => Promise<void>;
   onWalletDeletion?: () => Promise<void>;
   setWallet: (wallet: Wallet) => void;
+  chainId?: ChainId;
 }
 
 function useWalletInner(initialState: UseWalletProps | undefined) {
@@ -32,13 +34,13 @@ function useWalletInner(initialState: UseWalletProps | undefined) {
     onMnemonicChanged,
     onWalletDeletion,
     apiKey,
+    chainId,
   } = initialState ?? {};
-  const chain = ChainId.Celo;
   const [initialized, setInitialized] = React.useState(false);
   const [wallet, setWallet] = React.useState<Wallet>(
     noSmartWallet
-      ? new EOA(apiKey, chain, walletConfig?.eoa)
-      : new SmartWallet(apiKey, chain, walletConfig?.smartWallet)
+      ? new EOA(apiKey, chainId, walletConfig?.eoa)
+      : new SmartWallet(apiKey, chainId, walletConfig?.smartWallet)
   );
   const address = wallet.address;
   const eoaAddress = wallet instanceof SmartWallet && wallet.eoa?.address;
@@ -47,18 +49,17 @@ function useWalletInner(initialState: UseWalletProps | undefined) {
     (async () => {
       if (walletConfig) {
         const newWallet = noSmartWallet
-          ? new EOA(apiKey, chain, walletConfig?.eoa)
-          : new SmartWallet(apiKey, chain, walletConfig?.smartWallet);
+          ? new EOA(apiKey, chainId, walletConfig?.eoa)
+          : new SmartWallet(apiKey, chainId, walletConfig?.smartWallet);
         await newWallet._loadWallet(walletConfig);
         setWallet(newWallet);
         setInitialized(true);
       }
     })();
-  }, [noSmartWallet, setWallet, setInitialized, apiKey, chain, walletConfig]);
+  }, [noSmartWallet, setWallet, setInitialized, apiKey, walletConfig, chainId]);
 
   // Save to async storage when finished.
   useOnClose(async () => {
-    console.log({ address });
     asyncWriteObject(
       `${DEFAULT_PREFIX}${WALLET_KEY_SUFFIX}`,
       noSmartWallet
@@ -77,6 +78,7 @@ function useWalletInner(initialState: UseWalletProps | undefined) {
     noSmartWallet,
     setWallet,
     onWalletDeletion,
+    chainId,
   };
 }
 
@@ -98,17 +100,18 @@ export const useWalletAddress = () => {
 };
 
 export const useCreateWallet = () => {
-  const { noSmartWallet, onMnemonicChanged, setWallet } =
+  const { noSmartWallet, onMnemonicChanged, setWallet, chainId } =
     WalletContainer.useContainer();
   const apiKey = '';
-  const chain = ChainId.Celo;
+  const chain = chainId;
   return React.useMemo(
     () => async () => {
       const { wallet, mnemonic } = await createWallet(
         apiKey,
-        chain,
+        chain ?? ChainId.Celo,
         !noSmartWallet
       );
+      console.log(wallet.address);
       setWallet(wallet);
       if (!onMnemonicChanged) {
         Alert.alert(

@@ -6,12 +6,17 @@ import {
   subscribeToTokenTransfers,
   ChainId,
   getBalances,
+  TransferTransaction,
+  fetchTransfers,
 } from '@node-fi/sdk-core';
 import { createContainer } from 'unstated-next';
-import { useWalletAddress } from './WalletContext';
+import { useWalletAddress, WalletContainer } from './WalletContext';
+import { useTokenPrices } from './PriceContext';
+import { useQuery } from 'react-query';
 
 export interface UseTokensInnerProps {
   initialTokens: Token[];
+  chainId: ChainId;
 }
 
 /**
@@ -33,8 +38,11 @@ interface UseTokensInnerType {
   tokens: TokenMap;
   addToken: (token: Token) => void;
   removeToken: (token: Address) => void;
+  transferCounter: number;
 }
 function useTokensInner(props?: UseTokensInnerProps) {
+  const chainId = props?.chainId ?? ChainId.Celo;
+  const [transferCounter, setTransferCounter] = React.useState(0);
   const [tokens, setTokens] = React.useState<TokenMap>(
     props?.initialTokens?.reduce(
       (accum: TokenMap, cur: Token) => ({
@@ -47,11 +55,15 @@ function useTokensInner(props?: UseTokensInnerProps) {
   const [balances, setBalances] = React.useState<TokenBalances>({});
   const walletAddress = useWalletAddress();
   const tokenAddresses = React.useMemo(() => Object.keys(tokens), [tokens]);
-  console.log('render');
+
   React.useEffect(() => {
     if (!walletAddress || tokenAddresses.length === 0) return;
     (async () => {
-      const fetchedBalances = await getBalances(walletAddress, tokenAddresses);
+      const fetchedBalances = await getBalances(
+        chainId,
+        walletAddress,
+        tokenAddresses
+      );
       setBalances(
         Object.entries(fetchedBalances).reduce(
           (accum: TokenBalances, [address, balance]) => ({
@@ -62,10 +74,9 @@ function useTokensInner(props?: UseTokensInnerProps) {
         )
       );
     })();
-
     const subscription = subscribeToTokenTransfers(
       walletAddress,
-      ChainId.Celo,
+      chainId,
       tokenAddresses,
       (token, balance) => {
         setBalances((b) => ({
@@ -75,11 +86,12 @@ function useTokensInner(props?: UseTokensInnerProps) {
             balance
           ),
         }));
+        setTransferCounter((t) => t + 1);
       }
     );
 
     return subscription;
-  }, [walletAddress, tokens, setBalances, tokenAddresses]);
+  }, [walletAddress, tokens, setBalances, tokenAddresses, chainId]);
 
   const addToken = React.useCallback(
     (newToken: Token) => {
@@ -100,7 +112,7 @@ function useTokensInner(props?: UseTokensInnerProps) {
     [setTokens]
   );
 
-  return { balances, tokens, addToken, removeToken };
+  return { balances, tokens, addToken, removeToken, transferCounter };
 }
 
 export const TokenContainer = createContainer<
@@ -125,6 +137,21 @@ export const useBalances = (): TokenBalances => {
   return balances;
 };
 
+export const usePricedBalances = (): TokenBalances => {
+  const balances = useBalances();
+  const prices = useTokenPrices() ?? {};
+  return Object.entries(balances).reduce(
+    (accum, [addr, tokAmount]) => ({
+      ...accum,
+      [addr]: new TokenAmount(
+        tokAmount.token,
+        tokAmount.raw.multipliedBy(prices[addr.toLowerCase()]?.current ?? 1)
+      ),
+    }),
+    {}
+  );
+};
+
 export const useTokens = (): TokenMap => {
   const { tokens } = TokenContainer.useContainer();
   return tokens;
@@ -146,4 +173,36 @@ export const useAddToken = (): ((newToken: Token) => Promise<void>) => {
 export const useRemoveToken = () => {
   const { removeToken } = TokenContainer.useContainer();
   return removeToken;
+};
+
+export const useHistoricalTransfers = (
+  startBlock?: number,
+  subscribe?: boolean
+): TransferTransaction[] | undefined => {
+  const { wallet, chainId } = WalletContainer.useContainer();
+  const { transferCounter, tokens } = TokenContainer.useContainer();
+  const tokenAddresses = Object.values(tokens).map(({ address }) => address);
+
+  const fetch = async () => {
+    if (!wallet || !wallet.address) {
+      return [];
+    }
+    try {
+      const transfers = await fetchTransfers(
+        chainId ?? ChainId.Celo,
+        wallet.address ?? '',
+        tokenAddresses,
+        startBlock ?? 'earliest'
+      );
+      return transfers;
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  };
+  const res = useQuery(
+    [tokenAddresses, subscribe ? transferCounter : 0, wallet.address],
+    fetch
+  );
+  return res?.data;
 };

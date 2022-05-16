@@ -28,6 +28,7 @@ export {
   useBalances,
   useRemoveToken,
   useTokens,
+  useHistoricalTransfers,
 } from './TokensContext';
 
 export const useOnClose = (callback: () => Promise<void>) => {

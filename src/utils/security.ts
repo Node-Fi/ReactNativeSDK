@@ -4,8 +4,10 @@ import { KEYCHAIN_SETTINGS, SECURE_ENCLAVE_LABEL } from './storageKeys';
 import invariant from 'tiny-invariant';
 
 export const getMnemonic = async (service: string) => {
+  const biometrySupported = await Keychain.getSupportedBiometryType();
+
   const existingCredentials = await Keychain.getGenericPassword(
-    KEYCHAIN_SETTINGS(service)
+    KEYCHAIN_SETTINGS(service, biometrySupported)
   );
   if (!existingCredentials) return undefined;
   const mnemonicCipher = existingCredentials.password;
@@ -17,11 +19,14 @@ export const getMnemonic = async (service: string) => {
 };
 
 export const clearMnemonic = async (service: string) => {
-  console.log(service);
-  await Keychain.resetGenericPassword(KEYCHAIN_SETTINGS(service));
+  const biometrySupported = await Keychain.getSupportedBiometryType();
+  await Keychain.resetGenericPassword(
+    KEYCHAIN_SETTINGS(service, biometrySupported)
+  );
 };
 
 export const saveMnemonic = async (service: string, mnemonic: string) => {
+  const biometrySupported = await Keychain.getSupportedBiometryType();
   const existingCredentials = await getMnemonic(service);
   invariant(
     !existingCredentials,
@@ -34,6 +39,6 @@ export const saveMnemonic = async (service: string, mnemonic: string) => {
   await Keychain.setGenericPassword(
     service,
     mnemonicCipher,
-    KEYCHAIN_SETTINGS(service)
+    KEYCHAIN_SETTINGS(service, biometrySupported)
   );
 };

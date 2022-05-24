@@ -16,6 +16,7 @@ import { useTokenPrices } from './PriceContext';
 import { useQuery } from 'react-query';
 import Web3 from 'web3';
 import type { Log } from 'web3-core';
+import { BigNumber } from 'bignumber.js';
 
 export interface UseTokensInnerProps {
   initialTokens: Token[];
@@ -73,7 +74,7 @@ function useTokensInner(props?: UseTokensInnerProps) {
         Object.entries(fetchedBalances).reduce(
           (accum: TokenBalances, [address, balance]) => ({
             ...accum,
-            [address]: new TokenAmount(tokens[address], balance),
+            [address.toLowerCase()]: new TokenAmount(tokens[address], balance),
           }),
           {}
         )
@@ -199,16 +200,28 @@ export const useRemoveToken = () => {
  * @param maxTransfers Maximum number of transfers to retrieve. Will default to "all"
  * @param startBlock The block to start searching for transactions from.  Defaults to "earliest"
  * @param subscribe If true, will receive new transactions as they come in
+ * @param filter callback to filter transfers.  Default filters transfers < $0.001
  * @returns A list of Transfers
  */
 export const useHistoricalTransfers = (
   maxTransfers?: number | 'all',
   startBlock?: number,
-  subscribe?: boolean
+  subscribe?: boolean,
+  filter?: (t: TransferTransaction) => boolean
 ): TransferTransaction[] | undefined => {
   const { wallet, chainId } = WalletContainer.useContainer();
   const { newTransfers, tokens } = TokenContainer.useContainer();
   const tokenAddresses = Object.values(tokens).map(({ address }) => address);
+
+  const defaultTransferFilter = React.useCallback(
+    (transfer: TransferTransaction) => {
+      const token = tokens[transfer.token.toLowerCase()];
+      return transfer.amount.isGreaterThan(
+        new BigNumber('10').pow(token.decimals - 3)
+      );
+    },
+    [tokens]
+  );
 
   const fetch = async () => {
     if (!wallet || !wallet.address) {
@@ -228,11 +241,21 @@ export const useHistoricalTransfers = (
     }
   };
   const res = useQuery([], fetch);
-  const transfers = subscribe ? res?.data?.concat(newTransfers) : res?.data;
-  if (!transfers) return transfers;
-  return maxTransfers === 'all' ||
-    maxTransfers === undefined ||
-    transfers?.length < maxTransfers
-    ? transfers
-    : transfers?.slice(-1 * maxTransfers);
+  const transfers = React.useMemo(() => {
+    const mid = subscribe
+      ? res?.data?.concat(newTransfers).filter(filter ?? defaultTransferFilter)
+      : res?.data?.filter(filter ?? defaultTransferFilter);
+    return mid?.sort((t1, t2) => t2.blockNumber - t1.blockNumber);
+  }, [res.isLoading]);
+  return React.useMemo(
+    () =>
+      !transfers
+        ? undefined
+        : maxTransfers === 'all' ||
+          maxTransfers === undefined ||
+          transfers?.length < maxTransfers
+        ? transfers
+        : transfers?.slice(0, maxTransfers),
+    [transfers, maxTransfers]
+  );
 };

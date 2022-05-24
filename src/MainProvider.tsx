@@ -3,7 +3,10 @@ import * as React from 'react';
 import { WalletContainer } from './WalletContext';
 import { PriceContainer } from './PriceContext';
 import { Address, ChainId, Token } from '@node-fi/sdk-core';
-import type { WalletConfig } from '@node-fi/sdk-core/dist/src/wallet/Wallet';
+import type {
+  WalletConfig,
+  WalletOptions,
+} from '@node-fi/sdk-core/dist/src/wallet/Wallet';
 import { DEFAULT_PREFIX, WALLET_KEY_SUFFIX } from './utils/storageKeys';
 import { asyncReadObject } from './utils/asyncStorage';
 import { clearMnemonic, getMnemonic, saveMnemonic } from './utils/security';
@@ -28,7 +31,7 @@ export interface NodeKitProviderProps {
   tokenDetailsOverride?: TokenConfig[];
   tokenBlacklist?: Set<Address>;
   storagePrefix?: string;
-  walletConfig?: WalletConfig;
+  walletConfig?: WalletConfig & { opts?: WalletOptions };
   eoaOnly?: boolean;
   loadingComponent?: React.ReactElement;
   apiKey: string;

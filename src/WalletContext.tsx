@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { createContainer } from 'unstated-next';
 import { Wallet, SmartWallet, EOA, ChainId } from '@node-fi/sdk-core';
-import type { WalletConfig } from '@node-fi/sdk-core/dist/src/wallet/Wallet';
+import type {
+  WalletConfig,
+  WalletOptions,
+} from '@node-fi/sdk-core/dist/src/wallet/Wallet';
 import { asyncClear, asyncWriteObject } from './utils/asyncStorage';
 import { DEFAULT_PREFIX, WALLET_KEY_SUFFIX } from './utils/storageKeys';
 import { createWallet } from './utils/accounts';
@@ -10,7 +13,7 @@ import { useOnClose } from './hooks';
 
 export interface UseWalletProps {
   noSmartWallet?: boolean;
-  walletConfig?: WalletConfig;
+  walletConfig?: WalletConfig & { opts?: WalletOptions };
   onMnemonicChanged: (mnemonic: string) => Promise<void>;
   onWalletDeletion: () => Promise<void>;
   apiKey: string;
@@ -49,8 +52,13 @@ function useWalletInner(initialState: UseWalletProps | undefined) {
     (async () => {
       if (walletConfig) {
         const newWallet = noSmartWallet
-          ? new EOA(apiKey, chainId, walletConfig?.eoa)
-          : new SmartWallet(apiKey, chainId, walletConfig?.smartWallet);
+          ? new EOA(apiKey, chainId, walletConfig?.eoa, walletConfig.opts)
+          : new SmartWallet(
+              apiKey,
+              chainId,
+              walletConfig?.smartWallet,
+              walletConfig.opts
+            );
         await newWallet._loadWallet(walletConfig);
         setWallet(newWallet);
         setInitialized(true);
@@ -60,13 +68,17 @@ function useWalletInner(initialState: UseWalletProps | undefined) {
 
   // Save to async storage when finished.
   useOnClose(async () => {
-    asyncWriteObject(
+    const opts = {
+      defaultGasToken: wallet.feeCurrency,
+    };
+    await asyncWriteObject(
       `${DEFAULT_PREFIX}${WALLET_KEY_SUFFIX}`,
       noSmartWallet
-        ? { eoa: address }
+        ? { eoa: address, opts }
         : {
             eoa: eoaAddress,
             smartWallet: address,
+            opts,
           }
     );
   });
@@ -105,11 +117,12 @@ export const useCreateWallet = () => {
   const apiKey = '';
   const chain = chainId;
   return React.useMemo(
-    () => async () => {
+    () => async (existingMnemonic?: string) => {
       const { wallet, mnemonic } = await createWallet(
         apiKey,
         chain ?? ChainId.Celo,
-        !noSmartWallet
+        !noSmartWallet,
+        existingMnemonic
       );
       setWallet(wallet);
       if (!onMnemonicChanged) {
@@ -133,6 +146,22 @@ export const useDeleteWallet = () => {
     await asyncClear(`${DEFAULT_PREFIX}${WALLET_KEY_SUFFIX}`);
     onWalletDeletion && (await onWalletDeletion());
   };
+};
+
+export const useSetGasToken = () => {
+  const { wallet, setWallet } = WalletContainer.useContainer();
+  const currentGasToken = wallet.feeCurrency;
+
+  const setGasToken = (newFeeCurrency: string) => {
+    try {
+      wallet.setFeeCurrency(newFeeCurrency);
+      setWallet(wallet);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  return [currentGasToken, setGasToken];
 };
 
 // export WalletContainer as  React.ReactComponentElement<any, {initalValues: UseWalletInnerType}>

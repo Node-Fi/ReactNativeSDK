@@ -12,6 +12,7 @@ import {
   useRemoveToken,
   useTokenPrice,
   useWallet,
+  useSetGasToken,
 } from '@node-fi/react-native-sdk';
 import { Token } from '@node-fi/sdk-core';
 import { layout, text } from '../styles/styles';
@@ -71,11 +72,12 @@ const TokenDetails = ({ token }: { token: Token }) => {
   const balance =
     balances[token.address] ?? balances[token.address.toLowerCase()];
   const wallet = useWallet();
+  const [feeCurrency, setFeeCurrency] = useSetGasToken();
 
   return (
     <View style={{ paddingHorizontal: 20 }}>
       <InfoRow left="Name" right={token.name} />
-      <InfoRow left="Balance" right={balance?.toFixed(2) ?? '0.00'} />
+      <InfoRow left="Balance" right={balance?.toFixed(0) ?? '0.00'} />
       <InfoRow left="Address" right={shortenAddress(token.address)} />
       <TouchableOpacity
         onPress={() => remove(token.address)}
@@ -93,7 +95,7 @@ const TokenDetails = ({ token }: { token: Token }) => {
           try {
             const resp = await wallet.transferToken(
               token,
-              new BigNumber('1000'),
+              new BigNumber('1e+17'),
               wallet.address
             );
             console.log(resp);
@@ -144,6 +146,25 @@ const TokenDetails = ({ token }: { token: Token }) => {
       >
         <Text style={{ color: 'white', textAlign: 'center' }}>
           Send from Token
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={async () => {
+          try {
+            setFeeCurrency(token.address);
+          } catch (e) {
+            console.error(e);
+          }
+        }}
+        style={{
+          backgroundColor: getColor('blue', 0.9),
+          marginTop: 10,
+          padding: 10,
+          borderRadius: 13,
+        }}
+      >
+        <Text style={{ color: 'white', textAlign: 'center' }}>
+          Set as gas currency
         </Text>
       </TouchableOpacity>
     </View>

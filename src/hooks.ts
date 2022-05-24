@@ -14,9 +14,16 @@ import {
   useWallet,
   useWalletAddress,
   useDeleteWallet,
+  useSetGasToken,
 } from './WalletContext';
 
-export { useCreateWallet, useWallet, useWalletAddress, useDeleteWallet };
+export {
+  useCreateWallet,
+  useWallet,
+  useWalletAddress,
+  useDeleteWallet,
+  useSetGasToken,
+};
 export {
   useSetDefaultCurrency,
   useTokenPrice,

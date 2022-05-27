@@ -246,6 +246,7 @@ export const useHistoricalTransfers = (
       ? res?.data?.concat(newTransfers).filter(filter ?? defaultTransferFilter)
       : res?.data?.filter(filter ?? defaultTransferFilter);
     return mid?.sort((t1, t2) => t2.blockNumber - t1.blockNumber);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [res.isLoading]);
   return React.useMemo(
     () =>

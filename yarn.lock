@@ -1896,10 +1896,10 @@
   resolved "https://registry.yarnpkg.com/@node-fi/default-token-list/-/default-token-list-4.1.81.tgz#2909ef1af60859d4e92bf0b2b0fea7f3c2d841de"
   integrity sha512-EGCXvyx9uXlx1vrDr2Jt4YBxHolIxHPwebfheltAZ1Y/A+30tnyJS/ZgP7ur2KP3MP2vs2h/5Jk7Kw4OiVXoZw==
 
-"@node-fi/sdk-core@0.0.18":
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.18.tgz#557a11beed200dacdf0454c7a4d71d056550820b"
-  integrity sha512-W1YsS7kwDj2QmpEBmVaZUnjrj2kCZ1Qjs9DUrIQtzR/lpQ/i2dCcmghjW0yA1JYdvHCo6MaZQC8CiFUr8jTmfg==
+"@node-fi/sdk-core@0.0.1-8.6-dev":
+  version "0.0.1-8.6-dev"
+  resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.1-8.6-dev.tgz#513a775149b34f7dcb3dc637603c08ce7acbb308"
+  integrity sha512-PSri+SlcvHMz/ndI57F9wntd8bTcNK5phJ0czcuAS0oiPkQHGIJ86XoIWmeI4b3bR6AklYhH2qfbnAvU08R68g==
   dependencies:
     "@babel/core" "^7.17.5"
     "@babel/preset-env" "^7.16.11"

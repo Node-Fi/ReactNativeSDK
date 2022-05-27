@@ -16,7 +16,6 @@ export function CreateWallet() {
   const createWallet = useCreateWallet();
   const deleteWallet = useDeleteWallet();
   const transactions = useHistoricalTransfers(4);
-  console.log(transactions?.map(({ blockNumber }) => blockNumber));
   return wallet?.address ? (
     <View style={[styles.center]}>
       <Text style={{ textAlign: 'center' }}>{`Wallet: ${wallet.address}`}</Text>
@@ -40,7 +39,7 @@ export function CreateWallet() {
     </View>
   ) : (
     <View style={{ height: 100, backgroundColor: 'red' }}>
-      <TouchableOpacity onPress={createWallet}>
+      <TouchableOpacity onPress={() => createWallet()}>
         <View
           style={{
             paddingVertical: 15,
@@ -106,6 +105,7 @@ export function CreateWallet() {
         >
           <Text style={{ color: 'white', fontSize: 20, lineHeight: 25 }}>
             Clear Async Storage
+            {JSON.stringify(transactions)}
           </Text>
         </View>
       </TouchableOpacity>

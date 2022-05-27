@@ -28,6 +28,7 @@ export interface UseWalletInnerType {
   onWalletDeletion?: () => Promise<void>;
   setWallet: (wallet: Wallet) => void;
   chainId?: ChainId;
+  apiKey?: string;
 }
 
 function useWalletInner(initialState: UseWalletProps | undefined) {
@@ -91,6 +92,7 @@ function useWalletInner(initialState: UseWalletProps | undefined) {
     setWallet,
     onWalletDeletion,
     chainId,
+    apiKey,
   };
 }
 

@@ -6,6 +6,7 @@ import { env } from 'process';
 import { TokenList } from './TokenList';
 import { SUPPORTED_TOKENS, TOKEN_OVERRIDES } from './constants/Tokens';
 import { ChainId, Token } from '@node-fi/sdk-core';
+import { KeychainButton } from './components/Keychain';
 
 export const styles = StyleSheet.create({
   center: { alignItems: 'center' },
@@ -44,6 +45,7 @@ export default function App(): JSX.Element {
       <SafeAreaView style={[styles.center, styles.white]}>
         <CreateWallet />
         <TokenList />
+        <KeychainButton />
       </SafeAreaView>
     </NodeKitProvider>
   );

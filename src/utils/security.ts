@@ -2,8 +2,20 @@ import * as Keychain from 'react-native-keychain';
 import ECEncryption from 'react-native-ec-encryption';
 import { KEYCHAIN_SETTINGS, SECURE_ENCLAVE_LABEL } from './storageKeys';
 import invariant from 'tiny-invariant';
+import * as LocalAuthentication from 'expo-local-authentication';
+import { Platform } from 'react-native';
 
-export const getMnemonic = async (service: string) => {
+export const getMnemonic = async (
+  service: string,
+  attempt = 0
+): Promise<string | undefined> => {
+  if (Platform.OS === 'android') {
+    const auth = await LocalAuthentication.authenticateAsync();
+    if (!auth.success) {
+      if (attempt > 3) throw new Error('Unauthorized access');
+      return getMnemonic(service, attempt + 1);
+    }
+  }
   const biometrySupported = await Keychain.getSupportedBiometryType();
 
   const existingCredentials = await Keychain.getGenericPassword(

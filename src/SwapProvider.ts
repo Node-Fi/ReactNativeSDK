@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  Address,
-  ChainId,
-  SmartRouter,
-  Token,
-  TokenAmount,
-} from '@node-fi/sdk-core';
+import { Address, SmartRouter, Token, TokenAmount } from '@node-fi/sdk-core';
 import { createContainer } from 'unstated-next';
 import { useTokens } from './TokensContext';
 import useDebounce, { useWallet } from './hooks';
@@ -41,6 +35,15 @@ export function useSlippage() {
   return [slippage, setSlippage];
 }
 
+/**
+ *
+ * @param inputAddress address of token being swapped
+ * @param outputAddress address of token being swapped to
+ * @param typedAmount input amount in human-readable format (not accounting for decimals)
+ * @param recipient recipient for swap - defaults to current wallet
+ * @param debounceDelayMs delay to refresh quote as typedAmount chages.  Increase for greater response at the cost of performance
+ * @returns
+ */
 export function useSwapTypedAmount(
   inputAddress: Address,
   outputAddress: Address,

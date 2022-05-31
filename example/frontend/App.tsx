@@ -24,29 +24,33 @@ export default function App(): JSX.Element {
     </View>
   );
 
+  console.log('Hello');
   return (
-    <NodeKitProvider
-      loadingComponent={loadingComponent}
-      eoaOnly
-      apiKey={env.NODE_API_KEY}
-      tokenWhitelist={new Set(SUPPORTED_TOKENS)}
-      tokenDetailsOverride={TOKEN_OVERRIDES}
-      customTokens={[
-        new Token(
-          44787,
-          '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1',
-          18,
-          'cUSD',
-          'Cello Dollar'
-        ),
-      ]}
-      chainId={ChainId.Alfajores}
-    >
-      <SafeAreaView style={[styles.center, styles.white]}>
-        <CreateWallet />
-        <TokenList />
-        <KeychainButton />
-      </SafeAreaView>
-    </NodeKitProvider>
+    <>
+      <View style={{ height: 100, width: 100, backgroundColor: 'red' }} />
+      <NodeKitProvider
+        loadingComponent={loadingComponent}
+        eoaOnly
+        apiKey={env.NODE_API_KEY}
+        tokenWhitelist={new Set(SUPPORTED_TOKENS)}
+        tokenDetailsOverride={TOKEN_OVERRIDES}
+        customTokens={[
+          new Token(
+            44787,
+            '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1',
+            18,
+            'cUSD',
+            'Cello Dollar'
+          ),
+        ]}
+        chainId={ChainId.Alfajores}
+      >
+        <SafeAreaView style={[styles.center, styles.white]}>
+          <CreateWallet />
+          <TokenList />
+          <KeychainButton />
+        </SafeAreaView>
+      </NodeKitProvider>
+    </>
   );
 }

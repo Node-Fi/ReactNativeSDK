@@ -11,6 +11,8 @@
     "src",
     "lib",
     "android",
+    "setup.js",
+    "nodeWalletBabel.js",
     "ios",
     "cpp",
     "node-fi-node-sdk-react-native.podspec",

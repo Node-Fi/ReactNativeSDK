@@ -10,12 +10,14 @@ import {
 } from '@node-fi/react-native-sdk';
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './App';
+import { DEVICE_WIDTH } from './styles/styles';
 
 export function CreateWallet() {
   const wallet = useWallet();
   const createWallet = useCreateWallet();
   const deleteWallet = useDeleteWallet();
-  const transactions = useHistoricalTransfers(4);
+  const transactions = useHistoricalTransfers(4, undefined, true);
+  console.log(wallet.address);
   return wallet?.address ? (
     <View style={[styles.center]}>
       <Text style={{ textAlign: 'center' }}>{`Wallet: ${wallet.address}`}</Text>
@@ -36,6 +38,11 @@ export function CreateWallet() {
           Reset Wallet
         </Text>
       </TouchableOpacity>
+      {transactions?.map((el) => (
+        <View style={{ width: DEVICE_WIDTH }}>
+          <Text>{`Time: ${el.blockNumber}`}</Text>
+        </View>
+      )) ?? null}
     </View>
   ) : (
     <View style={{ height: 100, backgroundColor: 'red' }}>

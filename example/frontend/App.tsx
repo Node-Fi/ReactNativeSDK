@@ -7,6 +7,7 @@ import { TokenList } from './TokenList';
 import { SUPPORTED_TOKENS, TOKEN_OVERRIDES } from './constants/Tokens';
 import { ChainId, Token } from '@node-fi/sdk-core';
 import { KeychainButton } from './components/Keychain';
+import { SyncPortfolioButton } from './components/SyncPortfolio';
 
 export const styles = StyleSheet.create({
   center: { alignItems: 'center' },
@@ -27,7 +28,6 @@ export default function App(): JSX.Element {
   console.log('Hello');
   return (
     <>
-      <View style={{ height: 100, width: 100, backgroundColor: 'red' }} />
       <NodeKitProvider
         loadingComponent={loadingComponent}
         eoaOnly
@@ -42,6 +42,13 @@ export default function App(): JSX.Element {
             'cUSD',
             'Cello Dollar'
           ),
+          new Token(
+            44787,
+            '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9',
+            18,
+            'CELO',
+            'Cello'
+          ),
         ]}
         chainId={ChainId.Alfajores}
       >
@@ -49,6 +56,7 @@ export default function App(): JSX.Element {
           <CreateWallet />
           <TokenList />
           <KeychainButton />
+          <SyncPortfolioButton />
         </SafeAreaView>
       </NodeKitProvider>
     </>

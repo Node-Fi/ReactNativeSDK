@@ -104,7 +104,7 @@ const TokenDetails = ({ token }: { token: Token }) => {
             try {
               const resp = await wallet.transferToken(
                 token.address,
-                new BigNumber('1000'),
+                new BigNumber('10').pow(17).times(2),
                 wallet.address
               );
               console.log(resp);

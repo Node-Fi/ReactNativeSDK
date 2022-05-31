@@ -39,6 +39,8 @@ export {
   usePricedBalances,
 } from './TokensContext';
 
+export * from './SwapProvider';
+
 export const useOnClose = (callback: () => Promise<void>) => {
   useEffect(() => {
     const onClose = (appstate: AppStateStatus) => {

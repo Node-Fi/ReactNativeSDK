@@ -14,6 +14,7 @@ import { TokenContainer } from './TokensContext';
 import DEFAULT_TOKENS from '@node-fi/default-token-list';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { reduceArrayToMap } from './utils';
+import { SwapContainer } from './SwapProvider';
 
 export type TokenConfig = {
   address: Address;
@@ -134,7 +135,7 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
           }}
         >
           <PriceContainer.Provider initialState={{ apiKey }}>
-            {children}
+            <SwapContainer.Provider>{children}</SwapContainer.Provider>
           </PriceContainer.Provider>
         </TokenContainer.Provider>
       </WalletContainer.Provider>

@@ -15,7 +15,6 @@ import { useWalletAddress, WalletContainer } from './WalletContext';
 import { useTokenPrices } from './PriceContext';
 import { useQuery } from 'react-query';
 import Web3 from 'web3';
-import type { Log } from 'web3-core';
 import { BigNumber } from 'bignumber.js';
 
 export interface UseTokensInnerProps {
@@ -84,7 +83,7 @@ function useTokensInner(props?: UseTokensInnerProps) {
       walletAddress,
       chainId,
       tokenAddresses,
-      (token, balance) => {
+      (token, balance, e) => {
         setBalances((b) => ({
           ...b,
           [token.toLowerCase()]: new TokenAmount(
@@ -92,13 +91,11 @@ function useTokensInner(props?: UseTokensInnerProps) {
             balance
           ),
         }));
-        (e: Log) => {
-          const transfer = convertLogToTransferObject(e, new Web3(), false);
-          setNewTransfers((t) => [
-            ...t,
-            { ...transfer, outgoing: transfer.from === walletAddress },
-          ]);
-        };
+        const transfer = convertLogToTransferObject(e, new Web3(), false);
+        setNewTransfers((t) => [
+          ...t,
+          { ...transfer, outgoing: transfer.from === walletAddress },
+        ]);
       }
     );
 
@@ -240,7 +237,7 @@ export const useHistoricalTransfers = (
       return [];
     }
   };
-  const res = useQuery([], fetch);
+  const res = useQuery([wallet?.address], fetch);
   const transfers = React.useMemo(() => {
     const mid = subscribe
       ? res?.data?.concat(newTransfers).filter(filter ?? defaultTransferFilter)

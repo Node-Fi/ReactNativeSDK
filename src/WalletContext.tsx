@@ -10,6 +10,7 @@ import { DEFAULT_PREFIX, WALLET_KEY_SUFFIX } from './utils/storageKeys';
 import { createWallet } from './utils/accounts';
 import { Alert } from 'react-native';
 import { useOnClose } from './hooks';
+import invariant from 'tiny-invariant';
 
 export interface UseWalletProps {
   noSmartWallet?: boolean;
@@ -114,9 +115,9 @@ export const useWalletAddress = () => {
 };
 
 export const useCreateWallet = () => {
-  const { noSmartWallet, onMnemonicChanged, setWallet, chainId } =
+  const { noSmartWallet, onMnemonicChanged, setWallet, chainId, apiKey } =
     WalletContainer.useContainer();
-  const apiKey = '';
+  invariant(!!apiKey, 'Api Key Required');
   const chain = chainId;
   return React.useMemo(
     () => async (existingMnemonic?: string) => {
@@ -136,7 +137,7 @@ export const useCreateWallet = () => {
         await onMnemonicChanged(mnemonic);
       }
     },
-    [chain, noSmartWallet, setWallet, onMnemonicChanged]
+    [chain, noSmartWallet, setWallet, onMnemonicChanged, apiKey]
   );
 };
 

@@ -2572,10 +2572,10 @@
   integrity sha512-EGCXvyx9uXlx1vrDr2Jt4YBxHolIxHPwebfheltAZ1Y/A+30tnyJS/ZgP7ur2KP3MP2vs2h/5Jk7Kw4OiVXoZw==
 
 "@node-fi/react-native-sdk@file:..":
-  version "0.1.3-5.5-dev"
+  version "0.1.45-experimental"
   dependencies:
     "@node-fi/default-token-list" "^4.1.81"
-    "@node-fi/sdk-core" "0.0.1-8.7-dev"
+    "@node-fi/sdk-core" "0.0.19-experimental"
     "@react-native-async-storage/async-storage" "^1.17.3"
     axios "^0.27.2"
     bignumber.js "^9.0.2"
@@ -2588,10 +2588,10 @@
     tiny-invariant "^1.2.0"
     unstated-next "^1.1.0"
 
-"@node-fi/sdk-core@0.0.1-8.7-dev":
-  version "0.0.1-8.7-dev"
-  resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.1-8.7-dev.tgz#2631dc3695dc2a0422b241d6f3d17e0733400ecc"
-  integrity sha512-8oC309EtYm6E9H2kdiIvGikoE4GfKIGHEAUDjWyfybC1BrVfNKOdS8ascDkQozWJxRh2t4htzK6xZfecFFhVQg==
+"@node-fi/sdk-core@0.0.19-experimental":
+  version "0.0.19-experimental"
+  resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.19-experimental.tgz#ed1a2a3d399c2823fe4d3613228a9a9dbf7c9dc4"
+  integrity sha512-LzJ79UtlF+vfQNoUk9uJMAk+CbIn7TaB7O6Q40vpYovT5aGYLlfEgi34cVg30w2DHe7Ae16gLoGjzX6NrYY9Lw==
   dependencies:
     "@babel/core" "^7.17.5"
     "@babel/preset-env" "^7.16.11"
@@ -3234,9 +3234,9 @@
     form-data "^3.0.0"
 
 "@types/node@*", "@types/node@>=12":
-  version "17.0.36"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.36.tgz#c0d5f2fe76b47b63e0e0efc3d2049a9970d68794"
-  integrity sha512-V3orv+ggDsWVHP99K3JlwtH20R7J4IhI1Kksgc+64q5VxgfRkQG8Ws3MFm/FZOKDYGy9feGFlZ70/HpCNe9QaA==
+  version "17.0.38"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.38.tgz#f8bb07c371ccb1903f3752872c89f44006132947"
+  integrity sha512-5jY9RhV7c0Z4Jy09G+NIDTsCZ5G0L5n+Z+p+Y7t5VJHM30bgwzSjVtlcBxqAj+6L/swIlvtOSzr8rBk/aNyV2g==
 
 "@types/node@10.12.18":
   version "10.12.18"
@@ -3259,9 +3259,9 @@
   integrity sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==
 
 "@types/node@^12.11.7", "@types/node@^12.12.6":
-  version "12.20.52"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.52.tgz#2fd2dc6bfa185601b15457398d4ba1ef27f81251"
-  integrity sha512-cfkwWw72849SNYp3Zx0IcIs25vABmFh73xicxhCkTcvtZQeIez15PpwQN8fY3RD7gv1Wrxlc9MEtfMORZDEsGw==
+  version "12.20.54"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.54.tgz#38a3dff8c2a939553f2cdb85dcddc68be46c3c68"
+  integrity sha512-CFMnEPkSXWALI73t1oIWyb8QOmVrp6RruAqIx349sd+1ImaFwzlKcz55mwrx/yLyOyz1gkq/UKuNOigt27PXqg==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -12370,7 +12370,7 @@ moo@^0.5.0:
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
-  integrity sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=
+  integrity sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==
 
 ms@2.1.1:
   version "2.1.1"
@@ -12430,7 +12430,7 @@ multihashes@^0.4.15, multihashes@~0.4.15:
 mute-stream@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
-  integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
+  integrity sha512-r65nCZhrbXXb6dXOACihYApHw2Q6pV0M3V0PSxd74N0+D8nzAdEAITq2oAjA1jVnKI+tGvEBUpqiMh0+rW6zDQ==
 
 mz@^2.7.0:
   version "2.7.0"
@@ -12449,12 +12449,12 @@ nan@^2.13.2:
 nano-json-stream-parser@^0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/nano-json-stream-parser/-/nano-json-stream-parser-0.1.2.tgz#0cc8f6d0e2b622b479c40d499c46d64b755c6f5f"
-  integrity sha1-DMj20OK2IrR5xA1JnEbWS3Vcb18=
+  integrity sha512-9MqxMH/BSJC7dnLsEMPyfN5Dvoo49IsPFYMcHw3Bcfc2kN0lpHRBSzlMSVx4HGyJ7s9B31CyBTVehWJoQ8Ctew==
 
 nano-time@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/nano-time/-/nano-time-1.0.0.tgz#b0554f69ad89e22d0907f7a12b0993a5d96137ef"
-  integrity sha1-sFVPaa2J4i0JB/ehKwmTpdlhN+8=
+  integrity sha512-flnngywOoQ0lLQOTRNexn2gGSNuM9bKj9RZAWSzhQ+UJYaAFG9bac4DW9VHjUAzrOaIcajHybCTHe/bkvozQqA==
   dependencies:
     big-integer "^1.6.16"
 
@@ -12483,7 +12483,7 @@ napi-build-utils@^1.0.1:
 natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
-  integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
+  integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
 
 nearley@^2.7.10:
   version "2.20.1"
@@ -12535,7 +12535,7 @@ node-addon-api@^2.0.0:
 node-dir@^0.1.17:
   version "0.1.17"
   resolved "https://registry.yarnpkg.com/node-dir/-/node-dir-0.1.17.tgz#5f5665d93351335caabef8f1c554516cf5f1e4e5"
-  integrity sha1-X1Zl2TNRM1yqvvjxxVRRbPXx5OU=
+  integrity sha512-tmPX422rYgofd4epzrNoOXiE8XFZYOcCq1vD7MAXCDO+O+zndlA2ztdKKMa+EeuBG5tHETpr4ml4RGgpqDCCAg==
   dependencies:
     minimatch "^3.0.2"
 
@@ -12578,7 +12578,7 @@ node-gyp-build@^4.2.0, node-gyp-build@^4.3.0:
 node-int64@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/node-int64/-/node-int64-0.4.0.tgz#87a9065cdb355d3182d8f94ce11188b825c68a3b"
-  integrity sha1-h6kGXNs1XTGC2PlM4RGIuCXGijs=
+  integrity sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==
 
 node-libs-browser@2.2.1:
   version "2.2.1"

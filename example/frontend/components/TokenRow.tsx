@@ -98,7 +98,7 @@ const TokenDetails = ({ token }: { token: Token }) => {
               new BigNumber('1e+17'),
               wallet.address
             );
-            console.log(resp);
+            // console.log(resp);
           } catch (e) {
             console.error(e);
             try {

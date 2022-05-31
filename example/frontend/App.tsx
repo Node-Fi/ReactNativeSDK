@@ -2,7 +2,7 @@ import React from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { NodeKitProvider } from '@node-fi/react-native-sdk';
 import { CreateWallet } from './CreateWallet';
-import { env } from 'process';
+import env from 'process';
 import { TokenList } from './TokenList';
 import { SUPPORTED_TOKENS, TOKEN_OVERRIDES } from './constants/Tokens';
 import { ChainId, Token } from '@node-fi/sdk-core';
@@ -25,13 +25,12 @@ export default function App(): JSX.Element {
     </View>
   );
 
-  console.log('Hello');
   return (
     <>
       <NodeKitProvider
         loadingComponent={loadingComponent}
         eoaOnly
-        apiKey={env.NODE_API_KEY}
+        apiKey={'c72d0ce2d50a447d874da93b7e44abb1'}
         tokenWhitelist={new Set(SUPPORTED_TOKENS)}
         tokenDetailsOverride={TOKEN_OVERRIDES}
         customTokens={[

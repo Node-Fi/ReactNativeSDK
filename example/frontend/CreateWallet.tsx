@@ -17,6 +17,7 @@ export function CreateWallet() {
   const createWallet = useCreateWallet();
   const deleteWallet = useDeleteWallet();
   const transactions = useHistoricalTransfers(4, undefined, true);
+
   console.log(wallet.address);
   return wallet?.address ? (
     <View style={[styles.center]}>

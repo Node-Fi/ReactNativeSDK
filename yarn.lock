@@ -1896,8 +1896,10 @@
   resolved "https://registry.yarnpkg.com/@node-fi/default-token-list/-/default-token-list-4.1.81.tgz#2909ef1af60859d4e92bf0b2b0fea7f3c2d841de"
   integrity sha512-EGCXvyx9uXlx1vrDr2Jt4YBxHolIxHPwebfheltAZ1Y/A+30tnyJS/ZgP7ur2KP3MP2vs2h/5Jk7Kw4OiVXoZw==
 
-"@node-fi/sdk-core@file:../SDK_Core":
-  version "0.0.1-8.6-dev"
+"@node-fi/sdk-core@0.0.1-8.7-dev":
+  version "0.0.1-8.7-dev"
+  resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.1-8.7-dev.tgz#2631dc3695dc2a0422b241d6f3d17e0733400ecc"
+  integrity sha512-8oC309EtYm6E9H2kdiIvGikoE4GfKIGHEAUDjWyfybC1BrVfNKOdS8ascDkQozWJxRh2t4htzK6xZfecFFhVQg==
   dependencies:
     "@babel/core" "^7.17.5"
     "@babel/preset-env" "^7.16.11"
@@ -9260,10 +9262,8 @@ react-native-get-random-values@^1.8.0:
   dependencies:
     fast-base64-decode "^1.0.0"
 
-react-native-keychain@^8.0.0:
+"react-native-keychain@file:../react-native-keychain":
   version "8.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-8.0.0.tgz#ff708e4dc2a5440df717179bf9b7cd50f78b61d7"
-  integrity sha512-c7Cs+YQN26UaQsRG1dmlXL7VL2ctnXwH/dl0IOMEQ7ZaL2NdN313YSAI8ZEZZjrVhNmPsyWEuvTFqWrdpItqQg==
 
 react-native-securerandom@^1.0.0:
   version "1.0.0"

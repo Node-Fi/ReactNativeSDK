@@ -1,6 +1,6 @@
 {
   "name": "@node-fi/react-native-sdk",
-  "version": "0.1.35.3-dev",
+  "version": "0.1.35.5-dev",
   "description": "A React Native wrapper for the Node Core SDK",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -62,7 +62,6 @@
     "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
     "react-native-builder-bob": "^0.18.2",
-    "react-native-keychain": "^8.0.0",
     "release-it": "^14.2.2",
     "typescript": "^4.1.3"
   },
@@ -151,13 +150,14 @@
   },
   "dependencies": {
     "@node-fi/default-token-list": "^4.1.81",
-    "@node-fi/sdk-core": "file:../SDK_Core",
+    "@node-fi/sdk-core": "0.0.1-8.7-dev",
     "@react-native-async-storage/async-storage": "^1.17.3",
     "axios": "^0.27.2",
     "bignumber.js": "^9.0.2",
     "react-native-crypto": "^2.2.0",
     "react-native-ec-encryption": "^1.1.0",
     "react-native-get-random-values": "^1.8.0",
+    "react-native-keychain": "file:../react-native-keychain",
     "react-native-securerandom": "^1.0.0",
     "react-query": "^3.39.0",
     "tiny-invariant": "^1.2.0",

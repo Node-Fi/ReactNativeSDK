@@ -291,6 +291,8 @@ PODS:
     - React-perflogger (= 0.64.3)
   - RNCAsyncStorage (1.13.4):
     - React-Core
+  - RNDeviceInfo (8.7.1):
+    - React-Core
   - RNKeychain (8.0.0):
     - React-Core
   - RNSecureRandom (1.0.0):
@@ -340,6 +342,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNSecureRandom (from `../node_modules/react-native-securerandom`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -426,6 +429,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
   RNSecureRandom:
@@ -475,6 +480,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 493d9abb8b23c3f84e19ae221eeba92cadcb70dc
   ReactCommon: 8fea6422328e2fc093e25c9fac67adbcf0f04fb4
   RNCAsyncStorage: 44539979e1f234262d64d3ce86ec21cceb1b2c5e
+  RNDeviceInfo: aad3c663b25752a52bf8fce93f2354001dd185aa
   RNKeychain: 4f63aada75ebafd26f4bc2c670199461eab85d94
   RNSecureRandom: 0dcee021fdb3d50cd5cee5db0ebf583c42f5af0e
   RNSVG: a53a5de0d90ec96a6502cc3a4534dfcc0c130622

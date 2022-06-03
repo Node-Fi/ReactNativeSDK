@@ -134,7 +134,7 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
               .filter((el) => el.chainId === chainId),
           }}
         >
-          <PriceContainer.Provider initialState={{ apiKey }}>
+          <PriceContainer.Provider initialState={{ apiKey, chainId }}>
             <SwapContainer.Provider>{children}</SwapContainer.Provider>
           </PriceContainer.Provider>
         </TokenContainer.Provider>

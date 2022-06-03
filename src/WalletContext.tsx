@@ -104,6 +104,17 @@ export const WalletContainer = createContainer<
 
 export const useWalletBase = WalletContainer.useContainer;
 
+export const useApiKey = () => {
+  const { apiKey } = WalletContainer.useContainer();
+
+  return React.useMemo(() => apiKey, [apiKey]);
+};
+
+export const useChainId = () => {
+  const { chainId } = WalletContainer.useContainer();
+  return chainId;
+};
+
 export const useWallet = () => {
   const { wallet } = WalletContainer.useContainer();
   return wallet;

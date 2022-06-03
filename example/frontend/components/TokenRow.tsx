@@ -13,6 +13,7 @@ import {
   useTokenPrice,
   useWallet,
   useSetGasToken,
+  usePricedBalances,
 } from '@node-fi/react-native-sdk';
 import { Token } from '@node-fi/sdk-core';
 import { layout, text } from '../styles/styles';
@@ -68,7 +69,7 @@ export const InfoBlock = ({
 
 const TokenDetails = ({ token }: { token: Token }) => {
   const remove = useRemoveToken();
-  const balances = useBalances();
+  const balances = usePricedBalances();
   const balance =
     balances[token.address] ?? balances[token.address.toLowerCase()];
   const wallet = useWallet();
@@ -77,7 +78,7 @@ const TokenDetails = ({ token }: { token: Token }) => {
   return (
     <View style={{ paddingHorizontal: 20 }}>
       <InfoRow left="Name" right={token.name} />
-      <InfoRow left="Balance" right={balance?.toFixed(0) ?? '0.00'} />
+      <InfoRow left="Balance" right={`$${balance?.toFixed(2)}` ?? '0.00'} />
       <InfoRow left="Address" right={shortenAddress(token.address)} />
       <TouchableOpacity
         onPress={() => remove(token.address)}

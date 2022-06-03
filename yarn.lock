@@ -1896,10 +1896,10 @@
   resolved "https://registry.yarnpkg.com/@node-fi/default-token-list/-/default-token-list-4.1.81.tgz#2909ef1af60859d4e92bf0b2b0fea7f3c2d841de"
   integrity sha512-EGCXvyx9uXlx1vrDr2Jt4YBxHolIxHPwebfheltAZ1Y/A+30tnyJS/ZgP7ur2KP3MP2vs2h/5Jk7Kw4OiVXoZw==
 
-"@node-fi/sdk-core@0.0.19-experimental":
-  version "0.0.19-experimental"
-  resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.19-experimental.tgz#ed1a2a3d399c2823fe4d3613228a9a9dbf7c9dc4"
-  integrity sha512-LzJ79UtlF+vfQNoUk9uJMAk+CbIn7TaB7O6Q40vpYovT5aGYLlfEgi34cVg30w2DHe7Ae16gLoGjzX6NrYY9Lw==
+"@node-fi/sdk-core@0.0.20-experimental":
+  version "0.0.20-experimental"
+  resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.20-experimental.tgz#1e626575781525f60201a1ce9377b54ace509950"
+  integrity sha512-mk8IfLmpl9/LXRtka+2ZiLMS+BrU/CAedcXtz+DSptfLFQKMVxQy0G1+2svZAeFOi/9HnFzJ+Dai/d17Z4dzow==
   dependencies:
     "@babel/core" "^7.17.5"
     "@babel/preset-env" "^7.16.11"
@@ -9254,11 +9254,6 @@ react-native-device-info@^8.7.1:
   version "8.7.1"
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-8.7.1.tgz#fbb06f87dbbc4423abe713874699fb2e6e99fd15"
   integrity sha512-cVMZztFa2Qn6qpQa601W61CtUwZQ1KXfqCOeltejAWEXmgIWivC692WGSdtGudj4upSi1UgMSaGcvKjfcpdGjg==
-
-react-native-ec-encryption@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-ec-encryption/-/react-native-ec-encryption-1.1.0.tgz#bbbf09ba6cce04813215e7aecee3b36952273a6f"
-  integrity sha512-tqbsoaxfQXXRnyIz1BhHXc23tO5Sx2r+DZW/HktMnrTD/UTbGe0MsLHgC+HHZ5RuFpEgK+NYCa7RJ1i0d06lXA==
 
 react-native-get-random-values@^1.8.0:
   version "1.8.0"

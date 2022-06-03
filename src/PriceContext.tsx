@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Address, fetchPrices } from '@node-fi/sdk-core';
+import { Address, ChainId, fetchPrices } from '@node-fi/sdk-core';
 import { createContainer } from 'unstated-next';
 
 interface PriceMap {
@@ -17,19 +17,18 @@ interface UsePriceInnerType {
   setDefaultCurrency: (ct: CurrencyType) => void;
 }
 
-function usePricesInner(
-  initialState = {
-    apiKey: '',
-  }
-): UsePriceInnerType {
-  const { apiKey } = initialState;
+function usePricesInner(initialState?: {
+  apiKey: string;
+  chainId: ChainId;
+}): UsePriceInnerType {
+  const { apiKey = '', chainId } = initialState ?? {};
   const [prices, setPrices] = React.useState<PriceMap>();
   const [defaultCurrency, setDefaultCurrency] =
     React.useState<CurrencyType>('usd');
 
   React.useEffect(() => {
     const fetchAndSetPrices = async () => {
-      const fetchedPrices = await fetchPrices(apiKey);
+      const fetchedPrices = await fetchPrices(apiKey, chainId);
       setPrices(fetchedPrices);
     };
     fetchAndSetPrices();
@@ -37,13 +36,13 @@ function usePricesInner(
     return () => {
       clearInterval(intervalId);
     };
-  }, [setPrices, apiKey]);
+  }, [setPrices, apiKey, chainId]);
   return { prices, defaultCurrency, setDefaultCurrency };
 }
 
 export const PriceContainer = createContainer<
   UsePriceInnerType,
-  { apiKey: string }
+  { apiKey: string; chainId: ChainId }
 >(usePricesInner);
 
 export const useTokenPrices = () => {

@@ -1,6 +1,5 @@
 import * as Keychain from 'react-native-keychain';
-import ECEncryption from 'react-native-ec-encryption';
-import { KEYCHAIN_SETTINGS, SECURE_ENCLAVE_LABEL } from './storageKeys';
+import { KEYCHAIN_SETTINGS } from './storageKeys';
 import invariant from 'tiny-invariant';
 // import * as LocalAuthentication from 'expo-local-authentication';
 // import { Platform } from 'react-native';
@@ -22,11 +21,11 @@ export const getMnemonic = async (
   //     return getMnemonic(service, attempt + 1);
   //   }
   // }
-  const mnemonicCipher = existingCredentials.password;
-  const mnemonic: string = await ECEncryption.decrypt({
-    data: mnemonicCipher,
-    label: SECURE_ENCLAVE_LABEL,
-  });
+  const { mnemonic } = JSON.parse(existingCredentials.password);
+  // const mnemonic: string = await ECEncryption.decrypt({
+  //   data: mnemonicCipher,
+  //   label: SECURE_ENCLAVE_LABEL,
+  // });
   return mnemonic;
 };
 
@@ -44,13 +43,13 @@ export const saveMnemonic = async (service: string, mnemonic: string) => {
     !existingCredentials,
     'Mnemonic already exists here, delete mnemonic before overriding'
   );
-  const mnemonicCipher: string = await ECEncryption.encrypt({
-    data: mnemonic,
-    label: SECURE_ENCLAVE_LABEL,
-  });
+  // const mnemonicCipher: string = await ECEncryption.encrypt({
+  //   data: mnemonic,
+  //   label: SECURE_ENCLAVE_LABEL,
+  // });
   await Keychain.setGenericPassword(
     service,
-    mnemonicCipher,
+    JSON.stringify({ mnemonic, _v: 0 }), //mnemonicCipher,
     KEYCHAIN_SETTINGS(service, biometrySupported)
   );
 };

@@ -221,8 +221,6 @@ PODS:
     - React-jsi (= 0.64.3)
     - React-perflogger (= 0.64.3)
   - React-jsinspector (0.64.3)
-  - react-native-ec-encryption (1.1.0):
-    - React
   - react-native-get-random-values (1.5.0):
     - React
   - React-perflogger (0.64.3)
@@ -327,7 +325,6 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
-  - react-native-ec-encryption (from `../node_modules/react-native-ec-encryption`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -399,8 +396,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
-  react-native-ec-encryption:
-    :path: "../node_modules/react-native-ec-encryption"
   react-native-get-random-values:
     :path: "../node_modules/react-native-get-random-values"
   React-perflogger:
@@ -465,7 +460,6 @@ SPEC CHECKSUMS:
   React-jsi: a8b09c29521c798f1783348b37b511ba7b3dbeb3
   React-jsiexecutor: df6abc9fafbecb8e5b7a5fbc5e6d4bd017d594d5
   React-jsinspector: 34e23860273a23695342f58eed3ffd3ba10c31e0
-  react-native-ec-encryption: 0c4ea5e143331d18e192e644b400529c033075b4
   react-native-get-random-values: 1404bd5cc0ab0e287f75ee1c489555688fc65f89
   React-perflogger: cc76a4254d19640f1d8ad1c66fdee800414b805c
   React-RCTActionSheet: 7448f049318d8d7e8a9a1ebb742ada721757eea8

@@ -15,6 +15,8 @@ import {
   useWalletAddress,
   useDeleteWallet,
   useSetGasToken,
+  useApiKey,
+  useChainId,
 } from './WalletContext';
 
 export {
@@ -23,6 +25,8 @@ export {
   useWalletAddress,
   useDeleteWallet,
   useSetGasToken,
+  useApiKey,
+  useChainId,
 };
 export {
   useSetDefaultCurrency,
@@ -62,11 +66,10 @@ export function useHistoricalTokenPrices(address: string, range: DateRange) {
   const fetch = async () => {
     try {
       const query = formatHistoricalPricesQuery(address, interval, period);
-      console.log({ query });
       return axios
         .get<{
           message: { time: number; priceusd: number }[];
-        }>(formatHistoricalPricesQuery(address, interval, period))
+        }>(query)
         .then((resp) => {
           return resp.data.message;
         });

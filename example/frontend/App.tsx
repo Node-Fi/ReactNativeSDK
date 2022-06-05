@@ -30,7 +30,7 @@ export default function App(): JSX.Element {
       <NodeKitProvider
         loadingComponent={loadingComponent}
         eoaOnly
-        apiKey={'c72d0ce2d50a447d874da93b7e44abb1'}
+        apiKey={'c72d0ce2d50a447d874da93b7e44abb1'} // sandbox api key - will only work on alfajores
         tokenWhitelist={new Set(SUPPORTED_TOKENS)}
         tokenDetailsOverride={TOKEN_OVERRIDES}
         customTokens={[

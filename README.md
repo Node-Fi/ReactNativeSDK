@@ -212,3 +212,36 @@ function Component() {
   );
 }
 ```
+
+#### usePortfolioHistory
+
+This hook will return an array of objects relating to a wallet's balance at a specific point in time. The range for which to fetch balances is a required parameter, and corresponds to the number of days to retrieve data for. Values are mapped to an enum `DateRange`.
+
+While data is loading, the returned value will be `undefined`
+
+`usePortfolioHistory(range: DateRange)`
+
+```tsx
+import { usePortfolioHistory } from '@node-fi/react-native-sdk';
+import { DateRange } from '@node-fi/sdk-core';
+
+// Possible Values for DateRange
+DateRange['1H']; // 1 Hour
+DateRange['1D']; // 1 Day
+DateRange['1W']; // 7 Day
+DateRange['1M']; // 30 Day
+DateRange['1Y']; // 365 Day
+DateRange['ALL']; // Entire History
+
+function GraphComponent() {
+  const [range, setRange] = useState<DateRange>(DateRange['1W']);
+  const portfolioHistory = usePortfolioHistory(range);
+
+  if (!portfolioHistory) {
+    // If portfolioHistory === undefined, content is loading
+    return <LoadingComponent />;
+  }
+
+  return <Chart data={portolioHistory} x="time" y="total" />;
+}
+```

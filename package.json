@@ -69,7 +69,9 @@
     "@node-fi/sdk-core": "*",
     "react": ">=16.8.1 <=17.0.x",
     "react-native": ">=0.60.0-rc.0 <1.0.x",
-    "react-native-keychain": "*"
+    "react-native-keychain": "*",
+    "react-native-device-info": "*",
+    "react-native-securerandom": "*"
   },
   "jest": {
     "preset": "react-native",

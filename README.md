@@ -245,3 +245,49 @@ function GraphComponent() {
   return <Chart data={portolioHistory} x="time" y="total" />;
 }
 ```
+
+## Token Context Hooks
+
+The Token context covers token balances, details, and prices.
+
+#### useBalances
+
+This hook returns a mapping from addresses to the wallet's current balance, as a `TokenAmount` object. Addresses are all lowercase within the mapping, so to access the balance of a given token you will need to use a lowercase address.
+
+If a supported token is not contained in the mapping, then the wallet's balance is 0 for that token.
+
+```ts
+import { useBalances } from '@node-fi/react-native-sk';
+
+type TokenBalances = {
+  [lowerCaseAddress: string]: TokenAmount;
+};
+
+function Component() {
+  const balances = useBalances();
+
+  const cusdBalance = balances[addressOf('CUSD')];
+
+  // ...rest
+}
+```
+
+#### useBalance
+
+This hook returns the balance for a single token, as a TokenAmount object. TokenAmount object contain both the underlying token, the raw amount (not accounting for decimals), and the amoun accounting for decimals.
+
+This hook accepts either a token object, or the address of a token.
+
+```ts
+import { useBalance } from '@node-fi/react-native-sdk';
+
+function Component() {
+  const CUSD = '0xAddress';
+  const CELO = new Token(ChainId.Celo, CELO_ADDRESS, 18);
+
+  const cusdBalance = useBalance(CUSD);
+  const celoBalance = useBalance(CELO);
+
+  // ...rest
+}
+```

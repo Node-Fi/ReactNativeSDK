@@ -24,6 +24,59 @@ Example:
 ...
 ```
 
+### Required Steps
+
+#### Babel.config.js
+
+Within `babel.config.js`, add:
+
+```js
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: [
+      'babel-preset-expo',
+      ['@babel/preset-env', { targets: { node: 'current' } }],
+      '@babel/preset-typescript',
+      // other presets here
+    ],
+    plugins: [
+      ['@babel/plugin-proposal-private-property-in-object', { loose: true }],
+      ['module:react-native-dotenv'],
+      // other settings here
+    ],
+    // anything else
+  };
+};
+```
+
+Alternatively, you can import the above and call one function, so your `babel.config.js` will look like:
+
+```js
+const nodeConfig = require('@node-fi/react-native-sdk/nodeWalletBabel');
+module.exports = function (api) {
+  return { ...nodeConfig(api) };
+};
+```
+
+#### index.js
+
+Within your `index.js`, you will need to import a script from the sdk in order to properly set up dependencies:
+
+```js
+/* dapp-begin */
+require('@node-fi/react-native-sdk/setup');
+
+/**
+ * Other code goes here
+ */
+
+const { registerRootComponent } = require('expo');
+const { default: App } = require('./frontend/App');
+registerRootComponent(App);
+/* dapp-end */
+```
+
 ## Getting Started
 
 In order to access the functionality of this SDK, you will need to wrap your app with the `NodeKitProvider` component.

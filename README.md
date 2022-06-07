@@ -402,3 +402,88 @@ function Component() {
   const dollarValueOfMyHoldings = pricedBalances[MY_TOKEN.toLowerCase()];
 }
 ```
+
+#### useTokenPrices
+
+This hook returns a mapping from token addresses to their respective price in the default currency.
+
+A price object is of the shape:
+
+```ts
+type PriceObject = {
+  current: number;
+  yesterday: number;
+};
+```
+
+Example use:
+
+```tsx
+import { useTokenPrices } from "@node-fi/react-native-sdk"
+
+function Component() {
+  const prices = useTokenPrices();
+  const MAIN_TOKEN = "0xAddress"
+
+  return (
+    <Text>{`Price of main token: ${prices[MAIN_TOKEN.toLowerCase()].current}`}</Text>
+    {Object.entries(prices).map(([address, {current}]) =>
+      <Text key={`price-${address}`}> {`Current price of token ${address}: ${current}`} </Text>)}
+  )
+}
+```
+
+#### useTokenPrice
+
+This hook returns the price object for a specific token. It takes as argument the address of the token.
+
+```ts
+import { useTokenPrice } from '@node-fi/react-native-sdk';
+
+function Component() {
+  const MY_TOKEN = '0xAddress';
+
+  const { current: currentPrice, yesterday: yesterdayPrice } =
+    prices[MY_TOKEN.toLowerCase()];
+
+  // ...rest
+}
+```
+
+#### useHistoricalTokenPrices
+
+This hook returns the historical prices for any supported token.
+
+While data is loading, the return value will be undefined. Otherwise, it will be of the shape:
+
+```ts
+type UseHistoricalPricesShape = {
+  time: number; // unix time
+  priceusd: number; // price in usd -- future versions of the sdk will simply use a 'price' field that adjusts based off of preferred currency
+};
+```
+
+The inputs for the hook are as follows:
+
+| Param   | Type                                | Required? | Purpose                                                              | Default Value    |
+| ------- | ----------------------------------- | --------- | -------------------------------------------------------------------- | ---------------- |
+| address | string                              | Yes       | Specifies the address of the token to retrieve historical prices for | N / A - REQUIRED |
+| range   | DateRange (1h, 1d, 1w, 1m, 1y, all) | Y         | Specifies the time range to fetch token prices for                   | N / A - REQUIRED |
+
+Example Use Case:
+
+```tsx
+import { useHistoricalTokenPrices } from "@node-fi/react-native-sdk"
+import { DateRange } from "@node-fi/sdk-core"
+
+function Component() {
+  const MY_TOKEN = "0xAddress"
+  const DATE_RANGE = DateRange['1W']
+
+  const historicalPrices = useHistoricalTokenPrices(MY_TOKEN, DATE_RANGE)
+
+  if (historicalPrices === undefined) return <LoadingComponent />
+
+  return <ChartComponent data={historicalPrices} x="time" y="priceusd">
+}
+```

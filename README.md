@@ -487,3 +487,34 @@ function Component() {
   return <ChartComponent data={historicalPrices} x="time" y="priceusd">
 }
 ```
+
+## Swap Context Hooks
+
+The following explores hooks within the SwapContext
+
+#### useSlippage
+
+This hook exposes both the current slippage, and a function to change the current slippage.
+
+Slippage is expressed in Bips (1 / 10000)
+
+Example:
+
+```tsx
+import { useSetSlippage } from "@node-fi/react-native-sdk"
+
+const convertBipsToFloat = (bips: number) => bips / 100000
+
+
+function Component() {
+  const [slippage, setSlippage] = useSetSlippage()
+
+
+  return (
+    <>
+      <Text> {`Current Slippage is: %${(convertBipsToFloat(slippage) * 100).toFixed(2)}`}
+      <Button text={`Set slippage to 1%`} onPress={() => setSlippage(100)}>
+    </>
+  )
+}
+```

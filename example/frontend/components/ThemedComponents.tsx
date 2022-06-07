@@ -1,14 +1,14 @@
 import * as React from 'react';
 import {
   Image as DefaultImage,
+  SliderComponent as DefaultSlider,
   Text as DefaultText,
   TextInput as DefaultTextInput,
   StyleProp,
-  View,
-  ViewStyle,
   TextStyle,
   TouchableOpacity,
-  SliderComponent as DefaultSlider,
+  View,
+  ViewStyle,
 } from 'react-native';
 import { Animated } from 'react-native';
 
@@ -76,7 +76,7 @@ export function Container({
   return <View style={[layout.container, layout.column, style]} {...props} />;
 }
 
-export const InfoRow = ({ left, right }: { left: string; right: string }) => (
+export const InfoRow = ({ left, right }: { readonly left: string; readonly right: string }) => (
   <View style={[layout.row, layout.spaceBetween]}>
     <Text style={{ opacity: 0.75 }}>{left}</Text>
     <Text>{right}</Text>
@@ -92,7 +92,7 @@ export function SlidingUnderCard({
   noShadow,
   show,
   ...props
-}: CardProps & { show?: boolean }) {
+}: CardProps & { readonly show?: boolean }) {
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
     'cardBackground'
@@ -185,7 +185,7 @@ export function ColorCard({
   onPress,
   colorOpacity,
   ...props
-}: CardProps & { color: string; onPress?: () => void; colorOpacity?: number }) {
+}: CardProps & { readonly color: string; readonly onPress?: () => void; readonly colorOpacity?: number }) {
   const backgroundColor = useThemeColor(
     {
       light: getColor(color, colorOpacity ?? 0.2),
@@ -224,7 +224,7 @@ export function CenterThree({
   style,
   children,
   ...props
-}: ViewProps & { left: number; right: number }) {
+}: ViewProps & { readonly left: number; readonly right: number }) {
   return (
     <View style={[{ position: 'relative' }, style]} {...props}>
       <View style={{ position: 'absolute', left }} children={children[0]} />
@@ -320,7 +320,7 @@ export function ButtonConfirm({
 }: BackgroundProps &
   TextProps &
   ThemeProps &
-  TouchableOpacity['props'] & { width?: number; shadow?: boolean }) {
+  TouchableOpacity['props'] & { readonly width?: number; readonly shadow?: boolean }) {
   const backgroundColor = useThemeColor(background || {}, 'buttonBackground');
   const textColor = useThemeColor(textOverride || {}, 'buttonText');
   return (
@@ -364,10 +364,10 @@ export function NodeButton({
   TextProps &
   ThemeProps &
   TouchableOpacity['props'] & {
-    width?: number;
-    noShadow?: boolean;
-    text?: string;
-    textStyle?: TextStyle;
+    readonly width?: number;
+    readonly noShadow?: boolean;
+    readonly text?: string;
+    readonly textStyle?: TextStyle;
   }) {
   const backgroundColor = useThemeColor(background || {}, 'buttonBackground');
   const textColor = useThemeColor(textOverride || {}, 'buttonText');
@@ -418,7 +418,7 @@ export function Button({
 }: BackgroundProps &
   TextProps &
   ThemeProps &
-  TouchableOpacity['props'] & { containerStyle: ViewStyle }) {
+  TouchableOpacity['props'] & { readonly containerStyle: ViewStyle }) {
   const backgroundColor = useThemeColor(background || {}, 'buttonBackground');
   const textColor = useThemeColor(textOverride || {}, 'buttonText');
 
@@ -446,7 +446,7 @@ export function RoundedButton({
 }: BackgroundProps &
   TextProps &
   ThemeProps &
-  TouchableOpacity['props'] & { containerStyle: ViewStyle }) {
+  TouchableOpacity['props'] & { readonly containerStyle: ViewStyle }) {
   const backgroundColor = useThemeColor(background || {}, 'buttonBackground');
   const textColor = useThemeColor(textOverride || {}, 'buttonText');
 
@@ -473,8 +473,8 @@ export const TradeDetailRow = ({
   detail,
   style,
 }: {
-  label: string;
-  detail: string;
+  readonly label: string;
+  readonly detail: string;
 } & ViewProps) => (
   <View
     style={[layout.row, layout.spaceBetween, { paddingHorizontal: 3 }, style]}
@@ -500,7 +500,7 @@ export function ButtonSmall({
   containerStyle,
   ...props
 }: TextProps &
-  TouchableOpacity['props'] & { containerStyle: ViewStyle; icon: ImageProps }) {
+  TouchableOpacity['props'] & { readonly containerStyle: ViewStyle; readonly icon: ImageProps }) {
   const backgroundColor = useThemeColor({}, 'buttonBackground');
   const textColor = useThemeColor({}, 'buttonText');
 

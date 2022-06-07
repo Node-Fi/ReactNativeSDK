@@ -1,6 +1,6 @@
+import { Token } from '@node-fi/sdk-core';
 import React, { useMemo } from 'react';
 import { Image, ImageStyle } from 'react-native';
-import { Token } from '@node-fi/sdk-core';
 
 export default function CurrencyLogo({
   currency,

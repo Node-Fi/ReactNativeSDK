@@ -3,8 +3,8 @@ import { AddressZero } from '@ethersproject/constants';
 import { Contract } from '@ethersproject/contracts';
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
 import { TokenAmount } from '@node-fi/sdk-core';
-import Web3 from 'web3';
 import { BigNumber } from 'bignumber.js';
+import Web3 from 'web3';
 
 export function shortenAddress(address: string, len = 5): string {
   return `${address.slice(0, len)}...${address.slice(-3)}`;
@@ -18,7 +18,7 @@ export const formatTokenAmount = (
   amount: TokenAmount | number,
   force?: number
 ) => {
-  let scaledAmount =
+  const scaledAmount =
     typeof amount === 'number'
       ? new BigNumber(amount)
       : amount.raw.dividedBy(new BigNumber(`1e+${amount.token.decimals}`));

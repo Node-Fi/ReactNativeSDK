@@ -1,3 +1,13 @@
+import {
+  useBalances,
+  usePricedBalances,
+  useRemoveToken,
+  useSetGasToken,
+  useTokenPrice,
+  useWallet,
+} from '@node-fi/react-native-sdk';
+import { Token } from '@node-fi/sdk-core';
+import BigNumber from 'bignumber.js';
 import * as React from 'react';
 import {
   Animated,
@@ -7,19 +17,13 @@ import {
   View,
 } from 'react-native';
 
-import {
-  useBalances,
-  useRemoveToken,
-  useTokenPrice,
-} from '@node-fi/react-native-sdk';
-import { Token } from '@node-fi/sdk-core';
+
+import { getColor } from '../styles/colors';
 import { layout, text } from '../styles/styles';
 import { formatTokenAmount, shortenAddress } from '../utils';
 
-import CurrencyLogo from './TokenLogo';
 import { InfoRow, Text, ViewProps } from './ThemedComponents';
-import BigNumber from 'bignumber.js';
-import { getColor } from '../styles/colors';
+import CurrencyLogo from './TokenLogo';
 
 type PropTypes = ViewProps & {
   readonly token: Token;
@@ -64,16 +68,18 @@ export const InfoBlock = ({
   </View>
 );
 
-const TokenDetails = ({ token }: { token: Token }) => {
+const TokenDetails = ({ token }: { readonly token: Token }) => {
   const remove = useRemoveToken();
-  const balances = useBalances();
+  const balances = usePricedBalances();
   const balance =
     balances[token.address] ?? balances[token.address.toLowerCase()];
+  const wallet = useWallet();
+  const [feeCurrency, setFeeCurrency] = useSetGasToken();
 
   return (
     <View style={{ paddingHorizontal: 20 }}>
       <InfoRow left="Name" right={token.name} />
-      <InfoRow left="Balance" right={balance?.toFixed(2) ?? '0.00'} />
+      <InfoRow left="Balance" right={`$${balance?.toFixed(2)}` ?? '0.00'} />
       <InfoRow left="Address" right={shortenAddress(token.address)} />
       <TouchableOpacity
         onPress={() => remove(token.address)}
@@ -85,6 +91,83 @@ const TokenDetails = ({ token }: { token: Token }) => {
         }}
       >
         <Text style={{ color: 'white', textAlign: 'center' }}>Remove</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={async () => {
+          try {
+            const resp = await wallet.transferToken(
+              token,
+              new BigNumber('1e+17'),
+              wallet.address
+            );
+            // console.log(resp);
+          } catch (e) {
+            console.error(e);
+            try {
+              const resp = await wallet.transferToken(
+                token.address,
+                new BigNumber('10').pow(17).times(2),
+                wallet.address
+              );
+              console.log(resp);
+            } catch (e) {
+              console.error(e);
+            }
+          }
+        }}
+        style={{
+          backgroundColor: getColor('green', 0.9),
+          marginTop: 10,
+          padding: 10,
+          borderRadius: 13,
+        }}
+      >
+        <Text style={{ color: 'white', textAlign: 'center' }}>
+          Send from Wallet
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={async () => {
+          try {
+            const resp = await token.send(
+              new BigNumber('100'),
+              wallet,
+              wallet.address
+            );
+            console.log(resp);
+          } catch (e) {
+            console.error(e);
+          }
+        }}
+        style={{
+          backgroundColor: getColor('blue', 0.9),
+          marginTop: 10,
+          padding: 10,
+          borderRadius: 13,
+        }}
+      >
+        <Text style={{ color: 'white', textAlign: 'center' }}>
+          Send from Token
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={async () => {
+          try {
+            setFeeCurrency(token.address);
+          } catch (e) {
+            console.error(e);
+          }
+        }}
+        style={{
+          backgroundColor: getColor('blue', 0.9),
+          marginTop: 10,
+          padding: 10,
+          borderRadius: 13,
+        }}
+      >
+        <Text style={{ color: 'white', textAlign: 'center' }}>
+          Set as gas currency
+        </Text>
       </TouchableOpacity>
     </View>
   );

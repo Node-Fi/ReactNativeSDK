@@ -17,9 +17,10 @@ export const generateMnemonic = async () => {
 export const createWallet = async (
   apiKey: string,
   chain: ChainId,
-  smartWallet?: boolean
+  smartWallet?: boolean,
+  existingMnemonic?: string
 ) => {
-  const mnemonic = await generateMnemonic();
+  const mnemonic = existingMnemonic ?? (await generateMnemonic());
   const wallet = smartWallet
     ? new SmartWallet(apiKey, chain)
     : new EOA(apiKey, chain);

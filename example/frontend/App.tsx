@@ -1,11 +1,15 @@
+import env from 'process';
+
+import { NodeKitProvider } from '@node-fi/react-native-sdk';
+import { ChainId, Token } from '@node-fi/sdk-core';
 import React from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { NodeKitProvider } from '@node-fi/react-native-sdk';
+
 import { CreateWallet } from './CreateWallet';
-import { env } from 'process';
 import { TokenList } from './TokenList';
+import { KeychainButton } from './components/Keychain';
+import { SyncPortfolioButton } from './components/SyncPortfolio';
 import { SUPPORTED_TOKENS, TOKEN_OVERRIDES } from './constants/Tokens';
-import { ChainId } from '@node-fi/sdk-core';
 
 export const styles = StyleSheet.create({
   center: { alignItems: 'center' },
@@ -24,19 +28,38 @@ export default function App(): JSX.Element {
   );
 
   return (
-    <NodeKitProvider
-      loadingComponent={loadingComponent}
-      eoaOnly
-      apiKey={env.NODE_API_KEY}
-      tokenWhitelist={new Set(SUPPORTED_TOKENS)}
-      tokenDetailsOverride={TOKEN_OVERRIDES}
-      customTokens={[]}
-      chainId={ChainId.Alfajores}
-    >
-      <SafeAreaView style={[styles.center, styles.white]}>
-        <CreateWallet />
-        <TokenList />
-      </SafeAreaView>
-    </NodeKitProvider>
+    <>
+      <NodeKitProvider
+        loadingComponent={loadingComponent}
+        eoaOnly
+        apiKey={'c72d0ce2d50a447d874da93b7e44abb1'} // sandbox api key - will only work on alfajores
+        tokenWhitelist={new Set(SUPPORTED_TOKENS)}
+        tokenDetailsOverride={TOKEN_OVERRIDES}
+        customTokens={[
+          new Token(
+            44787,
+            '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1',
+            18,
+            'cUSD',
+            'Cello Dollar'
+          ),
+          new Token(
+            44787,
+            '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9',
+            18,
+            'CELO',
+            'Cello'
+          ),
+        ]}
+        chainId={ChainId.Alfajores}
+      >
+        <SafeAreaView style={[styles.center, styles.white]}>
+          <CreateWallet />
+          <TokenList />
+          <KeychainButton />
+          <SyncPortfolioButton />
+        </SafeAreaView>
+      </NodeKitProvider>
+    </>
   );
 }

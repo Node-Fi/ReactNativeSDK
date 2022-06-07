@@ -8,11 +8,14 @@ import {
   getBalances,
   TransferTransaction,
   fetchTransfers,
+  convertLogToTransferObject,
 } from '@node-fi/sdk-core';
 import { createContainer } from 'unstated-next';
 import { useWalletAddress, WalletContainer } from './WalletContext';
 import { useTokenPrices } from './PriceContext';
 import { useQuery } from 'react-query';
+import Web3 from 'web3';
+import { BigNumber } from 'bignumber.js';
 
 export interface UseTokensInnerProps {
   initialTokens: Token[];
@@ -38,11 +41,10 @@ interface UseTokensInnerType {
   tokens: TokenMap;
   addToken: (token: Token) => void;
   removeToken: (token: Address) => void;
-  transferCounter: number;
+  newTransfers: TransferTransaction[];
 }
 function useTokensInner(props?: UseTokensInnerProps) {
   const chainId = props?.chainId ?? ChainId.Celo;
-  const [transferCounter, setTransferCounter] = React.useState(0);
   const [tokens, setTokens] = React.useState<TokenMap>(
     props?.initialTokens?.reduce(
       (accum: TokenMap, cur: Token) => ({
@@ -53,6 +55,9 @@ function useTokensInner(props?: UseTokensInnerProps) {
     ) ?? {}
   );
   const [balances, setBalances] = React.useState<TokenBalances>({});
+  const [newTransfers, setNewTransfers] = React.useState<TransferTransaction[]>(
+    []
+  );
   const walletAddress = useWalletAddress();
   const tokenAddresses = React.useMemo(() => Object.keys(tokens), [tokens]);
 
@@ -68,17 +73,17 @@ function useTokensInner(props?: UseTokensInnerProps) {
         Object.entries(fetchedBalances).reduce(
           (accum: TokenBalances, [address, balance]) => ({
             ...accum,
-            [address]: new TokenAmount(tokens[address], balance),
+            [address.toLowerCase()]: new TokenAmount(tokens[address], balance),
           }),
           {}
         )
       );
     })();
-    const subscription = subscribeToTokenTransfers(
+    const endSubscription = subscribeToTokenTransfers(
       walletAddress,
       chainId,
       tokenAddresses,
-      (token, balance) => {
+      (token, balance, e) => {
         setBalances((b) => ({
           ...b,
           [token.toLowerCase()]: new TokenAmount(
@@ -86,11 +91,15 @@ function useTokensInner(props?: UseTokensInnerProps) {
             balance
           ),
         }));
-        setTransferCounter((t) => t + 1);
+        const transfer = convertLogToTransferObject(e, new Web3(), false);
+        setNewTransfers((t) => [
+          ...t,
+          { ...transfer, outgoing: transfer.from === walletAddress },
+        ]);
       }
     );
 
-    return subscription;
+    return endSubscription;
   }, [walletAddress, tokens, setBalances, tokenAddresses, chainId]);
 
   const addToken = React.useCallback(
@@ -112,7 +121,7 @@ function useTokensInner(props?: UseTokensInnerProps) {
     [setTokens]
   );
 
-  return { balances, tokens, addToken, removeToken, transferCounter };
+  return { balances, tokens, addToken, removeToken, newTransfers };
 }
 
 export const TokenContainer = createContainer<
@@ -132,21 +141,31 @@ export const useBalance = (token: Token | Address): TokenAmount => {
   return React.useMemo(() => balance, [balance]);
 };
 
+/**
+ *
+ * @returns All balances for supported tokens.  A token is in the map if and only if the user has a non zero balance
+ */
 export const useBalances = (): TokenBalances => {
   const { balances } = TokenContainer.useContainer();
   return balances;
 };
 
+/**
+ *
+ * @returns Balances multiplied by the price of the token
+ */
 export const usePricedBalances = (): TokenBalances => {
   const balances = useBalances();
   const prices = useTokenPrices() ?? {};
   return Object.entries(balances).reduce(
     (accum, [addr, tokAmount]) => ({
       ...accum,
-      [addr]: new TokenAmount(
-        tokAmount.token,
-        tokAmount.raw.multipliedBy(prices[addr.toLowerCase()]?.current ?? 1)
-      ),
+      [addr]: prices[addr.toLowerCase()]
+        ? new TokenAmount(
+            tokAmount.token,
+            tokAmount.raw.multipliedBy(prices[addr.toLowerCase()]?.current ?? 1)
+          )
+        : undefined,
     }),
     {}
   );
@@ -159,15 +178,18 @@ export const useTokens = (): TokenMap => {
 
 export const useAddToken = (): ((newToken: Token) => Promise<void>) => {
   const { addToken } = TokenContainer.useContainer();
-  return async (newToken: Token) => {
-    if (
-      newToken.address &&
-      (!newToken.name || !newToken.decimals || !newToken.symbol)
-    ) {
-      await newToken.loadDetails();
-    }
-    addToken(newToken);
-  };
+  return React.useCallback(
+    async (newToken: Token) => {
+      if (
+        newToken.address &&
+        (!newToken.name || !newToken.decimals || !newToken.symbol)
+      ) {
+        await newToken.loadDetails();
+      }
+      addToken(newToken);
+    },
+    [addToken]
+  );
 };
 
 export const useRemoveToken = () => {
@@ -175,13 +197,33 @@ export const useRemoveToken = () => {
   return removeToken;
 };
 
+/**
+ *
+ * @param maxTransfers Maximum number of transfers to retrieve. Will default to "all"
+ * @param startBlock The block to start searching for transactions from.  Defaults to "earliest"
+ * @param subscribe If true, will receive new transactions as they come in
+ * @param filter callback to filter transfers.  Default filters transfers < $0.001
+ * @returns A list of Transfers
+ */
 export const useHistoricalTransfers = (
+  maxTransfers?: number | 'all',
   startBlock?: number,
-  subscribe?: boolean
+  subscribe?: boolean,
+  filter?: (t: TransferTransaction) => boolean
 ): TransferTransaction[] | undefined => {
   const { wallet, chainId } = WalletContainer.useContainer();
-  const { transferCounter, tokens } = TokenContainer.useContainer();
+  const { newTransfers, tokens } = TokenContainer.useContainer();
   const tokenAddresses = Object.values(tokens).map(({ address }) => address);
+
+  const defaultTransferFilter = React.useCallback(
+    (transfer: TransferTransaction) => {
+      const token = tokens[transfer.token.toLowerCase()];
+      return transfer.amount.isGreaterThan(
+        new BigNumber('10').pow(token.decimals - 3)
+      );
+    },
+    [tokens]
+  );
 
   const fetch = async () => {
     if (!wallet || !wallet.address) {
@@ -200,9 +242,23 @@ export const useHistoricalTransfers = (
       return [];
     }
   };
-  const res = useQuery(
-    [tokenAddresses, subscribe ? transferCounter : 0, wallet.address],
-    fetch
+  const res = useQuery([wallet?.address], fetch);
+  const transfers = React.useMemo(() => {
+    const mid = subscribe
+      ? res?.data?.concat(newTransfers).filter(filter ?? defaultTransferFilter)
+      : res?.data?.filter(filter ?? defaultTransferFilter);
+    return mid?.sort((t1, t2) => t2.blockNumber - t1.blockNumber);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [res.isLoading, newTransfers]);
+  return React.useMemo(
+    () =>
+      !transfers
+        ? undefined
+        : maxTransfers === 'all' ||
+          maxTransfers === undefined ||
+          transfers?.length < maxTransfers
+        ? transfers
+        : transfers?.slice(0, maxTransfers),
+    [transfers, maxTransfers]
   );
-  return res?.data;
 };

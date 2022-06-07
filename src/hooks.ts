@@ -6,7 +6,7 @@ import {
   formatHistoricalPricesQuery,
 } from '@node-fi/sdk-core';
 import axios from 'axios';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import { useQuery } from 'react-query';
 import {
@@ -14,9 +14,20 @@ import {
   useWallet,
   useWalletAddress,
   useDeleteWallet,
+  useSetGasToken,
+  useApiKey,
+  useChainId,
 } from './WalletContext';
 
-export { useCreateWallet, useWallet, useWalletAddress, useDeleteWallet };
+export {
+  useCreateWallet,
+  useWallet,
+  useWalletAddress,
+  useDeleteWallet,
+  useSetGasToken,
+  useApiKey,
+  useChainId,
+};
 export {
   useSetDefaultCurrency,
   useTokenPrice,
@@ -31,6 +42,8 @@ export {
   useHistoricalTransfers,
   usePricedBalances,
 } from './TokensContext';
+
+export * from './SwapProvider';
 
 export const useOnClose = (callback: () => Promise<void>) => {
   useEffect(() => {
@@ -53,11 +66,10 @@ export function useHistoricalTokenPrices(address: string, range: DateRange) {
   const fetch = async () => {
     try {
       const query = formatHistoricalPricesQuery(address, interval, period);
-      console.log({ query });
       return axios
         .get<{
           message: { time: number; priceusd: number }[];
-        }>(formatHistoricalPricesQuery(address, interval, period))
+        }>(query)
         .then((resp) => {
           return resp.data.message;
         });
@@ -94,4 +106,25 @@ export function usePortfolioHistory(range: DateRange) {
 
   const res = useQuery([period, interval], fetch);
   return res?.data;
+}
+
+// modified from https://usehooks.com/useDebounce/
+export default function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    // Update debounced value after delay
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    // Cancel the timeout if value changes (also on delay change or unmount)
+    // This is how we prevent debounced value from updating if value is changed ...
+    // .. within the delay period. Timeout gets cleared and restarted.
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
 }

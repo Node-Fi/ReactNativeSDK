@@ -221,8 +221,6 @@ PODS:
     - React-jsi (= 0.64.3)
     - React-perflogger (= 0.64.3)
   - React-jsinspector (0.64.3)
-  - react-native-ec-encryption (1.1.0):
-    - React
   - react-native-get-random-values (1.5.0):
     - React
   - React-perflogger (0.64.3)
@@ -291,6 +289,8 @@ PODS:
     - React-perflogger (= 0.64.3)
   - RNCAsyncStorage (1.13.4):
     - React-Core
+  - RNDeviceInfo (8.7.1):
+    - React-Core
   - RNKeychain (8.0.0):
     - React-Core
   - RNSecureRandom (1.0.0):
@@ -325,7 +325,6 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
-  - react-native-ec-encryption (from `../node_modules/react-native-ec-encryption`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -340,6 +339,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNSecureRandom (from `../node_modules/react-native-securerandom`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -396,8 +396,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
-  react-native-ec-encryption:
-    :path: "../node_modules/react-native-ec-encryption"
   react-native-get-random-values:
     :path: "../node_modules/react-native-get-random-values"
   React-perflogger:
@@ -426,6 +424,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNKeychain:
     :path: "../node_modules/react-native-keychain"
   RNSecureRandom:
@@ -460,7 +460,6 @@ SPEC CHECKSUMS:
   React-jsi: a8b09c29521c798f1783348b37b511ba7b3dbeb3
   React-jsiexecutor: df6abc9fafbecb8e5b7a5fbc5e6d4bd017d594d5
   React-jsinspector: 34e23860273a23695342f58eed3ffd3ba10c31e0
-  react-native-ec-encryption: 0c4ea5e143331d18e192e644b400529c033075b4
   react-native-get-random-values: 1404bd5cc0ab0e287f75ee1c489555688fc65f89
   React-perflogger: cc76a4254d19640f1d8ad1c66fdee800414b805c
   React-RCTActionSheet: 7448f049318d8d7e8a9a1ebb742ada721757eea8
@@ -475,11 +474,12 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 493d9abb8b23c3f84e19ae221eeba92cadcb70dc
   ReactCommon: 8fea6422328e2fc093e25c9fac67adbcf0f04fb4
   RNCAsyncStorage: 44539979e1f234262d64d3ce86ec21cceb1b2c5e
+  RNDeviceInfo: aad3c663b25752a52bf8fce93f2354001dd185aa
   RNKeychain: 4f63aada75ebafd26f4bc2c670199461eab85d94
   RNSecureRandom: 0dcee021fdb3d50cd5cee5db0ebf583c42f5af0e
   RNSVG: a53a5de0d90ec96a6502cc3a4534dfcc0c130622
   Yoga: e6ecf3fa25af9d4c87e94ad7d5d292eedef49749
 
-PODFILE CHECKSUM: 84e1e142cd22f6d2f95e3c839bb88d51777c19dd
+PODFILE CHECKSUM: b25405a8dcc133bfc2876db8501a4ba009bae78e
 
 COCOAPODS: 1.11.3

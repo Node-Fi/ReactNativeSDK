@@ -3,7 +3,10 @@ import * as React from 'react';
 import { WalletContainer } from './WalletContext';
 import { PriceContainer } from './PriceContext';
 import { Address, ChainId, Token } from '@node-fi/sdk-core';
-import type { WalletConfig } from '@node-fi/sdk-core/dist/src/wallet/Wallet';
+import type {
+  WalletConfig,
+  WalletOptions,
+} from '@node-fi/sdk-core/dist/src/wallet/Wallet';
 import { DEFAULT_PREFIX, WALLET_KEY_SUFFIX } from './utils/storageKeys';
 import { asyncReadObject } from './utils/asyncStorage';
 import { clearMnemonic, getMnemonic, saveMnemonic } from './utils/security';
@@ -11,12 +14,15 @@ import { TokenContainer } from './TokensContext';
 import DEFAULT_TOKENS from '@node-fi/default-token-list';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { reduceArrayToMap } from './utils';
+import { SwapContainer } from './SwapProvider';
 
 export type TokenConfig = {
   address: Address;
   name?: string;
   symbol?: string;
   decimals?: number;
+  newAddress?: Address;
+  chainId?: ChainId;
 };
 
 export interface NodeKitProviderProps {
@@ -26,7 +32,7 @@ export interface NodeKitProviderProps {
   tokenDetailsOverride?: TokenConfig[];
   tokenBlacklist?: Set<Address>;
   storagePrefix?: string;
-  walletConfig?: WalletConfig;
+  walletConfig?: WalletConfig & { opts?: WalletOptions };
   eoaOnly?: boolean;
   loadingComponent?: React.ReactElement;
   apiKey: string;
@@ -53,7 +59,6 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
     customTokens,
     chainId = ChainId.Celo,
   } = props;
-
   const [persistedData, setPersistedData] = React.useState<PersistedData>();
   const [loaded, setLoaded] = React.useState(false);
 
@@ -104,24 +109,33 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
                 return true;
               })
               .map((t) => {
-                const { address, name, symbol, chainId, decimals, logoURI } = {
+                const {
+                  address,
+                  name,
+                  symbol,
+                  chainId: tokenChainId,
+                  decimals,
+                  logoURI,
+                  newAddress,
+                } = {
                   ...t,
                   ...tokenOverride[t.address],
                 } as TokenConfig & { chainId: number; logoURI: string };
                 return new Token(
-                  chainId,
-                  address,
+                  tokenChainId,
+                  newAddress ?? address,
                   decimals,
                   symbol,
                   name,
                   logoURI
                 );
               })
-              .concat(customTokens ?? []),
+              .concat(customTokens ?? [])
+              .filter((el) => el.chainId === chainId),
           }}
         >
-          <PriceContainer.Provider initialState={{ apiKey }}>
-            {children}
+          <PriceContainer.Provider initialState={{ apiKey, chainId }}>
+            <SwapContainer.Provider>{children}</SwapContainer.Provider>
           </PriceContainer.Provider>
         </TokenContainer.Provider>
       </WalletContainer.Provider>

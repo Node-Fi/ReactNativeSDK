@@ -496,7 +496,12 @@ The following explores hooks within the SwapContext
 
 This hook is intended to be directly integrated into frontends, and uses debouncing to limit how often new prices are fetched.
 
-It Returns the same shape as `useSwapQuote`
+It returns the following:
+
+| Param   | Type                                | Required? | Purpose                                                              | Default Value    |
+| ------- | ----------------------------------- | --------- | -------------------------------------------------------------------- | ---------------- |
+| address | string                              | Yes       | Specifies the address of the token to retrieve historical prices for | N / A - REQUIRED |
+| range   | DateRange (1h, 1d, 1w, 1m, 1y, all) | Y         | Specifies the time range to fetch token prices for                   | N / A - REQUIRED |
 
 For parameters, it takes the following:
 
@@ -507,6 +512,40 @@ For parameters, it takes the following:
 | typedAmount     | string \| number | Y         | Decimal-adjusted amount of input token to trade. This would be a value that is entered into a text field by a user |
 | recipient       | string           | N         | Address of recipient of the trade - if undefined will default to current wallet.                                   |
 | debounceDelayMs | number           | N         | Millisecond delay for the internally used debounce hook. Defaults to 500ms                                         |
+
+Example:
+
+```tsx
+import { useSwapTypedAmount } from "@node-fi/react-native-sdk"
+
+function SwapComponent() {
+  const [inputToken, setInputToken] = useState<string>();
+  const [outputToken setOutputToken] = useState<string>()
+  const [inputAmount, setInputAmount] = useState<string>()
+
+  const tradeDetails = useSwapTypedAmount(inputToken, outputToken, inputAmount)
+
+  return (
+    <View>
+      <TokenSelector onSelectToken={setInputToken}>
+      <TokeSelector onSelectToken={setOutputToken}>
+
+      <TextField label="Input Amount" onChangeText={setInputAmount}>
+
+      {
+        tradeDetails ? tradeDetails.error
+          ? <Text>{`Error: ${tradeDetails.error}`}</Text>
+          : <View>
+              <Text>{`Expected output: ${tradeDetails.output.toFixed(2)} ${tradeDetails.output.token.symbol}`}</Text>
+              <Button text={`Execute Swap`} onPress={tradeDetails.execute}>
+            </View>
+        : null
+      }
+    </View>
+  )
+}
+
+```
 
 #### useSwapQuote
 

@@ -121,21 +121,23 @@ export function useSwapQuote(
     [swapPayload, recipient, wallet, slippage, swapMaster]
   );
 
-  if (swapPayload.isLoading) return { loading: true };
-  if (!swapPayload.data) return {};
-  const { details, error, expectedOut } = swapPayload.data;
-  return {
-    execute,
-    path: details?.path,
-    output: expectedOut
-      ? new TokenAmount(outputToken as Token, expectedOut)
-      : undefined,
-    minimumOutput: expectedOut
-      ? new TokenAmount(
-          outputToken as Token,
-          expectedOut.minus(expectedOut.multipliedBy(slippage).div(10000))
-        )
-      : undefined,
-    error,
-  };
+  return React.useMemo(() => {
+    if (swapPayload.isLoading) return { loading: true };
+    if (!swapPayload.data) return {};
+    const { details, error, expectedOut } = swapPayload.data;
+    return {
+      execute,
+      path: details?.path,
+      output: expectedOut
+        ? new TokenAmount(outputToken as Token, expectedOut)
+        : undefined,
+      minimumOutput: expectedOut
+        ? new TokenAmount(
+            outputToken as Token,
+            expectedOut.minus(expectedOut.multipliedBy(slippage).div(10000))
+          )
+        : undefined,
+      error,
+    };
+  }, [swapPayload, execute, outputToken, slippage]);
 }

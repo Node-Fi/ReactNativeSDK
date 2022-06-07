@@ -1,3 +1,13 @@
+import {
+  useBalances,
+  usePricedBalances,
+  useRemoveToken,
+  useSetGasToken,
+  useTokenPrice,
+  useWallet,
+} from '@node-fi/react-native-sdk';
+import { Token } from '@node-fi/sdk-core';
+import BigNumber from 'bignumber.js';
 import * as React from 'react';
 import {
   Animated,
@@ -7,22 +17,13 @@ import {
   View,
 } from 'react-native';
 
-import {
-  useBalances,
-  useRemoveToken,
-  useTokenPrice,
-  useWallet,
-  useSetGasToken,
-  usePricedBalances,
-} from '@node-fi/react-native-sdk';
-import { Token } from '@node-fi/sdk-core';
+
+import { getColor } from '../styles/colors';
 import { layout, text } from '../styles/styles';
 import { formatTokenAmount, shortenAddress } from '../utils';
 
-import CurrencyLogo from './TokenLogo';
 import { InfoRow, Text, ViewProps } from './ThemedComponents';
-import BigNumber from 'bignumber.js';
-import { getColor } from '../styles/colors';
+import CurrencyLogo from './TokenLogo';
 
 type PropTypes = ViewProps & {
   readonly token: Token;
@@ -67,7 +68,7 @@ export const InfoBlock = ({
   </View>
 );
 
-const TokenDetails = ({ token }: { token: Token }) => {
+const TokenDetails = ({ token }: { readonly token: Token }) => {
   const remove = useRemoveToken();
   const balances = usePricedBalances();
   const balance =

@@ -1,8 +1,12 @@
-import * as React from 'react';
+import { FontAwesome } from '@expo/vector-icons';
 import { useAddToken } from '@node-fi/react-native-sdk';
+import { ChainId, Token, validateAndParseAddress } from '@node-fi/sdk-core';
+import * as React from 'react';
 import { ActivityIndicator, TouchableOpacity, View } from 'react-native';
 import Modal from 'react-native-modal';
+
 import { DEVICE_HEIGHT, DEVICE_WIDTH, layout, text } from '../styles/styles';
+
 import {
   Card,
   InfoRow,
@@ -11,10 +15,9 @@ import {
   Text,
   TextInput,
 } from './ThemedComponents';
-import { FontAwesome } from '@expo/vector-icons';
-import { ChainId, Token, validateAndParseAddress } from '@node-fi/sdk-core';
 
-const RenderHeader = ({ onClose }: { onClose: () => void }) => (
+
+const RenderHeader = ({ onClose }: { readonly onClose: () => void }) => (
   <View
     style={{
       zIndex: 999,
@@ -44,8 +47,8 @@ export function AddTokenModal({
   onClose,
   modalVisible,
 }: {
-  onClose: () => void;
-  modalVisible?: boolean;
+  readonly onClose: () => void;
+  readonly modalVisible?: boolean;
 }) {
   const addToken = useAddToken();
   const [token, setToken] = React.useState<Token>();

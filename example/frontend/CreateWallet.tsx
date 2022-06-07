@@ -1,14 +1,15 @@
-import * as React from 'react';
 import {
-  useCreateWallet,
-  useWallet,
-  useDeleteWallet,
-  clearMnemonic,
   asyncClear,
+  clearMnemonic,
   DEFAULT_PREFIX,
+  useCreateWallet,
+  useDeleteWallet,
   useHistoricalTransfers,
+  useWallet,
 } from '@node-fi/react-native-sdk';
+import * as React from 'react';
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
+
 import { styles } from './App';
 import { DEVICE_WIDTH } from './styles/styles';
 
@@ -20,7 +21,7 @@ export function CreateWallet() {
 
   console.log(wallet.address);
   return wallet?.address ? (
-    <View style={[styles.center]}>
+    <View style={styles.center}>
       <Text style={{ textAlign: 'center' }}>{`Wallet: ${wallet.address}`}</Text>
       <TouchableOpacity
         style={{

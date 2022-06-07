@@ -1,14 +1,16 @@
-import * as React from 'react';
 import { useTokens, useWallet } from '@node-fi/react-native-sdk';
-import { FlatList, TouchableOpacity, View } from 'react-native';
 import { Token } from '@node-fi/sdk-core';
-import TokenRow from './components/TokenRow';
-import { DEVICE_HEIGHT, DEVICE_WIDTH } from './styles/styles';
+import { EOA, subscribeToTokenTransfers } from '@node-fi/sdk-core';
+import * as React from 'react';
+import { FlatList, TouchableOpacity, View } from 'react-native';
+
 import { AddTokenModal } from './components/AddTokenModal';
 import { Text } from './components/ThemedComponents';
-import { subscribeToTokenTransfers, EOA } from '@node-fi/sdk-core';
+import TokenRow from './components/TokenRow';
+import { DEVICE_HEIGHT, DEVICE_WIDTH } from './styles/styles';
 
-const RenderRow = ({ item: token }: { item: Token }) => (
+
+const RenderRow = ({ item: token }: { readonly item: Token }) => (
   <TokenRow token={token} style={{ maxWidth: DEVICE_WIDTH * 0.8 }} />
 );
 

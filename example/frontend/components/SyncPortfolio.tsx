@@ -6,9 +6,11 @@ import {
 import * as React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import * as Keychain from 'react-native-keychain';
+
 import { styles } from '../App';
 import { getColor } from '../styles/colors';
 import { DEVICE_WIDTH, layout } from '../styles/styles';
+
 import { Text } from './ThemedComponents';
 
 export const SyncPortfolioButton = () => {

@@ -1,13 +1,15 @@
+import env from 'process';
+
+import { NodeKitProvider } from '@node-fi/react-native-sdk';
+import { ChainId, Token } from '@node-fi/sdk-core';
 import React from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { NodeKitProvider } from '@node-fi/react-native-sdk';
+
 import { CreateWallet } from './CreateWallet';
-import env from 'process';
 import { TokenList } from './TokenList';
-import { SUPPORTED_TOKENS, TOKEN_OVERRIDES } from './constants/Tokens';
-import { ChainId, Token } from '@node-fi/sdk-core';
 import { KeychainButton } from './components/Keychain';
 import { SyncPortfolioButton } from './components/SyncPortfolio';
+import { SUPPORTED_TOKENS, TOKEN_OVERRIDES } from './constants/Tokens';
 
 export const styles = StyleSheet.create({
   center: { alignItems: 'center' },

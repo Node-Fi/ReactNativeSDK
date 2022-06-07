@@ -160,10 +160,12 @@ export const usePricedBalances = (): TokenBalances => {
   return Object.entries(balances).reduce(
     (accum, [addr, tokAmount]) => ({
       ...accum,
-      [addr]: new TokenAmount(
-        tokAmount.token,
-        tokAmount.raw.multipliedBy(prices[addr.toLowerCase()]?.current ?? 1)
-      ),
+      [addr]: prices[addr.toLowerCase()]
+        ? new TokenAmount(
+            tokAmount.token,
+            tokAmount.raw.multipliedBy(prices[addr.toLowerCase()]?.current ?? 1)
+          )
+        : undefined,
     }),
     {}
   );
@@ -176,15 +178,18 @@ export const useTokens = (): TokenMap => {
 
 export const useAddToken = (): ((newToken: Token) => Promise<void>) => {
   const { addToken } = TokenContainer.useContainer();
-  return async (newToken: Token) => {
-    if (
-      newToken.address &&
-      (!newToken.name || !newToken.decimals || !newToken.symbol)
-    ) {
-      await newToken.loadDetails();
-    }
-    addToken(newToken);
-  };
+  return React.useCallback(
+    async (newToken: Token) => {
+      if (
+        newToken.address &&
+        (!newToken.name || !newToken.decimals || !newToken.symbol)
+      ) {
+        await newToken.loadDetails();
+      }
+      addToken(newToken);
+    },
+    [addToken]
+  );
 };
 
 export const useRemoveToken = () => {

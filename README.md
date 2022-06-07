@@ -250,6 +250,56 @@ function GraphComponent() {
 
 The Token context covers token balances, details, and prices.
 
+#### useTokens
+
+This hook returns a mapping from address to a token object for each supported token. Within the NodeProvider, a whitelist for tokens can be supplied as well as a blacklist. Additionally, custom tokens can be declared.
+
+The Token object contains fields for address, decimals, name, symbol, and url of image.
+
+Addresses in the mapping are all lowercase, to avoid capit
+
+```ts
+import { useTokens } from '@node-fi/react-native-sdk';
+
+function Component() {
+  const tokens = useTokens();
+  const tokenAddress = '0xAddress';
+
+  const tokenObject = tokens[tokenAddress.toLowerCase()];
+
+  // ...rest
+}
+```
+
+#### useAddToken
+
+This hook allows for a user to dynamically add new tokens to be recognized by their wallet. In most cases, it is unlikely that an added token will have a correlated price.
+
+The hook returns a callback that takes in a Token object, and adds it to the internal token mapping. This token object only needs to be populated with the address and the ChainId, and the rest of the details will be loaded.
+
+```tsx
+import { useAddToken, useChainId } from "@node-fi/react-native-sdk"
+import { Token } from "@node-fi/sdk-core"
+
+function AddTokenComponent() {
+  const [address, setAddress] = React.useState<string>()
+  const addToken = useAddToken()
+  const chainId = useChainId()
+
+  const addNewToken = React.useCallback(async () => {
+    const newToken = new Token(chainId, address)
+    await addToken(newToken)
+  }, [address])
+
+  return (
+    <>
+      <TextInput onChange={setAddress}>
+      <Button text="Add Token!" onPress={addNewToken} >
+    </>
+  )
+}
+```
+
 #### useBalances
 
 This hook returns a mapping from addresses to the wallet's current balance, as a `TokenAmount` object. Addresses are all lowercase within the mapping, so to access the balance of a given token you will need to use a lowercase address.
@@ -289,5 +339,21 @@ function Component() {
   const celoBalance = useBalance(CELO);
 
   // ...rest
+}
+```
+
+#### usePricedBalances
+
+This hook will return a mapping of token addresses to the dollar value of the wallet's current balance.
+If a token does not have a subsequent balance in the mapping, then the user either has 0 balance or there is no price recorded for that token
+
+```ts
+import { usePricedBalances } from '@node-fi/react-native-wrapper';
+
+function Component() {
+  const pricedBalances = usePricedBalances();
+  const MY_TOKEN = '0xAddress';
+
+  const dollarValueOfMyHoldings = pricedBalances[MY_TOKEN.toLowerCase()];
 }
 ```

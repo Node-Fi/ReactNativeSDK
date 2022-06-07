@@ -45,9 +45,9 @@ export function useSlippage() {
  * @returns
  */
 export function useSwapTypedAmount(
-  inputAddress: Address,
-  outputAddress: Address,
-  typedAmount: string | number,
+  inputAddress: Address = '',
+  outputAddress: Address = '',
+  typedAmount?: string | number,
   recipient?: Address,
   debounceDelayMs = 500
 ) {

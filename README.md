@@ -492,6 +492,22 @@ function Component() {
 
 The following explores hooks within the SwapContext
 
+#### useSwapTypedAmount
+
+This hook is intended to be directly integrated into frontends, and uses debouncing to limit how often new prices are fetched.
+
+It Returns the same shape as `useSwapQuote`
+
+For parameters, it takes the following:
+
+| Param           | Type             | Required? | Description                                                                                                        |
+| --------------- | ---------------- | --------- | ------------------------------------------------------------------------------------------------------------------ |
+| inputAddress    | string           | Y         | Address of input token. If undefined, returned object will be null.                                                |
+| outputAddress   | string           | Y         | Address of output token. If undefined, returned object will be null.                                               |
+| typedAmount     | string \| number | Y         | Decimal-adjusted amount of input token to trade. This would be a value that is entered into a text field by a user |
+| recipient       | string           | N         | Address of recipient of the trade - if undefined will default to current wallet.                                   |
+| debounceDelayMs | number           | N         | Millisecond delay for the internally used debounce hook. Defaults to 500ms                                         |
+
 #### useSwapQuote
 
 For direct frontend integrations, it is recommended to use `useSwapTypedAmount` instead. This hook does not debounce the input, so unless another hook is built on top of it, it will make many unneccessary calls to the backend service when a user types in a new trade amount.

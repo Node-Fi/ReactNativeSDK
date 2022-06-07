@@ -494,6 +494,8 @@ The following explores hooks within the SwapContext
 
 #### useSwapQuote
 
+For direct frontend integrations, it is recommended to use `useSwapTypedAmount` instead. This hook does not debounce the input, so unless another hook is built on top of it, it will make many unneccessary calls to the backend service when a user types in a new trade amount.
+
 This hook can be used to get a live-updated price quote for a given input and output.
 
 It returns the following:

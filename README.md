@@ -505,10 +505,11 @@ It returns the following:
 
 It accepts the following as parameters:
 
-| Param   | Type                                | Required? | Purpose                                                              | Default Value    |
-| ------- | ----------------------------------- | --------- | -------------------------------------------------------------------- | ---------------- |
-| address | string                              | Yes       | Specifies the address of the token to retrieve historical prices for | N / A - REQUIRED |
-| range   | DateRange (1h, 1d, 1w, 1m, 1y, all) | Y         | Specifies the time range to fetch token prices for                   | N / A - REQUIRED |
+| Param       | Type        | Required? | Description                                                                                               |
+| ----------- | ----------- | --------- | --------------------------------------------------------------------------------------------------------- |
+| input       | TokenAmount | N         | Input token and input amount for the trade. If this is not supplied, the hook will return an empty object |
+| outputToken | Token       | N         | Token to be swapped to. If not supplied, returned object will be empty.                                   |
+| recipient   | string      | N         | Address of recipient of trade result. If not supplied, will default to current active wallet              |
 
 #### useSlippage
 

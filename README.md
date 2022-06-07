@@ -300,6 +300,51 @@ function AddTokenComponent() {
 }
 ```
 
+#### useRemoveToken
+
+This hook allows the user to dynamically remove tokens from being recognized by their wallet.
+
+It takes as input the address of the token to remove.
+
+```ts
+import { useRemoveToken } from '@node-fi/react-native-sdk';
+
+function Component() {
+  const removeToken = useRemoveToken();
+  const tokenToRemove = '0xAddress';
+
+  const handleRemove = React.useCallback(
+    () => removeToken(tokenToRemove),
+    [removeToken]
+  );
+
+  // ...rest
+}
+```
+
+#### useHistoricalTransfers
+
+This hook allows a component to subscribe to past and future token transfers. Transfers are given in the following shape:
+
+```ts
+type TransferTransaction = {
+  amount: BigNumber;
+  blockNumber: number; // block during which the transfer occured
+  token: Address; // address of token that was transfered
+  from: Address; // address of sender
+  to: Address; // address of receiver
+  outgoing?: boolean | undefined; // true if the transfer was outgoing from the tracked wallet
+};
+```
+
+Inputs for the hook are as follows:
+| Param | Type | Required? | Purpose | Default Value |
+|--------------|-------------------------------------|-----------|-------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------|
+| maxTransfers | number \| "all" | N | Specifies the maximum number of transfers to retrieve | "all" |
+| startBlock | number | N | Specifies the block to begin tracking transfers from. If not provided, begins at token genesis | undefined |
+| subscribe | boolean | N | If true, then the returned value will be updated to included new transfers in real time | false |
+| filter | (t: TransferTransaction) => boolean | N | Provides a way to filter transactions on the fly. | Filters out transfers where the amount does not exceed 1/1000 of a token |
+
 #### useBalances
 
 This hook returns a mapping from addresses to the wallet's current balance, as a `TokenAmount` object. Addresses are all lowercase within the mapping, so to access the balance of a given token you will need to use a lowercase address.

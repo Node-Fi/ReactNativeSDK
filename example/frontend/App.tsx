@@ -10,6 +10,7 @@ import { TokenList } from './TokenList';
 import { KeychainButton } from './components/Keychain';
 import { SyncPortfolioButton } from './components/SyncPortfolio';
 import { SUPPORTED_TOKENS, TOKEN_OVERRIDES } from './constants/Tokens';
+import SetDefaultCurrency from './components/SetDefaultCurrency';
 
 export const styles = StyleSheet.create({
   center: { alignItems: 'center' },
@@ -54,10 +55,13 @@ export default function App(): JSX.Element {
         chainId={ChainId.Alfajores}
       >
         <SafeAreaView style={[styles.center, styles.white]}>
-          <CreateWallet />
-          <TokenList />
-          <KeychainButton />
-          <SyncPortfolioButton />
+          <ScrollView>
+            <CreateWallet />
+            <TokenList />
+            <KeychainButton />
+            <SyncPortfolioButton />
+            <SetDefaultCurrency />
+          </ScrollView>
         </SafeAreaView>
       </NodeKitProvider>
     </>

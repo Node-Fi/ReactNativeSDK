@@ -7,6 +7,9 @@ import {
 import DeviceInfo from 'react-native-device-info';
 import { Platform } from 'react-native';
 export const WALLET_KEY_SUFFIX = '/Wallet/Info';
+export const PRICE_KEY_SUFFICE = '/price/info';
+export const SWAP_KEY_SUFFIX = '/swap/info';
+export const TOKENS_KEY_SUFFIX = '/tokens/info';
 export const DEFAULT_PREFIX = '@node-fi/sdk-core';
 export const MNEMONIC = '/secret';
 export const SECURE_ENCLAVE_LABEL = '0xNodeFiSecureEnclave';

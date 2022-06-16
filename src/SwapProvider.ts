@@ -8,7 +8,7 @@ import { useQuery } from 'react-query';
 import type { TransactionReceipt } from 'web3-eth';
 import { BigNumber } from 'bignumber.js';
 
-interface UseSwappInnerProps {
+export interface UseSwappInnerProps {
   slippage?: number;
 }
 

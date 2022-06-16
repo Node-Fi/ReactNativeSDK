@@ -2572,10 +2572,10 @@
   integrity sha512-EGCXvyx9uXlx1vrDr2Jt4YBxHolIxHPwebfheltAZ1Y/A+30tnyJS/ZgP7ur2KP3MP2vs2h/5Jk7Kw4OiVXoZw==
 
 "@node-fi/react-native-sdk@file:..":
-  version "0.1.47-experimental"
+  version "0.1.48-experimental"
   dependencies:
     "@node-fi/default-token-list" "^4.1.81"
-    "@node-fi/sdk-core" "0.0.20-experimental"
+    "@node-fi/sdk-core" "file:../../../../Library/Caches/Yarn/v6/npm-@node-fi-react-native-sdk-0.1.48-experimental-a2d763b3-1e14-4b34-b32d-4ad3bf09e2ae-1655417519614/node_modules/@node-fi/SDK_Core"
     "@react-native-async-storage/async-storage" "^1.17.3"
     axios "^0.27.2"
     bignumber.js "^9.0.2"
@@ -2588,10 +2588,8 @@
     tiny-invariant "^1.2.0"
     unstated-next "^1.1.0"
 
-"@node-fi/sdk-core@0.0.20-experimental":
+"@node-fi/sdk-core@file:../../SDK_Core":
   version "0.0.20-experimental"
-  resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.20-experimental.tgz#1e626575781525f60201a1ce9377b54ace509950"
-  integrity sha512-mk8IfLmpl9/LXRtka+2ZiLMS+BrU/CAedcXtz+DSptfLFQKMVxQy0G1+2svZAeFOi/9HnFzJ+Dai/d17Z4dzow==
   dependencies:
     "@babel/core" "^7.17.5"
     "@babel/preset-env" "^7.16.11"
@@ -5078,9 +5076,9 @@ bip39@2.5.0:
     safe-buffer "^5.0.1"
     unorm "^1.3.3"
 
-"bip39@git+https://github.com/bitcoinjs/bip39.git#d8ea080a18b40f301d4e2219a2991cd2417e83c2":
+"bip39@https://github.com/bitcoinjs/bip39#d8ea080a18b40f301d4e2219a2991cd2417e83c2":
   version "3.0.3"
-  resolved "git+https://github.com/bitcoinjs/bip39.git#d8ea080a18b40f301d4e2219a2991cd2417e83c2"
+  resolved "https://github.com/bitcoinjs/bip39#d8ea080a18b40f301d4e2219a2991cd2417e83c2"
   dependencies:
     "@types/node" "11.11.6"
     create-hash "^1.1.0"
@@ -5101,9 +5099,9 @@ blakejs@^1.1.0:
   resolved "https://registry.yarnpkg.com/blakejs/-/blakejs-1.2.1.tgz#5057e4206eadb4a97f7c0b6e197a505042fc3814"
   integrity sha512-QXUSXI3QVc/gJME0dBpXrag1kbzOqCjCX8/b54ntNyW6sjtoqxqRk3LTmXzaJoh71zMsDCjM+47jS7XiwN/+fQ==
 
-"bls12377js@git+https://github.com/celo-org/bls12377js.git#cb38a4cfb643c778619d79b20ca3e5283a2122a6":
+"bls12377js@https://github.com/celo-org/bls12377js#cb38a4cfb643c778619d79b20ca3e5283a2122a6":
   version "0.1.0"
-  resolved "git+https://github.com/celo-org/bls12377js.git#cb38a4cfb643c778619d79b20ca3e5283a2122a6"
+  resolved "https://github.com/celo-org/bls12377js#cb38a4cfb643c778619d79b20ca3e5283a2122a6"
   dependencies:
     "@stablelib/blake2xs" "0.10.4"
     "@types/node" "^12.11.7"

@@ -1,20 +1,26 @@
 // @ts-ignore
 import * as React from 'react';
 import { WalletContainer } from './WalletContext';
-import { PriceContainer } from './PriceContext';
+import { PriceContainer, UsePriceInnerProps } from './PriceContext';
 import { Address, ChainId, Token } from '@node-fi/sdk-core';
 import type {
   WalletConfig,
   WalletOptions,
 } from '@node-fi/sdk-core/dist/src/wallet/Wallet';
-import { DEFAULT_PREFIX, WALLET_KEY_SUFFIX } from './utils/storageKeys';
+import {
+  DEFAULT_PREFIX,
+  PRICE_KEY_SUFFICE,
+  SWAP_KEY_SUFFIX,
+  TOKENS_KEY_SUFFIX,
+  WALLET_KEY_SUFFIX,
+} from './utils/storageKeys';
 import { asyncReadObject } from './utils/asyncStorage';
 import { clearMnemonic, getMnemonic, saveMnemonic } from './utils/security';
-import { TokenContainer } from './TokensContext';
+import { TokenContainer, UseTokensInnerProps } from './TokensContext';
 import DEFAULT_TOKENS from '@node-fi/default-token-list';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { reduceArrayToMap } from './utils';
-import { SwapContainer } from './SwapProvider';
+import { SwapContainer, UseSwappInnerProps } from './SwapProvider';
 
 export type TokenConfig = {
   address: Address;
@@ -41,6 +47,9 @@ export interface NodeKitProviderProps {
 
 interface PersistedData {
   wallet: WalletConfig;
+  tokens?: UseTokensInnerProps;
+  price?: UsePriceInnerProps;
+  swap?: UseSwappInnerProps;
 }
 
 const queryClient = new QueryClient();
@@ -72,12 +81,24 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
       const persistedWalletConfig = (await asyncReadObject(
         `${storagePrefix}${WALLET_KEY_SUFFIX}`
       )) as WalletConfig;
+      const persistedTokens = (await asyncReadObject(
+        `${storagePrefix}${TOKENS_KEY_SUFFIX}`
+      )) as UseTokensInnerProps | undefined;
+      const persistedPrice = (await asyncReadObject(
+        `${storagePrefix}${PRICE_KEY_SUFFICE}`
+      )) as UsePriceInnerProps | undefined;
+      const persistedSwap = (await asyncReadObject(
+        `${storagePrefix}${SWAP_KEY_SUFFIX}`
+      )) as UseSwappInnerProps | undefined;
       if (persistedWalletConfig) {
         setPersistedData({
           wallet: {
             ...persistedWalletConfig,
             getMnemonic: () => getMnemonic(storagePrefix),
           },
+          tokens: persistedTokens,
+          price: persistedPrice,
+          swap: persistedSwap,
         });
       }
       setLoaded(true);
@@ -132,10 +153,15 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
               })
               .concat(customTokens ?? [])
               .filter((el) => el.chainId === chainId),
+            ...persistedData?.tokens,
           }}
         >
-          <PriceContainer.Provider initialState={{ apiKey, chainId }}>
-            <SwapContainer.Provider>{children}</SwapContainer.Provider>
+          <PriceContainer.Provider
+            initialState={{ apiKey, chainId, ...persistedData?.price }}
+          >
+            <SwapContainer.Provider initialState={persistedData?.swap}>
+              {children}
+            </SwapContainer.Provider>
           </PriceContainer.Provider>
         </TokenContainer.Provider>
       </WalletContainer.Provider>

@@ -1896,35 +1896,6 @@
   resolved "https://registry.yarnpkg.com/@node-fi/default-token-list/-/default-token-list-4.1.81.tgz#2909ef1af60859d4e92bf0b2b0fea7f3c2d841de"
   integrity sha512-EGCXvyx9uXlx1vrDr2Jt4YBxHolIxHPwebfheltAZ1Y/A+30tnyJS/ZgP7ur2KP3MP2vs2h/5Jk7Kw4OiVXoZw==
 
-"@node-fi/sdk-core@0.0.20-experimental":
-  version "0.0.20-experimental"
-  resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.20-experimental.tgz#1e626575781525f60201a1ce9377b54ace509950"
-  integrity sha512-mk8IfLmpl9/LXRtka+2ZiLMS+BrU/CAedcXtz+DSptfLFQKMVxQy0G1+2svZAeFOi/9HnFzJ+Dai/d17Z4dzow==
-  dependencies:
-    "@babel/core" "^7.17.5"
-    "@babel/preset-env" "^7.16.11"
-    "@babel/preset-typescript" "^7.16.7"
-    "@celo/connect" "^2.0.0"
-    "@celo/utils" "~1.2.4"
-    "@celo/wallet-local" "^2.0.0"
-    "@ethersproject/abi" "^5.5.0"
-    "@typechain/web3-v1" "^5.0.0"
-    axios "^0.27.2"
-    babel-jest "^27.5.1"
-    big.js "^6.1.1"
-    bignumber.js "^9.0.2"
-    decimal.js-light "^2.5.1"
-    format-number "^3.0.0"
-    jest "^27.5.1"
-    minimist "^1.2.5"
-    p-map "^5.3.0"
-    prettier "^2.6.2"
-    tiny-invariant "^1.2.0"
-    tiny-warning "^1.0.3"
-    toformat "^2.0.0"
-    typechain "^7.0.0"
-    web3 "^1.7.0"
-
 "@node-fi/sdk-core@file:../SDK_Core":
   version "0.0.20-experimental"
   dependencies:

@@ -9,6 +9,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { AppState, AppStateStatus } from 'react-native';
 import { useQuery } from 'react-query';
+import { useDefaultCurrency } from './PriceContext';
 import {
   useCreateWallet,
   useWallet,
@@ -62,13 +63,19 @@ export const useOnClose = (callback: () => Promise<void>) => {
 export function useHistoricalTokenPrices(address: string, range: DateRange) {
   const period = dateRangeToReadable[range];
   const interval = dateRangeToDefaultInterval[range];
+  const defaultCurrency = useDefaultCurrency();
 
   const fetch = async () => {
     try {
-      const query = formatHistoricalPricesQuery(address, interval, period);
+      const query = formatHistoricalPricesQuery(
+        address,
+        interval,
+        period,
+        defaultCurrency
+      );
       return axios
         .get<{
-          message: { time: number; priceusd: number }[];
+          message: { time: number; priceusd: number; price: number }[];
         }>(query)
         .then((resp) => {
           return resp.data.message;
@@ -79,7 +86,7 @@ export function useHistoricalTokenPrices(address: string, range: DateRange) {
     }
   };
 
-  const res = useQuery([address, period, interval], fetch);
+  const res = useQuery([address, period, interval, defaultCurrency], fetch);
   return res?.data;
 }
 
@@ -87,6 +94,8 @@ export function usePortfolioHistory(range: DateRange) {
   const walletAddress = useWalletAddress();
   const period = dateRangeToReadable[range];
   const interval = dateRangeToDefaultInterval[range];
+  const defaultCurrency = useDefaultCurrency();
+
   const fetch = async () => {
     if (!walletAddress) {
       return undefined;
@@ -94,7 +103,8 @@ export function usePortfolioHistory(range: DateRange) {
     const query = formatHistoricalPortfolioQuery(
       walletAddress,
       interval,
-      period
+      period,
+      defaultCurrency
     );
     const resp = await axios.get<{ data: { total: number; time: number }[] }>(
       query
@@ -104,7 +114,7 @@ export function usePortfolioHistory(range: DateRange) {
       : resp.data.data;
   };
 
-  const res = useQuery([period, interval], fetch);
+  const res = useQuery([period, interval, defaultCurrency], fetch);
   return res?.data;
 }
 

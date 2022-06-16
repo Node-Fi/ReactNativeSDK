@@ -3,6 +3,7 @@ import { Address, ChainId, fetchPrices } from '@node-fi/sdk-core';
 import { createContainer } from 'unstated-next';
 import { useOnClose } from './hooks';
 import { asyncWriteObject, DEFAULT_PREFIX, PRICE_KEY_SUFFICE } from './utils';
+import type { SUPPORTED_BASE_CURRENCIES } from './constants';
 
 interface PriceMap {
   [address: Address]: {
@@ -11,7 +12,7 @@ interface PriceMap {
   };
 }
 
-type CurrencyType = 'usd' | 'euro' | 'real';
+type CurrencyType = typeof SUPPORTED_BASE_CURRENCIES[number];
 
 export interface UsePriceInnerType {
   prices?: PriceMap;

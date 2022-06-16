@@ -69,8 +69,8 @@
     "@node-fi/sdk-core": "*",
     "react": ">=16.8.1 <=17.0.x",
     "react-native": ">=0.60.0-rc.0 <1.0.x",
-    "react-native-keychain": "*",
     "react-native-device-info": "*",
+    "react-native-keychain": "*",
     "react-native-securerandom": "*"
   },
   "jest": {
@@ -152,7 +152,7 @@
   },
   "dependencies": {
     "@node-fi/default-token-list": "^4.1.81",
-    "@node-fi/sdk-core": "0.0.20-experimental",
+    "@node-fi/sdk-core": "file:../SDK_Core",
     "@react-native-async-storage/async-storage": "^1.17.3",
     "axios": "^0.27.2",
     "bignumber.js": "^9.0.2",

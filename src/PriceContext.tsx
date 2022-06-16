@@ -28,7 +28,7 @@ function usePricesInner(initialState?: {
 
   React.useEffect(() => {
     const fetchAndSetPrices = async () => {
-      const fetchedPrices = await fetchPrices(apiKey, chainId);
+      const fetchedPrices = await fetchPrices(apiKey, chainId, defaultCurrency);
       setPrices(fetchedPrices);
     };
     fetchAndSetPrices();
@@ -36,7 +36,7 @@ function usePricesInner(initialState?: {
     return () => {
       clearInterval(intervalId);
     };
-  }, [setPrices, apiKey, chainId]);
+  }, [setPrices, apiKey, chainId, defaultCurrency]);
   return { prices, defaultCurrency, setDefaultCurrency };
 }
 

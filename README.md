@@ -5,7 +5,7 @@ A React Native wrapper for the Node Core SDK
 ## Installation
 
 ```sh
-yarn add @node-fi/react-native-wrapper
+yarn add @node-fi/react-native-sdk
 ```
 
 ### ios

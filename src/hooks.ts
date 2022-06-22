@@ -90,7 +90,12 @@ export function useHistoricalTokenPrices(address: string, range: DateRange) {
   return res?.data;
 }
 
-export function usePortfolioHistory(range: DateRange) {
+export function usePortfolioHistory(range: DateRange):
+  | {
+      total: number;
+      time: number;
+    }[]
+  | undefined {
   const walletAddress = useWalletAddress();
   const period = dateRangeToReadable[range];
   const interval = dateRangeToDefaultInterval[range];
@@ -110,7 +115,10 @@ export function usePortfolioHistory(range: DateRange) {
       query
     );
     return resp.data.data.length === 0
-      ? new Array(50).fill({ total: 0, time: Math.random() * 100000 })
+      ? (new Array(50).fill({ total: 0, time: Math.random() * 100000 }) as {
+          total: number;
+          time: number;
+        }[])
       : resp.data.data;
   };
 

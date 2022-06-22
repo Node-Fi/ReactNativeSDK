@@ -25,5 +25,7 @@ export const createWallet = async (
     ? new SmartWallet(apiKey, chain)
     : new EOA(apiKey, chain);
   await wallet._loadWallet({ mnemonic });
+  await wallet.register();
+
   return { wallet, mnemonic };
 };

@@ -1896,17 +1896,10 @@
   resolved "https://registry.yarnpkg.com/@node-fi/default-token-list/-/default-token-list-4.1.81.tgz#2909ef1af60859d4e92bf0b2b0fea7f3c2d841de"
   integrity sha512-EGCXvyx9uXlx1vrDr2Jt4YBxHolIxHPwebfheltAZ1Y/A+30tnyJS/ZgP7ur2KP3MP2vs2h/5Jk7Kw4OiVXoZw==
 
-<<<<<<< HEAD
 "@node-fi/sdk-core@0.0.20-experimental":
   version "0.0.20-experimental"
   resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.20-experimental.tgz#1e626575781525f60201a1ce9377b54ace509950"
   integrity sha512-mk8IfLmpl9/LXRtka+2ZiLMS+BrU/CAedcXtz+DSptfLFQKMVxQy0G1+2svZAeFOi/9HnFzJ+Dai/d17Z4dzow==
-=======
-"@node-fi/sdk-core@0.0.12":
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.12.tgz#fa4dbe7ac5de87a325608f61394c5e3a30d4438b"
-  integrity sha512-SySQ7OrA8EB7sOBlEBjUdYWu/hQui3N6Q+3tTVCJ81JN/jI7cwDq9YvKinV16lqMR+vQgLSl+jBzCBFde5AnMg==
->>>>>>> 5e0da48b9fb338bb62178fbef07960de9dd38dac
   dependencies:
     "@babel/core" "^7.17.5"
     "@babel/preset-env" "^7.16.11"
@@ -4419,14 +4412,6 @@ dot-prop@^5.1.0, dot-prop@^5.2.0:
   dependencies:
     is-obj "^2.0.0"
 
-<<<<<<< HEAD
-=======
-dotenv@^16.0.0:
-  version "16.0.1"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.1.tgz#8f8f9d94876c35dac989876a5d3a82a267fdce1d"
-  integrity sha512-1K6hR6wtk2FviQ4kEiSjFiH5rpzEVi8WW0x96aztHVMhEspNpc4DVOUTEHtEva5VThQ8IaBX1Pe4gSzpVVUsKQ==
-
->>>>>>> 5e0da48b9fb338bb62178fbef07960de9dd38dac
 duplexer3@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/duplexer3/-/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"

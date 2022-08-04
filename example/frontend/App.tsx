@@ -7,11 +7,11 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { CreateWallet } from './CreateWallet';
 import { TokenList } from './TokenList';
+import GetMnemonicTest from './components/GetMnemonic';
 import { KeychainButton } from './components/Keychain';
+import SetDefaultCurrency from './components/SetDefaultCurrency';
 import { SyncPortfolioButton } from './components/SyncPortfolio';
 import { SUPPORTED_TOKENS, TOKEN_OVERRIDES } from './constants/Tokens';
-import SetDefaultCurrency from './components/SetDefaultCurrency';
-import GetMnemonicTest from './components/GetMnemonic';
 
 export const styles = StyleSheet.create({
   center: { alignItems: 'center' },

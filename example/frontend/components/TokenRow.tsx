@@ -4,19 +4,12 @@ import {
   useRemoveToken,
   useSetGasToken,
   useTokenPrice,
-  useTokenPrices,
   useWallet,
 } from '@node-fi/react-native-sdk';
 import { Token } from '@node-fi/sdk-core';
 import BigNumber from 'bignumber.js';
 import * as React from 'react';
-import {
-  Animated,
-  StyleSheet,
-  TextStyle,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { StyleSheet, TextStyle, TouchableOpacity, View } from 'react-native';
 
 import { getColor } from '../styles/colors';
 import { layout, text } from '../styles/styles';

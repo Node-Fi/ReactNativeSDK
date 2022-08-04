@@ -4,16 +4,12 @@ import {
   DEFAULT_PREFIX,
   PRICE_KEY_SUFFICE,
   SupportedMnemonicLanguages,
-  SWAP_KEY_SUFFIX,
-  TOKENS_KEY_SUFFIX,
   useCreateWallet,
   useDeleteWallet,
   useHistoricalTransfers,
-  usePortfolioHistory,
   useWallet,
   WALLET_KEY_SUFFIX,
 } from '@node-fi/react-native-sdk';
-import { DateRange } from '@node-fi/sdk-core';
 import * as React from 'react';
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 
@@ -132,6 +128,7 @@ export function CreateWallet() {
         >
           <Text style={{ color: 'white', fontSize: 20, lineHeight: 25 }}>
             Clear Async Storage
+            {JSON.stringify(transactions)}
           </Text>
         </View>
       </TouchableOpacity>

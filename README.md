@@ -8,6 +8,14 @@ A React Native wrapper for the Node Core SDK
 yarn add @node-fi/react-native-sdk
 ```
 
+## Development Setup
+
+```sh
+yarn
+cd example
+yarn add @node-fi/react-native-sdk
+```
+
 ### ios
 
 ```sh

@@ -19,7 +19,7 @@
     "react-native-device-info": "^8.7.1",
     "react-native-dotenv": "2.4.3",
     "react-native-get-random-values": "1.5.0",
-    "react-native-keychain": "file:../../react-native-keychain",
+    "react-native-keychain": "",
     "react-native-localhost": "1.0.0",
     "react-native-modal": "^13.0.1",
     "react-native-securerandom": "^1.0.0",

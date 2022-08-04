@@ -1,17 +1,17 @@
 import * as Keychain from 'react-native-keychain';
-import { KEYCHAIN_SETTINGS } from './storageKeys';
+import { DEFAULT_PREFIX, KEYCHAIN_SETTINGS } from './storageKeys';
 import invariant from 'tiny-invariant';
 // import * as LocalAuthentication from 'expo-local-authentication';
 // import { Platform } from 'react-native';
 
 export const getMnemonic = async (
-  service: string
+  storagePrefix: string = DEFAULT_PREFIX
   // attempt = 0
 ): Promise<string | undefined> => {
   const biometrySupported = await Keychain.getSupportedBiometryType();
 
   const existingCredentials = await Keychain.getGenericPassword(
-    KEYCHAIN_SETTINGS(service, biometrySupported)
+    KEYCHAIN_SETTINGS(storagePrefix, biometrySupported)
   );
   if (!existingCredentials) return undefined;
   // if (Platform.OS === 'android') {
@@ -29,16 +29,19 @@ export const getMnemonic = async (
   return mnemonic;
 };
 
-export const clearMnemonic = async (service: string) => {
+export const clearMnemonic = async (storagePrefix: string = DEFAULT_PREFIX) => {
   const biometrySupported = await Keychain.getSupportedBiometryType();
   await Keychain.resetGenericPassword(
-    KEYCHAIN_SETTINGS(service, biometrySupported)
+    KEYCHAIN_SETTINGS(storagePrefix, biometrySupported)
   );
 };
 
-export const saveMnemonic = async (service: string, mnemonic: string) => {
+export const saveMnemonic = async (
+  storagePrefix: string = DEFAULT_PREFIX,
+  mnemonic: string
+) => {
   const biometrySupported = await Keychain.getSupportedBiometryType();
-  const existingCredentials = await getMnemonic(service);
+  const existingCredentials = await getMnemonic(storagePrefix);
   invariant(
     !existingCredentials,
     'Mnemonic already exists here, delete mnemonic before overriding'
@@ -48,8 +51,8 @@ export const saveMnemonic = async (service: string, mnemonic: string) => {
   //   label: SECURE_ENCLAVE_LABEL,
   // });
   await Keychain.setGenericPassword(
-    service,
+    storagePrefix,
     JSON.stringify({ mnemonic, _v: 0 }), //mnemonicCipher,
-    KEYCHAIN_SETTINGS(service, biometrySupported)
+    KEYCHAIN_SETTINGS(storagePrefix, biometrySupported)
   );
 };

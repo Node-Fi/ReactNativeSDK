@@ -4,6 +4,8 @@ import { createContainer } from 'unstated-next';
 import { useOnClose } from './hooks';
 import { asyncWriteObject, DEFAULT_PREFIX, PRICE_KEY_SUFFICE } from './utils';
 import type { SUPPORTED_BASE_CURRENCIES } from './constants';
+import { useQuery } from 'react-query';
+import type { FetchDetails } from './types';
 
 interface PriceMap {
   [address: Address]: {
@@ -18,6 +20,7 @@ export interface UsePriceInnerType {
   prices?: PriceMap;
   defaultCurrency: CurrencyType;
   setDefaultCurrency: (ct: CurrencyType) => void;
+  fetchDetails: FetchDetails;
 }
 
 export interface UsePriceInnerProps {
@@ -34,21 +37,18 @@ function usePricesInner(initialState?: UsePriceInnerProps): UsePriceInnerType {
     defaultCurrency: _defaultCurrency = 'usd',
     prices: _prices,
   } = initialState ?? {};
-  const [prices, setPrices] = React.useState<PriceMap | undefined>(_prices);
   const [defaultCurrency, setDefaultCurrency] =
     React.useState<CurrencyType>(_defaultCurrency);
 
-  React.useEffect(() => {
-    const fetchAndSetPrices = async () => {
-      const fetchedPrices = await fetchPrices(apiKey, chainId, defaultCurrency);
-      setPrices(fetchedPrices);
-    };
-    fetchAndSetPrices();
-    const intervalId = setInterval(fetchAndSetPrices, 1000 * 60 * 5); // Refresh every 5 mintues
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [setPrices, apiKey, chainId, defaultCurrency]);
+  const { data: prices, ...pricesStatus } = useQuery<PriceMap>(
+    ['prices', defaultCurrency],
+    async () => await fetchPrices(apiKey, chainId, defaultCurrency),
+    {
+      keepPreviousData: true,
+      initialData: _prices,
+      refetchInterval: 30 * 1000,
+    }
+  );
 
   useOnClose(async () => {
     await asyncWriteObject(`${DEFAULT_PREFIX}${PRICE_KEY_SUFFICE}`, {
@@ -56,7 +56,12 @@ function usePricesInner(initialState?: UsePriceInnerProps): UsePriceInnerType {
       prices,
     });
   });
-  return { prices, defaultCurrency, setDefaultCurrency };
+  return {
+    prices,
+    defaultCurrency,
+    setDefaultCurrency,
+    fetchDetails: pricesStatus,
+  };
 }
 
 export const PriceContainer = createContainer<
@@ -64,15 +69,23 @@ export const PriceContainer = createContainer<
   { apiKey: string; chainId: ChainId }
 >(usePricesInner);
 
+export const useTokenPriceFetchDetails = () => {
+  const { fetchDetails } = PriceContainer.useContainer();
+  return fetchDetails;
+};
+
 export const useTokenPrices = () => {
-  const { prices } = PriceContainer.useContainer();
-  return prices;
+  const { prices, fetchDetails } = PriceContainer.useContainer();
+  return React.useMemo(
+    () => ({ prices, fetchDetails }),
+    [prices, fetchDetails]
+  );
 };
 
 export const useTokenPrice = (address: Address) => {
-  const { prices } = PriceContainer.useContainer();
-  const tokenPrice = prices?.[address.toLowerCase()];
-  return React.useMemo(() => tokenPrice, [tokenPrice]);
+  const { prices, fetchDetails } = PriceContainer.useContainer();
+  const price = prices?.[address.toLowerCase()];
+  return React.useMemo(() => ({ price, fetchDetails }), [price, fetchDetails]);
 };
 
 export const useSetDefaultCurrency = () => {

@@ -16,6 +16,7 @@ import { useTokenPrices } from './PriceContext';
 import { useQuery } from 'react-query';
 import Web3 from 'web3';
 import { BigNumber } from 'bignumber.js';
+import type { FetchDetails } from './types';
 
 export interface UseTokensInnerProps {
   initialTokens: Token[];
@@ -154,20 +155,34 @@ export const useBalances = (): TokenBalances => {
  *
  * @returns Balances multiplied by the price of the token
  */
-export const usePricedBalances = (): TokenBalances => {
+export const usePricedBalances = (): {
+  pricedBalances?: TokenBalances;
+  fetchDetails: FetchDetails;
+} => {
   const balances = useBalances();
-  const prices = useTokenPrices() ?? {};
-  return Object.entries(balances).reduce(
-    (accum, [addr, tokAmount]) => ({
-      ...accum,
-      [addr]: prices[addr.toLowerCase()]
-        ? new TokenAmount(
-            tokAmount.token,
-            tokAmount.raw.multipliedBy(prices[addr.toLowerCase()]?.current ?? 1)
-          )
-        : undefined,
-    }),
-    {}
+  const { prices, fetchDetails } = useTokenPrices() ?? {};
+  return React.useMemo(
+    () =>
+      !prices
+        ? { fetchDetails }
+        : {
+            pricedBalances: Object.entries(balances)
+              .filter(([addr]) => prices?.[addr.toLowerCase()])
+              .reduce(
+                (accum, [addr, tokAmount]) => ({
+                  ...accum,
+                  [addr]: new TokenAmount(
+                    tokAmount.token,
+                    tokAmount.raw.multipliedBy(
+                      prices[addr.toLowerCase()]?.current ?? 1
+                    )
+                  ),
+                }),
+                {}
+              ),
+            fetchDetails,
+          },
+    [prices, fetchDetails, balances]
   );
 };
 

@@ -1,6 +1,6 @@
 {
   "name": "@node-fi/react-native-sdk",
-  "version": "0.1.50-experimental",
+  "version": "0.1.51-experimental",
   "description": "A React Native wrapper for the Node Core SDK",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -152,7 +152,7 @@
   },
   "dependencies": {
     "@node-fi/default-token-list": "^4.1.81",
-    "@node-fi/sdk-core": "file:../SDK_Core",
+    "@node-fi/sdk-core": "0.0.22-experimental",
     "@react-native-async-storage/async-storage": "^1.17.3",
     "axios": "^0.27.2",
     "bignumber.js": "^9.0.2",

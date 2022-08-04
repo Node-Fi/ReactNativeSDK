@@ -3,7 +3,7 @@ import {
   useSetDefaultCurrency,
 } from '@node-fi/react-native-sdk';
 import * as React from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 
 import { NodeButton, Text, TextInput } from './ThemedComponents';
 
@@ -20,7 +20,8 @@ export default function SetDefaultCurrency() {
         <NodeButton
           text="Change"
           onPress={() => {
-            setDefaultCurrency((str as unknown) as 'usd');
+            // setDefaultCurrency('brl');
+            setDefaultCurrency((str.trim() as unknown) as 'usd');
             setStr(undefined);
           }}
         />

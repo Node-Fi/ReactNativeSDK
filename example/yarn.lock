@@ -2572,10 +2572,10 @@
   integrity sha512-EGCXvyx9uXlx1vrDr2Jt4YBxHolIxHPwebfheltAZ1Y/A+30tnyJS/ZgP7ur2KP3MP2vs2h/5Jk7Kw4OiVXoZw==
 
 "@node-fi/react-native-sdk@file:..":
-  version "0.1.50-experimental"
+  version "0.1.51-experimental"
   dependencies:
     "@node-fi/default-token-list" "^4.1.81"
-    "@node-fi/sdk-core" "0.0.21-experimental"
+    "@node-fi/sdk-core" "0.0.22-experimental"
     "@react-native-async-storage/async-storage" "^1.17.3"
     axios "^0.27.2"
     bignumber.js "^9.0.2"
@@ -2588,27 +2588,10 @@
     tiny-invariant "^1.2.0"
     unstated-next "^1.1.0"
 
-"@node-fi/react-native-sdk@file:../":
-  version "0.1.50-experimental"
-  dependencies:
-    "@node-fi/default-token-list" "^4.1.81"
-    "@node-fi/sdk-core" "0.0.21-experimental"
-    "@react-native-async-storage/async-storage" "^1.17.3"
-    axios "^0.27.2"
-    bignumber.js "^9.0.2"
-    react-native-crypto "^2.2.0"
-    react-native-device-info "^8.7.1"
-    react-native-get-random-values "^1.8.0"
-    react-native-keychain "^8.0.0"
-    react-native-securerandom "^1.0.0"
-    react-query "^3.39.0"
-    tiny-invariant "^1.2.0"
-    unstated-next "^1.1.0"
-
-"@node-fi/sdk-core@0.0.21-experimental":
-  version "0.0.21-experimental"
-  resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.21-experimental.tgz#f1929da1eff02f40bbcc5cd4dadf025be55b0345"
-  integrity sha512-frlxXCoaUcCeZNXN4vvzxSWd6xW9rwR8ZFP4YDGS6LA1VcekLWM+k0KO8E7ZbRm3tHaJuUog1yTnJgjzPzFX7w==
+"@node-fi/sdk-core@0.0.22-experimental":
+  version "0.0.22-experimental"
+  resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.22-experimental.tgz#ee4c6b602c30bdd977cc0a778f5f660afb5fb908"
+  integrity sha512-m1t1RN3wNsv//jIxRrIEzi9vfFAiXa/JtNyWdt2UcEuS6UoVzym0LUDg6Ol/k+dw+hfAWBJq+7qiViGAtzQoHw==
   dependencies:
     "@babel/core" "^7.17.5"
     "@babel/preset-env" "^7.16.11"
@@ -13897,13 +13880,15 @@ react-native-get-random-values@^1.8.0:
   dependencies:
     fast-base64-decode "^1.0.0"
 
+react-native-keychain@:
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-8.1.1.tgz#3bb5e37946b964a7bcf7df2fe470dd244e01a340"
+  integrity sha512-8fxgeHKwGcL657eAYpdBTkDIxNhbIHI+kyyO0Yac2dgVAN184JoIwQcW2z6snahwDaCObQOu0biLFHnsH+4KSg==
+
 react-native-keychain@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-8.0.0.tgz#ff708e4dc2a5440df717179bf9b7cd50f78b61d7"
   integrity sha512-c7Cs+YQN26UaQsRG1dmlXL7VL2ctnXwH/dl0IOMEQ7ZaL2NdN313YSAI8ZEZZjrVhNmPsyWEuvTFqWrdpItqQg==
-
-"react-native-keychain@file:../../react-native-keychain":
-  version "8.0.0"
 
 react-native-localhost@1.0.0:
   version "1.0.0"

@@ -4,6 +4,7 @@ import {
   useRemoveToken,
   useSetGasToken,
   useTokenPrice,
+  useTokenPrices,
   useWallet,
 } from '@node-fi/react-native-sdk';
 import { Token } from '@node-fi/sdk-core';
@@ -16,7 +17,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
 
 import { getColor } from '../styles/colors';
 import { layout, text } from '../styles/styles';
@@ -71,15 +71,24 @@ export const InfoBlock = ({
 const TokenDetails = ({ token }: { readonly token: Token }) => {
   const remove = useRemoveToken();
   const balances = usePricedBalances();
+  const b = useBalances();
   const balance =
     balances[token.address] ?? balances[token.address.toLowerCase()];
+  const price = useTokenPrices();
   const wallet = useWallet();
+  const b1 = b[token.address.toLowerCase()];
   const [feeCurrency, setFeeCurrency] = useSetGasToken();
 
+  // console.log('Balances: ', balances);
+  console.log('Prices', price);
   return (
     <View style={{ paddingHorizontal: 20 }}>
       <InfoRow left="Name" right={token.name} />
-      <InfoRow left="Balance" right={`$${balance?.toFixed(2)}` ?? '0.00'} />
+      <InfoRow
+        left="Priced Balance"
+        right={`$${balance?.toFixed(2)}` ?? '0.00'}
+      />
+      <InfoRow left="Balance" right={`$${b1?.toFixed(2)}` ?? '0.00'} />
       <InfoRow left="Address" right={shortenAddress(token.address)} />
       <TouchableOpacity
         onPress={() => remove(token.address)}

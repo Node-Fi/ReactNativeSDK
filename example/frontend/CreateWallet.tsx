@@ -2,11 +2,17 @@ import {
   asyncClear,
   clearMnemonic,
   DEFAULT_PREFIX,
+  PRICE_KEY_SUFFICE,
+  SWAP_KEY_SUFFIX,
+  TOKENS_KEY_SUFFIX,
   useCreateWallet,
   useDeleteWallet,
   useHistoricalTransfers,
+  usePortfolioHistory,
   useWallet,
+  WALLET_KEY_SUFFIX,
 } from '@node-fi/react-native-sdk';
+import { DateRange } from '@node-fi/sdk-core';
 import * as React from 'react';
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 
@@ -18,8 +24,6 @@ export function CreateWallet() {
   const createWallet = useCreateWallet();
   const deleteWallet = useDeleteWallet();
   const transactions = useHistoricalTransfers(4, undefined, true);
-
-  console.log(wallet.address);
   return wallet?.address ? (
     <View style={styles.center}>
       <Text style={{ textAlign: 'center' }}>{`Wallet: ${wallet.address}`}</Text>
@@ -68,9 +72,10 @@ export function CreateWallet() {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() =>
-          createWallet(
-            'trend process render future worth one warm ahead master enter inch pioneer indoor elevator upper embrace symbol awful pretty route must country film science'
-          )
+          createWallet({
+            mnemonic:
+              'trend process render future worth one warm ahead master enter inch pioneer indoor elevator upper embrace symbol awful pretty route must country film science',
+          })
         }
       >
         <View
@@ -93,8 +98,14 @@ export function CreateWallet() {
 
       <TouchableOpacity
         onPress={async () => {
+          console.log(`${DEFAULT_PREFIX}${PRICE_KEY_SUFFICE}`);
+          await asyncClear(`${DEFAULT_PREFIX}${PRICE_KEY_SUFFICE}`);
           await Promise.all([
             asyncClear(DEFAULT_PREFIX),
+            asyncClear(`${DEFAULT_PREFIX}${WALLET_KEY_SUFFIX}`),
+            // asyncClear(`${DEFAULT_PREFIX}${TOKENS_KEY_SUFFIX}`),
+            asyncClear(`${DEFAULT_PREFIX}${PRICE_KEY_SUFFICE}`),
+            // asyncClear(`${DEFAULT_PREFIX}${SWAP_KEY_SUFFIX}`),
             clearMnemonic(DEFAULT_PREFIX),
           ]);
         }}
@@ -114,7 +125,6 @@ export function CreateWallet() {
         >
           <Text style={{ color: 'white', fontSize: 20, lineHeight: 25 }}>
             Clear Async Storage
-            {JSON.stringify(transactions)}
           </Text>
         </View>
       </TouchableOpacity>

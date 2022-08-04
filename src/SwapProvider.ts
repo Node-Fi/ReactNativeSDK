@@ -7,6 +7,7 @@ import { WalletContainer } from './WalletContext';
 import { useQuery } from 'react-query';
 import type { TransactionReceipt } from 'web3-eth';
 import { BigNumber } from 'bignumber.js';
+import type { FetchDetails } from './types';
 
 export interface UseSwappInnerProps {
   slippage?: number;
@@ -82,8 +83,7 @@ export function useSwapQuote(
   output?: TokenAmount;
   minimumOutput?: TokenAmount;
   execute?: () => Promise<TransactionReceipt | void>;
-  error?: string;
-  loading?: boolean;
+  fetchDetails: FetchDetails;
 } {
   const { slippage } = SwapContainer.useContainer();
   const wallet = useWallet();
@@ -103,28 +103,34 @@ export function useSwapQuote(
         : undefined,
     [inputToken, inputAmount, outputToken, swapMaster]
   );
-  const swapPayload = useQuery(
+  const {
+    data: { details, routerAddress, error, expectedOut } = {},
+    ...swapQueryDetails
+  } = useQuery(
     [inputToken?.address, inputAmount?.toFixed(0), outputToken],
-    fetch
+    fetch,
+    {
+      keepPreviousData: true,
+      refetchInterval: 5 * 1000,
+    }
   );
 
   const execute = React.useCallback(
     async () =>
-      swapPayload.data?.details && (recipient || wallet?.address)
+      details && (recipient || wallet?.address) && routerAddress
         ? await swapMaster.performSwap(
-            swapPayload.data.details,
+            details,
             recipient ?? wallet.address ?? '',
             slippage / 10000,
-            swapPayload.data.routerAddress ?? ''
+            routerAddress
           )
         : console.error('Cannot execute a swap that does not exist'),
-    [swapPayload, recipient, wallet, slippage, swapMaster]
+    [details, routerAddress, recipient, wallet, slippage, swapMaster]
   );
 
   return React.useMemo(() => {
-    if (swapPayload.isLoading) return { loading: true };
-    if (!swapPayload.data) return {};
-    const { details, error, expectedOut } = swapPayload.data;
+    if (!details || !routerAddress || !error || !expectedOut)
+      return { fetchDetails: swapQueryDetails };
     return {
       execute,
       path: details?.path,
@@ -137,7 +143,16 @@ export function useSwapQuote(
             expectedOut.minus(expectedOut.multipliedBy(slippage).div(10000))
           )
         : undefined,
-      error,
+      fetchDetails: swapQueryDetails,
     };
-  }, [swapPayload, execute, outputToken, slippage]);
+  }, [
+    details,
+    routerAddress,
+    error,
+    swapQueryDetails,
+    expectedOut,
+    execute,
+    outputToken,
+    slippage,
+  ]);
 }

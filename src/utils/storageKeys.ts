@@ -10,9 +10,12 @@ export const WALLET_KEY_SUFFIX = '/Wallet/Info';
 export const PRICE_KEY_SUFFICE = '/price/info';
 export const SWAP_KEY_SUFFIX = '/swap/info';
 export const TOKENS_KEY_SUFFIX = '/tokens/info';
-export const DEFAULT_PREFIX = '@node-fi/sdk-core';
+export let DEFAULT_PREFIX = '@node-fi/sdk-core';
 export const MNEMONIC = '/secret';
 export const SECURE_ENCLAVE_LABEL = '0xNodeFiSecureEnclave';
+
+export const setStoragePrefix = (newPrefix: string) =>
+  (DEFAULT_PREFIX = newPrefix);
 
 export const KEYCHAIN_SETTINGS = (
   service: string,

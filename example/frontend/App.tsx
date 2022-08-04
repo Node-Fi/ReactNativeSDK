@@ -11,6 +11,7 @@ import { KeychainButton } from './components/Keychain';
 import { SyncPortfolioButton } from './components/SyncPortfolio';
 import { SUPPORTED_TOKENS, TOKEN_OVERRIDES } from './constants/Tokens';
 import SetDefaultCurrency from './components/SetDefaultCurrency';
+import GetMnemonicTest from './components/GetMnemonic';
 
 export const styles = StyleSheet.create({
   center: { alignItems: 'center' },
@@ -36,6 +37,7 @@ export default function App(): JSX.Element {
         apiKey={'c72d0ce2d50a447d874da93b7e44abb1'} // sandbox api key - will only work on alfajores
         tokenWhitelist={new Set(SUPPORTED_TOKENS)}
         tokenDetailsOverride={TOKEN_OVERRIDES}
+        // storagePrefix="example"
         customTokens={[
           new Token(
             44787,
@@ -61,6 +63,7 @@ export default function App(): JSX.Element {
             <KeychainButton />
             <SyncPortfolioButton />
             <SetDefaultCurrency />
+            <GetMnemonicTest />
           </ScrollView>
         </SafeAreaView>
       </NodeKitProvider>

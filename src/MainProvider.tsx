@@ -10,6 +10,7 @@ import type {
 import {
   DEFAULT_PREFIX,
   PRICE_KEY_SUFFICE,
+  setStoragePrefix,
   SWAP_KEY_SUFFIX,
   TOKENS_KEY_SUFFIX,
   WALLET_KEY_SUFFIX,
@@ -77,6 +78,8 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
   );
 
   React.useEffect(() => {
+    if (storagePrefix !== DEFAULT_PREFIX) setStoragePrefix(storagePrefix);
+
     (async () => {
       const persistedWalletConfig = (await asyncReadObject(
         `${storagePrefix}${WALLET_KEY_SUFFIX}`

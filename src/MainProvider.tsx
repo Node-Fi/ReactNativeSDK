@@ -81,7 +81,7 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
       storagePrefix = DEFAULT_PREFIX,
       swapQuoteRefetchPeriod,
       priceRefetchPeriod,
-    },
+    } = {},
   } = props;
   const [persistedData, setPersistedData] = React.useState<PersistedData>();
   const [loaded, setLoaded] = React.useState(false);

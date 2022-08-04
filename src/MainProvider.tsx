@@ -20,7 +20,11 @@ import { clearMnemonic, getMnemonic, saveMnemonic } from './utils/security';
 import { TokenContainer, UseTokensInnerProps } from './TokensContext';
 import DEFAULT_TOKENS from '@node-fi/default-token-list';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { reduceArrayToMap } from './utils';
+import {
+  reduceArrayToMap,
+  setPriceRefetchInterval,
+  setSwapQuoteRefetchInterval,
+} from './utils';
 import { SwapContainer, UseSwappInnerProps } from './SwapProvider';
 
 export type TokenConfig = {
@@ -32,18 +36,24 @@ export type TokenConfig = {
   chainId?: ChainId;
 };
 
+export type ConstantsOverride = Partial<{
+  storagePrefix: string;
+  priceRefetchPeriod: number;
+  swapQuoteRefetchPeriod: number;
+}>;
+
 export interface NodeKitProviderProps {
   children: React.ReactElement | React.ReactElement[];
   customTokens: Token[];
   tokenWhitelist?: Set<Address>;
   tokenDetailsOverride?: TokenConfig[];
   tokenBlacklist?: Set<Address>;
-  storagePrefix?: string;
   walletConfig?: WalletConfig & { opts?: WalletOptions };
   eoaOnly?: boolean;
   loadingComponent?: React.ReactElement;
   apiKey: string;
   chainId?: ChainId;
+  constantsOverride: ConstantsOverride;
 }
 
 interface PersistedData {
@@ -58,7 +68,6 @@ const queryClient = new QueryClient();
 export function NodeKitProvider(props: NodeKitProviderProps) {
   const {
     children,
-    storagePrefix = DEFAULT_PREFIX,
     eoaOnly,
     walletConfig,
     loadingComponent,
@@ -68,6 +77,11 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
     tokenBlacklist,
     customTokens,
     chainId = ChainId.Celo,
+    constantsOverride: {
+      storagePrefix = DEFAULT_PREFIX,
+      swapQuoteRefetchPeriod,
+      priceRefetchPeriod,
+    },
   } = props;
   const [persistedData, setPersistedData] = React.useState<PersistedData>();
   const [loaded, setLoaded] = React.useState(false);
@@ -79,6 +93,9 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
 
   React.useEffect(() => {
     if (storagePrefix !== DEFAULT_PREFIX) setStoragePrefix(storagePrefix);
+    if (swapQuoteRefetchPeriod)
+      setSwapQuoteRefetchInterval(swapQuoteRefetchPeriod);
+    if (priceRefetchPeriod) setPriceRefetchInterval(priceRefetchPeriod);
 
     (async () => {
       const persistedWalletConfig = (await asyncReadObject(
@@ -106,7 +123,7 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
       }
       setLoaded(true);
     })();
-  }, [setLoaded, storagePrefix]);
+  }, [setLoaded, storagePrefix, swapQuoteRefetchPeriod, priceRefetchPeriod]);
 
   return !loaded ? (
     loadingComponent ?? null

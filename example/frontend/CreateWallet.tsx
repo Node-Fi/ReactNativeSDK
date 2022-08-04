@@ -3,6 +3,7 @@ import {
   clearMnemonic,
   DEFAULT_PREFIX,
   PRICE_KEY_SUFFICE,
+  SupportedMnemonicLanguages,
   SWAP_KEY_SUFFIX,
   TOKENS_KEY_SUFFIX,
   useCreateWallet,
@@ -52,7 +53,14 @@ export function CreateWallet() {
     </View>
   ) : (
     <View style={{ height: 100, backgroundColor: 'red' }}>
-      <TouchableOpacity onPress={() => createWallet()}>
+      <TouchableOpacity
+        onPress={() => {
+          const i = Math.floor(
+            Math.random() * SupportedMnemonicLanguages.length
+          );
+          createWallet({ bip39Language: SupportedMnemonicLanguages[i] });
+        }}
+      >
         <View
           style={{
             paddingVertical: 15,
@@ -98,7 +106,6 @@ export function CreateWallet() {
 
       <TouchableOpacity
         onPress={async () => {
-          console.log(`${DEFAULT_PREFIX}${PRICE_KEY_SUFFICE}`);
           await asyncClear(`${DEFAULT_PREFIX}${PRICE_KEY_SUFFICE}`);
           await Promise.all([
             asyncClear(DEFAULT_PREFIX),

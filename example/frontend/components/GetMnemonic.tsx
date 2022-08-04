@@ -1,7 +1,9 @@
 import { DEFAULT_PREFIX, getMnemonic } from '@node-fi/react-native-sdk';
 import * as React from 'react';
-import { Dimensions, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
+
 import { DEVICE_WIDTH } from '../styles/styles';
+
 import { Text } from './ThemedComponents';
 export default function GetMnemonicTest() {
   const [mnemonic, setMnemonic] = React.useState<string>();
@@ -12,7 +14,7 @@ export default function GetMnemonicTest() {
         onPress={async () => {
           console.log(mnemonic);
           if (mnemonic) setMnemonic(undefined);
-          else setMnemonic(await getMnemonic(DEFAULT_PREFIX));
+          else setMnemonic(await getMnemonic());
         }}
         style={{
           paddingVertical: 15,

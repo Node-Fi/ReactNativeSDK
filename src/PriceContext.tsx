@@ -2,8 +2,13 @@ import * as React from 'react';
 import { Address, ChainId, fetchPrices } from '@node-fi/sdk-core';
 import { createContainer } from 'unstated-next';
 import { useOnClose } from './hooks';
-import { asyncWriteObject, DEFAULT_PREFIX, PRICE_KEY_SUFFICE } from './utils';
-import type { SUPPORTED_BASE_CURRENCIES } from './constants';
+import {
+  asyncWriteObject,
+  DEFAULT_PREFIX,
+  PRICE_KEY_SUFFICE,
+  PRICE_REFETCH_INTERVAL,
+  SUPPORTED_BASE_CURRENCIES,
+} from './utils';
 import { useQuery } from 'react-query';
 import type { FetchDetails } from './types';
 
@@ -46,7 +51,7 @@ function usePricesInner(initialState?: UsePriceInnerProps): UsePriceInnerType {
     {
       keepPreviousData: true,
       initialData: _prices,
-      refetchInterval: 30 * 1000,
+      refetchInterval: PRICE_REFETCH_INTERVAL,
     }
   );
 

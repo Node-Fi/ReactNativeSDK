@@ -8,6 +8,7 @@ import { useQuery } from 'react-query';
 import type { TransactionReceipt } from 'web3-eth';
 import { BigNumber } from 'bignumber.js';
 import type { FetchDetails } from './types';
+import { SWAP_QUOTE_REFETCH_INTERVAL } from './utils';
 
 export interface UseSwappInnerProps {
   slippage?: number;
@@ -111,7 +112,7 @@ export function useSwapQuote(
     fetch,
     {
       keepPreviousData: true,
-      refetchInterval: 5 * 1000,
+      refetchInterval: SWAP_QUOTE_REFETCH_INTERVAL,
     }
   );
 

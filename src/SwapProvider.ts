@@ -1,11 +1,18 @@
 import * as React from 'react';
-import { Address, SmartRouter, Token, TokenAmount } from '@node-fi/sdk-core';
+import {
+  Address,
+  SmartRouter,
+  Token,
+  TokenAmount,
+  RouterPayloadRequest,
+  SmartWallet,
+} from '@node-fi/sdk-core';
 import { createContainer } from 'unstated-next';
 import { useTokens } from './TokensContext';
 import useDebounce, { useWallet } from './hooks';
 import { WalletContainer } from './WalletContext';
 import { useQuery } from 'react-query';
-import type { TransactionReceipt } from 'web3-eth';
+import type { TransactionReceipt, TransactionConfig } from 'web3-eth';
 import { BigNumber } from 'bignumber.js';
 import type { FetchDetails } from './types';
 import { SWAP_QUOTE_REFETCH_INTERVAL } from './utils';
@@ -78,16 +85,24 @@ export function useSwapTypedAmount(
 export function useSwapQuote(
   input?: TokenAmount,
   outputToken?: Token,
-  recipient?: string
+  recipient?: string,
+  opts?: Partial<
+    Omit<RouterPayloadRequest, 'tokenIn' | 'tokenOut' | 'amountIn'>
+  >
 ): {
-  path?: string[];
-  output?: TokenAmount;
-  minimumOutput?: TokenAmount;
-  execute?: () => Promise<TransactionReceipt | void>;
+  trade?: {
+    path?: string[];
+    output?: TokenAmount;
+    minimumOutput?: TokenAmount;
+    txn?: TransactionConfig;
+    execute?: () => Promise<TransactionReceipt | void>;
+  };
   fetchDetails: FetchDetails;
 } {
   const { slippage } = SwapContainer.useContainer();
   const wallet = useWallet();
+  const from =
+    wallet instanceof SmartWallet ? wallet.eoa?.address : wallet.address;
   const { apiKey } = WalletContainer.useContainer();
 
   const swapMaster = React.useMemo(
@@ -100,7 +115,14 @@ export function useSwapQuote(
   const fetch = React.useCallback(
     async () =>
       inputToken && inputAmount && outputToken
-        ? swapMaster.getRouteBase(inputToken, outputToken, inputAmount)
+        ? swapMaster.getRouteBase(inputToken, outputToken, inputAmount, {
+            slippage,
+            from,
+            to: recipient ?? wallet.address,
+            includeTxn: true,
+            priceImpact: true,
+            ...opts,
+          })
         : undefined,
     [inputToken, inputAmount, outputToken, swapMaster]
   );
@@ -116,34 +138,23 @@ export function useSwapQuote(
     }
   );
 
-  const execute = React.useCallback(
-    async () =>
-      details && (recipient || wallet?.address) && routerAddress
-        ? await swapMaster.performSwap(
-            details,
-            recipient ?? wallet.address ?? '',
-            slippage / 10000,
-            routerAddress
-          )
-        : console.error('Cannot execute a swap that does not exist'),
-    [details, routerAddress, recipient, wallet, slippage, swapMaster]
-  );
-
   return React.useMemo(() => {
     if (!details || !routerAddress || !error || !expectedOut)
       return { fetchDetails: swapQueryDetails };
     return {
-      execute,
-      path: details?.path,
-      output: expectedOut
-        ? new TokenAmount(outputToken as Token, expectedOut)
-        : undefined,
-      minimumOutput: expectedOut
-        ? new TokenAmount(
-            outputToken as Token,
-            expectedOut.minus(expectedOut.multipliedBy(slippage).div(10000))
-          )
-        : undefined,
+      trade: {
+        ...details,
+        output: expectedOut
+          ? new TokenAmount(outputToken as Token, expectedOut)
+          : undefined,
+        minimumOutput: expectedOut
+          ? new TokenAmount(
+              outputToken as Token,
+              expectedOut.minus(expectedOut.multipliedBy(slippage).div(10000))
+            )
+          : undefined,
+        routerAddress,
+      },
       fetchDetails: swapQueryDetails,
     };
   }, [
@@ -152,7 +163,6 @@ export function useSwapQuote(
     error,
     swapQueryDetails,
     expectedOut,
-    execute,
     outputToken,
     slippage,
   ]);

@@ -11,15 +11,21 @@ export const PRICE_KEY_SUFFICE = '/price/info';
 export const SWAP_KEY_SUFFIX = '/swap/info';
 export const TOKENS_KEY_SUFFIX = '/tokens/info';
 export let DEFAULT_PREFIX = '@node-fi/sdk-core';
-export const MNEMONIC = '/secret';
+export let MNEMONIC = '/secret';
 export const SECURE_ENCLAVE_LABEL = '0xNodeFiSecureEnclave';
 
 export const setStoragePrefix = (newPrefix: string) =>
   (DEFAULT_PREFIX = newPrefix);
 
+export const setMnemonicSuffix = (newSuffix: string) => {
+  MNEMONIC = newSuffix;
+};
+
 export const KEYCHAIN_SETTINGS = (
   service: string,
-  biometryType: BIOMETRY_TYPE | null
+  biometryType?: BIOMETRY_TYPE | null,
+  accessible?: ACCESSIBLE | null,
+  authenticationType?: AUTHENTICATION_TYPE | null
 ) => {
   if (DeviceInfo.isEmulatorSync() && Platform.OS === 'ios') {
     console.warn(
@@ -32,8 +38,9 @@ export const KEYCHAIN_SETTINGS = (
     accessControl: biometryType
       ? ACCESS_CONTROL.BIOMETRY_CURRENT_SET
       : ACCESS_CONTROL.USER_PRESENCE,
-    accessible: ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-    authenticationType: AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
+    accessible: accessible ?? ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+    authenticationType:
+      authenticationType ?? AUTHENTICATION_TYPE.DEVICE_PASSCODE_OR_BIOMETRICS,
     service,
   };
 };

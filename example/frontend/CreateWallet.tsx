@@ -48,7 +48,7 @@ export function CreateWallet() {
       )) ?? null}
     </View>
   ) : (
-    <View style={{ height: 100, backgroundColor: 'red' }}>
+    <View>
       <TouchableOpacity
         onPress={() => {
           const i = Math.floor(
@@ -84,6 +84,7 @@ export function CreateWallet() {
       >
         <View
           style={{
+            marginTop: 10,
             paddingVertical: 15,
             width: Dimensions.get('screen').width * 0.9,
             display: 'flex',

@@ -114,12 +114,7 @@ export function usePortfolioHistory(range: DateRange):
     const resp = await axios.get<{ data: { total: number; time: number }[] }>(
       query
     );
-    return resp.data.data.length === 0
-      ? (new Array(50).fill({ total: 0, time: Math.random() * 100000 }) as {
-          total: number;
-          time: number;
-        }[])
-      : resp.data.data;
+    return resp.data.data;
   };
 
   const res = useQuery([period, interval, defaultCurrency], fetch);

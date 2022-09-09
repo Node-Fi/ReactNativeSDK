@@ -44,7 +44,7 @@ export type ConstantsOverride = Partial<{
 
 export interface NodeKitProviderProps {
   children: React.ReactElement | React.ReactElement[];
-  customTokens: Token[];
+  customTokens?: Token[];
   tokenWhitelist?: Set<Address>;
   tokenDetailsOverride?: TokenConfig[];
   tokenBlacklist?: Set<Address>;
@@ -53,7 +53,7 @@ export interface NodeKitProviderProps {
   loadingComponent?: React.ReactElement;
   apiKey: string;
   chainId?: ChainId;
-  constantsOverride: ConstantsOverride;
+  constantsOverride?: ConstantsOverride;
 }
 
 interface PersistedData {

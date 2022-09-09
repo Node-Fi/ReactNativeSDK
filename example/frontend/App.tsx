@@ -12,6 +12,8 @@ import { KeychainButton } from './components/Keychain';
 import SetDefaultCurrency from './components/SetDefaultCurrency';
 import { SyncPortfolioButton } from './components/SyncPortfolio';
 import { SUPPORTED_TOKENS, TOKEN_OVERRIDES } from './constants/Tokens';
+import SignMessage from './components/SignMessage';
+import { DEVICE_HEIGHT, DEVICE_WIDTH, layout } from './styles/styles';
 
 export const styles = StyleSheet.create({
   center: { alignItems: 'center' },
@@ -30,42 +32,41 @@ export default function App(): JSX.Element {
   );
 
   return (
-    <>
-      <NodeKitProvider
-        loadingComponent={loadingComponent}
-        eoaOnly
-        apiKey={'c72d0ce2d50a447d874da93b7e44abb1'} // sandbox api key - will only work on alfajores
-        tokenWhitelist={new Set(SUPPORTED_TOKENS)}
-        tokenDetailsOverride={TOKEN_OVERRIDES}
-        customTokens={[
-          new Token(
-            44787,
-            '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1',
-            18,
-            'cUSD',
-            'Cello Dollar'
-          ),
-          new Token(
-            44787,
-            '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9',
-            18,
-            'CELO',
-            'Cello'
-          ),
-        ]}
-        chainId={ChainId.Alfajores}
-      >
-        <SafeAreaView style={[styles.center, styles.white]}>
-          <ScrollView>
-            <CreateWallet />
-            <TokenList />
-            <KeychainButton />
+    <NodeKitProvider
+      loadingComponent={loadingComponent}
+      eoaOnly
+      apiKey={'c72d0ce2d50a447d874da93b7e44abb1'} // sandbox api key - will only work on alfajores
+      tokenWhitelist={new Set(SUPPORTED_TOKENS)}
+      tokenDetailsOverride={TOKEN_OVERRIDES}
+      customTokens={[
+        new Token(
+          44787,
+          '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1',
+          18,
+          'cUSD',
+          'Cello Dollar'
+        ),
+        new Token(
+          44787,
+          '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9',
+          18,
+          'CELO',
+          'Cello'
+        ),
+      ]}
+      chainId={ChainId.Alfajores}
+    >
+      <SafeAreaView style={[StyleSheet.absoluteFill, layout.centered]}>
+        <ScrollView>
+          <CreateWallet />
+          {/* <TokenList /> */}
+          {/* <KeychainButton />
             <SyncPortfolioButton />
             <SetDefaultCurrency />
-            <GetMnemonicTest />
-          </ScrollView>
-        </SafeAreaView>
-      </NodeKitProvider>
-    </>
+            <GetMnemonicTest /> */}
+          <SignMessage />
+        </ScrollView>
+      </SafeAreaView>
+    </NodeKitProvider>
   );
 }

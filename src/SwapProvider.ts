@@ -13,7 +13,7 @@ import { useTokens } from './TokensContext';
 import useDebounce, { useWallet } from './hooks';
 import { WalletContainer } from './WalletContext';
 import { useQuery } from 'react-query';
-import type { TransactionReceipt, TransactionConfig } from 'web3-eth';
+import type { TransactionConfig } from 'web3-eth';
 import { BigNumber } from 'bignumber.js';
 import type { FetchDetails } from './types';
 import { SWAP_QUOTE_REFETCH_INTERVAL } from './utils';
@@ -62,7 +62,10 @@ export function useSwapTypedAmount(
   debounceDelayMs = 500
 ) {
   const tokens = useTokens();
-  const { [inputAddress]: inputToken, [outputAddress]: outputToken } = tokens;
+  const {
+    [inputAddress.toLowerCase()]: inputToken,
+    [outputAddress.toLowerCase()]: outputToken,
+  } = tokens;
   const debouncedInput = useDebounce(typedAmount, debounceDelayMs);
   const input =
     inputToken && debouncedInput
@@ -138,7 +141,7 @@ export function useSwapQuote(
   );
 
   return React.useMemo(() => {
-    if (!details || !routerAddress || !error || !expectedOut)
+    if (!details || !routerAddress || !expectedOut)
       return { fetchDetails: swapQueryDetails };
     return {
       trade: {

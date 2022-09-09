@@ -6,6 +6,7 @@ import {
   TokenAmount,
   RouterPayloadRequest,
   SmartWallet,
+  RouterResponse,
 } from '@node-fi/sdk-core';
 import { createContainer } from 'unstated-next';
 import { useTokens } from './TokensContext';
@@ -90,12 +91,10 @@ export function useSwapQuote(
     Omit<RouterPayloadRequest, 'tokenIn' | 'tokenOut' | 'amountIn'>
   >
 ): {
-  trade?: {
-    path?: string[];
+  trade?: Partial<Omit<RouterResponse, 'output' | 'minimumOutput'>> & {
     output?: TokenAmount;
     minimumOutput?: TokenAmount;
     txn?: TransactionConfig;
-    execute?: () => Promise<TransactionReceipt | void>;
   };
   fetchDetails: FetchDetails;
 } {

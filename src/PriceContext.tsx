@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Address, ChainId, fetchPrices } from '@node-fi/sdk-core';
 import { createContainer } from 'unstated-next';
+import { useQuery } from 'react-query';
 import { useOnClose } from './hooks';
 import {
   asyncWriteObject,
@@ -9,7 +10,6 @@ import {
   PRICE_REFETCH_INTERVAL,
   SUPPORTED_BASE_CURRENCIES,
 } from './utils';
-import { useQuery } from 'react-query';
 import type { FetchDetails } from './types';
 
 interface PriceMap {

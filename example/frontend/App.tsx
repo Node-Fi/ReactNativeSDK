@@ -10,14 +10,14 @@ import { TokenList } from './TokenList';
 import GetMnemonicTest from './components/GetMnemonic';
 import { KeychainButton } from './components/Keychain';
 import SetDefaultCurrency from './components/SetDefaultCurrency';
+import SignMessage from './components/SignMessage';
 import { SyncPortfolioButton } from './components/SyncPortfolio';
 import { SUPPORTED_TOKENS, TOKEN_OVERRIDES } from './constants/Tokens';
-import SignMessage from './components/SignMessage';
 import { DEVICE_HEIGHT, DEVICE_WIDTH, layout } from './styles/styles';
 
 export const styles = StyleSheet.create({
   center: { alignItems: 'center' },
-  // eslint-disable-next-line react-native/no-color-literals
+   
   white: { backgroundColor: 'white' },
   red: { backgroundColor: 'red' },
   blue: { backgroundColor: 'blue' },

@@ -2,6 +2,7 @@ import { useWallet } from '@node-fi/react-native-sdk';
 import { EOA } from '@node-fi/sdk-core';
 import * as React from 'react';
 import { View } from 'react-native';
+
 import { layout } from '../styles/styles';
 
 import { NodeButton, Text, TextInput } from './ThemedComponents';

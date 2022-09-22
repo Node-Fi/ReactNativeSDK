@@ -207,6 +207,12 @@ export const useAddToken = (): ((newToken: Token) => Promise<void>) => {
   );
 };
 
+export const useGetToken = () => {
+  const { tokens } = TokenContainer.useContainer();
+
+  return (addr: string) => tokens[addr.toLowerCase()];
+};
+
 export const useRemoveToken = () => {
   const { removeToken } = TokenContainer.useContainer();
   return removeToken;
@@ -263,7 +269,6 @@ export const useHistoricalTransfers = (
       ? res?.data?.concat(newTransfers).filter(filter ?? defaultTransferFilter)
       : res?.data?.filter(filter ?? defaultTransferFilter);
     return mid?.sort((t1, t2) => t2.blockNumber - t1.blockNumber);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [res.isLoading, newTransfers]);
   return React.useMemo(
     () =>

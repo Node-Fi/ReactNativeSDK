@@ -10,7 +10,7 @@ import {
   PRICE_REFETCH_INTERVAL,
   SUPPORTED_BASE_CURRENCIES,
 } from './utils';
-import type { FetchDetails } from './types';
+import type { CurrencyType, FetchDetails } from './types';
 
 interface PriceMap {
   [address: Address]: {
@@ -18,8 +18,6 @@ interface PriceMap {
     yesterday: number;
   };
 }
-
-type CurrencyType = typeof SUPPORTED_BASE_CURRENCIES[number];
 
 export interface UsePriceInnerType {
   prices?: PriceMap;
@@ -71,7 +69,7 @@ function usePricesInner(initialState?: UsePriceInnerProps): UsePriceInnerType {
 
 export const PriceContainer = createContainer<
   UsePriceInnerType,
-  { apiKey: string; chainId: ChainId }
+  UsePriceInnerProps
 >(usePricesInner);
 
 export const useTokenPriceFetchDetails = () => {

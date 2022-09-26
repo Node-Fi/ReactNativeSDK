@@ -1,4 +1,3 @@
-// @ts-ignore
 import * as React from 'react';
 import { WalletContainer } from './WalletContext';
 import { PriceContainer, UsePriceInnerProps } from './PriceContext';
@@ -26,6 +25,7 @@ import {
   setSwapQuoteRefetchInterval,
 } from './utils';
 import { SwapContainer, UseSwappInnerProps } from './SwapProvider';
+import type { CurrencyType } from './types';
 
 export type TokenConfig = {
   address: Address;
@@ -54,6 +54,7 @@ export interface NodeKitProviderProps {
   apiKey: string;
   chainId?: ChainId;
   constantsOverride?: ConstantsOverride;
+  defaultCurrencyOverride?: CurrencyType;
 }
 
 interface PersistedData {
@@ -77,6 +78,7 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
     tokenBlacklist,
     customTokens,
     chainId = ChainId.Celo,
+    defaultCurrencyOverride,
     constantsOverride: {
       storagePrefix = DEFAULT_PREFIX,
       swapQuoteRefetchPeriod,
@@ -177,7 +179,14 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
           }}
         >
           <PriceContainer.Provider
-            initialState={{ apiKey, chainId, ...persistedData?.price }}
+            initialState={{
+              apiKey,
+              chainId,
+              ...persistedData?.price,
+              defaultCurrency:
+                persistedData?.price?.defaultCurrency ??
+                defaultCurrencyOverride,
+            }}
           >
             <SwapContainer.Provider initialState={persistedData?.swap}>
               {children}

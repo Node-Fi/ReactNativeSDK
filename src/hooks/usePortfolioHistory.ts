@@ -1,41 +1,49 @@
 import {
-  DateRange,
-  dateRangeToDefaultInterval,
-  dateRangeToReadable,
-  formatHistoricalPortfolioQuery,
+  convertTimeframeToUnixSeconds,
+  Interval,
+  TimeFrame,
 } from '@node-fi/sdk-core';
-import axios from 'axios';
-import { useQuery } from 'react-query';
+import { QueryOptions, useQuery } from 'react-query';
 import { useDefaultCurrency } from '../PriceContext';
-import { useWalletAddress } from '../WalletContext';
+import { useWallet } from '../WalletContext';
 
-export function usePortfolioHistory(range: DateRange):
-  | {
-      total: number;
-      time: number;
-    }[]
-  | undefined {
-  const walletAddress = useWalletAddress();
-  const period = dateRangeToReadable[range];
-  const interval = dateRangeToDefaultInterval[range];
+export const PORTFOLIO_QUERY_KEY = 'historical_portfolio';
+
+export function usePortfolioHistory(
+  range: TimeFrame,
+  interval?: Interval,
+  queryOpts?: QueryOptions<{ total: number; time: number }[] | undefined>
+) {
+  const wallet = useWallet();
   const defaultCurrency = useDefaultCurrency();
 
   const fetch = async () => {
-    if (!walletAddress) {
-      return undefined;
+    if (!wallet || !wallet.address) {
+      return [];
     }
-    const query = formatHistoricalPortfolioQuery(
-      walletAddress,
-      interval,
-      period,
+    const unixSeconds = convertTimeframeToUnixSeconds(range);
+
+    let assumedInterval = 4;
+
+    if (unixSeconds < 60 * 60 * 24 * 2) assumedInterval = 0;
+    else if (unixSeconds < 60 * 60 * 24 * 7) assumedInterval = 1;
+    else if (unixSeconds < 60 * 60 * 24 * 14) assumedInterval = 2;
+    else if (unixSeconds < 60 * 60 * 24 * 31) assumedInterval = 3;
+
+    return wallet.fetchBackendPortfolioValue(
+      interval ?? assumedInterval,
+      range,
       defaultCurrency
     );
-    const resp = await axios.get<{ data: { total: number; time: number }[] }>(
-      query
-    );
-    return resp.data.data;
   };
 
-  const res = useQuery([period, interval, defaultCurrency], fetch);
-  return res?.data;
+  const { data, ...fetchDetails } = useQuery(
+    [PORTFOLIO_QUERY_KEY, interval, interval, defaultCurrency],
+    fetch,
+    queryOpts
+  );
+  return {
+    history: data,
+    fetchDetails,
+  };
 }

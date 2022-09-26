@@ -5,10 +5,16 @@ import {
   formatHistoricalPricesQuery,
 } from '@node-fi/sdk-core';
 import axios from 'axios';
-import { useQuery } from 'react-query';
+import { QueryOptions, useQuery } from 'react-query';
 import { useDefaultCurrency } from '../PriceContext';
 
-export function useHistoricalTokenPrices(address: string, range: DateRange) {
+export function useHistoricalTokenPrices(
+  address: string,
+  range: DateRange,
+  queryOpts?: QueryOptions<
+    { time: number; priceusd: number; price: number }[] | undefined
+  >
+) {
   const period = dateRangeToReadable[range];
   const interval = dateRangeToDefaultInterval[range];
   const defaultCurrency = useDefaultCurrency();
@@ -34,6 +40,13 @@ export function useHistoricalTokenPrices(address: string, range: DateRange) {
     }
   };
 
-  const res = useQuery([address, period, interval, defaultCurrency], fetch);
-  return res?.data;
+  const { data, ...fetchDetails } = useQuery(
+    [address, period, interval, defaultCurrency],
+    fetch,
+    queryOpts
+  );
+  return {
+    history: data,
+    fetchDetails,
+  };
 }

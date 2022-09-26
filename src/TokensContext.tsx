@@ -6,17 +6,14 @@ import {
   subscribeToTokenTransfers,
   ChainId,
   getBalances,
-  TransferTransaction,
-  fetchTransfers,
-  convertLogToTransferObject,
 } from '@node-fi/sdk-core';
 import { createContainer } from 'unstated-next';
-import { useWalletAddress, WalletContainer } from './WalletContext';
+import { useWalletAddress } from './WalletContext';
 import { useTokenPrices } from './PriceContext';
-import { useQuery } from 'react-query';
-import Web3 from 'web3';
-import { BigNumber } from 'bignumber.js';
 import type { FetchDetails } from './types';
+import { useQueryClient } from 'react-query';
+import { TRANSACTION_HISTORY_QUERY_KEY } from './hooks/useTransactionHistory';
+import { PORTFOLIO_QUERY_KEY } from './hooks';
 
 export interface UseTokensInnerProps {
   initialTokens: Token[];
@@ -42,7 +39,6 @@ interface UseTokensInnerType {
   tokens: TokenMap;
   addToken: (token: Token) => void;
   removeToken: (token: Address) => void;
-  newTransfers: TransferTransaction[];
 }
 function useTokensInner(props?: UseTokensInnerProps) {
   const chainId = props?.chainId ?? ChainId.Celo;
@@ -56,11 +52,10 @@ function useTokensInner(props?: UseTokensInnerProps) {
     ) ?? {}
   );
   const [balances, setBalances] = React.useState<TokenBalances>({});
-  const [newTransfers, setNewTransfers] = React.useState<TransferTransaction[]>(
-    []
-  );
   const walletAddress = useWalletAddress();
   const tokenAddresses = React.useMemo(() => Object.keys(tokens), [tokens]);
+
+  const queryClient = useQueryClient();
 
   React.useEffect(() => {
     if (!walletAddress || tokenAddresses.length === 0) return;
@@ -92,11 +87,8 @@ function useTokensInner(props?: UseTokensInnerProps) {
             balance
           ),
         }));
-        const transfer = convertLogToTransferObject(e, new Web3(), false);
-        setNewTransfers((t) => [
-          ...t,
-          { ...transfer, outgoing: transfer.from === walletAddress },
-        ]);
+        queryClient.invalidateQueries(TRANSACTION_HISTORY_QUERY_KEY);
+        queryClient.invalidateQueries(PORTFOLIO_QUERY_KEY);
       }
     );
 
@@ -122,7 +114,7 @@ function useTokensInner(props?: UseTokensInnerProps) {
     [setTokens]
   );
 
-  return { balances, tokens, addToken, removeToken, newTransfers };
+  return { balances, tokens, addToken, removeToken };
 }
 
 export const TokenContainer = createContainer<
@@ -219,66 +211,20 @@ export const useRemoveToken = () => {
 };
 
 /**
- *
- * @param maxTransfers Maximum number of transfers to retrieve. Will default to "all"
- * @param startBlock The block to start searching for transactions from.  Defaults to "earliest"
- * @param subscribe If true, will receive new transactions as they come in
- * @param filter callback to filter transfers.  Default filters transfers < $0.001
- * @returns A list of Transfers
+ * @deprecated
+ * @param maxTransfers
+ * @param startBlock
+ * @param subscribe
+ * @param filter
  */
 export const useHistoricalTransfers = (
   maxTransfers?: number | 'all',
   startBlock?: number,
   subscribe?: boolean,
-  filter?: (t: TransferTransaction) => boolean
-): TransferTransaction[] | undefined => {
-  const { wallet, chainId } = WalletContainer.useContainer();
-  const { newTransfers, tokens } = TokenContainer.useContainer();
-  const tokenAddresses = Object.values(tokens).map(({ address }) => address);
-
-  const defaultTransferFilter = React.useCallback(
-    (transfer: TransferTransaction) => {
-      const token = tokens[transfer.token.toLowerCase()];
-      return transfer.amount.isGreaterThan(
-        new BigNumber('10').pow(token.decimals - 3)
-      );
-    },
-    [tokens]
+  filter?: (t: unknown) => boolean
+): unknown[] | undefined => {
+  console.warn(
+    `useHistoricalTransfers is deprecated, use useHistoricalTransactions instead`
   );
-
-  const fetch = async () => {
-    if (!wallet || !wallet.address) {
-      return [];
-    }
-    try {
-      const transfers = await fetchTransfers(
-        chainId ?? ChainId.Celo,
-        wallet.address ?? '',
-        tokenAddresses,
-        startBlock ?? 'earliest'
-      );
-      return transfers;
-    } catch (e) {
-      console.error(e);
-      return [];
-    }
-  };
-  const res = useQuery([wallet?.address], fetch);
-  const transfers = React.useMemo(() => {
-    const mid = subscribe
-      ? res?.data?.concat(newTransfers).filter(filter ?? defaultTransferFilter)
-      : res?.data?.filter(filter ?? defaultTransferFilter);
-    return mid?.sort((t1, t2) => t2.blockNumber - t1.blockNumber);
-  }, [res.isLoading, newTransfers]);
-  return React.useMemo(
-    () =>
-      !transfers
-        ? undefined
-        : maxTransfers === 'all' ||
-          maxTransfers === undefined ||
-          transfers?.length < maxTransfers
-        ? transfers
-        : transfers?.slice(0, maxTransfers),
-    [transfers, maxTransfers]
-  );
+  return [];
 };

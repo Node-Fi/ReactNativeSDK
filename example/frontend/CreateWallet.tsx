@@ -2,10 +2,13 @@ import {
   asyncClear,
   clearMnemonic,
   DEFAULT_PREFIX,
+  PRICE_KEY_SUFFICE,
+  SupportedMnemonicLanguages,
   useCreateWallet,
   useDeleteWallet,
   useHistoricalTransfers,
   useWallet,
+  WALLET_KEY_SUFFIX,
 } from '@node-fi/react-native-sdk';
 import * as React from 'react';
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
@@ -18,8 +21,6 @@ export function CreateWallet() {
   const createWallet = useCreateWallet();
   const deleteWallet = useDeleteWallet();
   const transactions = useHistoricalTransfers(4, undefined, true);
-
-  console.log(wallet.address);
   return wallet?.address ? (
     <View style={styles.center}>
       <Text style={{ textAlign: 'center' }}>{`Wallet: ${wallet.address}`}</Text>
@@ -47,8 +48,15 @@ export function CreateWallet() {
       )) ?? null}
     </View>
   ) : (
-    <View style={{ height: 100, backgroundColor: 'red' }}>
-      <TouchableOpacity onPress={() => createWallet()}>
+    <View>
+      <TouchableOpacity
+        onPress={() => {
+          const i = Math.floor(
+            Math.random() * SupportedMnemonicLanguages.length
+          );
+          createWallet({ bip39Language: SupportedMnemonicLanguages[i] });
+        }}
+      >
         <View
           style={{
             paddingVertical: 15,
@@ -68,13 +76,15 @@ export function CreateWallet() {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() =>
-          createWallet(
-            'trend process render future worth one warm ahead master enter inch pioneer indoor elevator upper embrace symbol awful pretty route must country film science'
-          )
+          createWallet({
+            mnemonic:
+              'trend process render future worth one warm ahead master enter inch pioneer indoor elevator upper embrace symbol awful pretty route must country film science',
+          })
         }
       >
         <View
           style={{
+            marginTop: 10,
             paddingVertical: 15,
             width: Dimensions.get('screen').width * 0.9,
             display: 'flex',
@@ -93,8 +103,13 @@ export function CreateWallet() {
 
       <TouchableOpacity
         onPress={async () => {
+          await asyncClear(`${DEFAULT_PREFIX}${PRICE_KEY_SUFFICE}`);
           await Promise.all([
             asyncClear(DEFAULT_PREFIX),
+            asyncClear(`${DEFAULT_PREFIX}${WALLET_KEY_SUFFIX}`),
+            // asyncClear(`${DEFAULT_PREFIX}${TOKENS_KEY_SUFFIX}`),
+            asyncClear(`${DEFAULT_PREFIX}${PRICE_KEY_SUFFICE}`),
+            // asyncClear(`${DEFAULT_PREFIX}${SWAP_KEY_SUFFIX}`),
             clearMnemonic(DEFAULT_PREFIX),
           ]);
         }}

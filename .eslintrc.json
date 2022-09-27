@@ -3,7 +3,13 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["airbnb", "prettier"],
+  "extends": [
+    "eslint:recommended",
+    "prettier",
+    "plugin:import/typescript",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -15,6 +21,15 @@
   "plugins": ["react", "@typescript-eslint", "prettier"],
   "ignorePatterns": ["node_modules"],
   "rules": {
-    "prettier/prettier": ["error"]
+    "prettier/prettier": ["error"],
+    "import/extensions": 0
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"],
+        "moduleDirectory": ["node_modules", "src/"]
+      }
+    }
   }
 }

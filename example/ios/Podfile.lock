@@ -291,7 +291,7 @@ PODS:
     - React-Core
   - RNDeviceInfo (8.7.1):
     - React-Core
-  - RNKeychain (8.0.0):
+  - RNKeychain (8.1.1):
     - React-Core
   - RNSecureRandom (1.0.0):
     - React
@@ -447,7 +447,7 @@ SPEC CHECKSUMS:
   ExpoModulesCore: 32c0ccb47f477d330ee93db72505380adf0de09a
   EXSplashScreen: 21669e598804ee810547dbb6692c8deb5dd8dbf3
   FBLazyVector: c71c5917ec0ad2de41d5d06a5855f6d5eda06971
-  FBReactNativeSpec: 5d9061f0c9542c97e8e0c03721e3304f65b815e3
+  FBReactNativeSpec: 809e2644143fa4876360e218b6b6a4f081c77864
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTRequired: d34bf57e17cb6e3b2681f4809b13843c021feb6c
@@ -475,7 +475,7 @@ SPEC CHECKSUMS:
   ReactCommon: 8fea6422328e2fc093e25c9fac67adbcf0f04fb4
   RNCAsyncStorage: 44539979e1f234262d64d3ce86ec21cceb1b2c5e
   RNDeviceInfo: aad3c663b25752a52bf8fce93f2354001dd185aa
-  RNKeychain: 4f63aada75ebafd26f4bc2c670199461eab85d94
+  RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNSecureRandom: 0dcee021fdb3d50cd5cee5db0ebf583c42f5af0e
   RNSVG: a53a5de0d90ec96a6502cc3a4534dfcc0c130622
   Yoga: e6ecf3fa25af9d4c87e94ad7d5d292eedef49749

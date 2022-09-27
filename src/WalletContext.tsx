@@ -14,7 +14,7 @@ import type {
 } from '@node-fi/sdk-core/dist/src/wallet/Wallet';
 import { asyncClear, asyncWriteObject } from './utils/asyncStorage';
 import { DEFAULT_PREFIX, WALLET_KEY_SUFFIX } from './utils/storageKeys';
-import { createWallet } from './utils/accounts';
+import { createWallet, MnemonicLanguageOption } from './utils/accounts';
 import { Alert } from 'react-native';
 import { useOnClose } from './hooks';
 import invariant from 'tiny-invariant';
@@ -42,6 +42,7 @@ export interface UseWalletInnerType {
 export interface WalletCreationOpts {
   defaultGasCurrency?: Address;
   mnemonic?: string;
+  bip39Language?: MnemonicLanguageOption;
 }
 
 function useWalletInner(initialState: UseWalletProps | undefined) {
@@ -147,6 +148,7 @@ export const useCreateWallet = () => {
       const { wallet, mnemonic } = await createWallet(
         apiKey,
         chain ?? ChainId.Celo,
+        opts.bip39Language,
         !noSmartWallet,
         opts.mnemonic
       );

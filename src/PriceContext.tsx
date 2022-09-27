@@ -1,60 +1,41 @@
 import * as React from 'react';
-import { Address, ChainId, fetchPrices } from '@node-fi/sdk-core';
+import type { ChainId } from '@node-fi/sdk-core';
 import { createContainer } from 'unstated-next';
+import { useOnClose } from './hooks';
+import { asyncWriteObject, DEFAULT_PREFIX, PRICE_KEY_SUFFICE } from './utils';
+import type { CurrencyType } from './types';
 
-interface PriceMap {
-  [address: Address]: {
-    current: number;
-    yesterday: number;
-  };
-}
-
-type CurrencyType = 'usd' | 'euro' | 'real';
-
-interface UsePriceInnerType {
-  prices?: PriceMap;
+export interface UsePriceInnerType {
   defaultCurrency: CurrencyType;
   setDefaultCurrency: (ct: CurrencyType) => void;
 }
 
-function usePricesInner(initialState?: {
+export interface UsePriceInnerProps {
   apiKey: string;
   chainId: ChainId;
-}): UsePriceInnerType {
-  const { apiKey = '', chainId } = initialState ?? {};
-  const [prices, setPrices] = React.useState<PriceMap>();
-  const [defaultCurrency, setDefaultCurrency] =
-    React.useState<CurrencyType>('usd');
+  defaultCurrency?: CurrencyType;
+}
 
-  React.useEffect(() => {
-    const fetchAndSetPrices = async () => {
-      const fetchedPrices = await fetchPrices(apiKey, chainId);
-      setPrices(fetchedPrices);
-    };
-    fetchAndSetPrices();
-    const intervalId = setInterval(fetchAndSetPrices, 1000 * 60 * 5); // Refresh every 5 mintues
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [setPrices, apiKey, chainId]);
-  return { prices, defaultCurrency, setDefaultCurrency };
+function usePricesInner(initialState?: UsePriceInnerProps): UsePriceInnerType {
+  const { defaultCurrency: _defaultCurrency = 'usd' } = initialState ?? {};
+  const [defaultCurrency, setDefaultCurrency] =
+    React.useState<CurrencyType>(_defaultCurrency);
+
+  useOnClose(async () => {
+    await asyncWriteObject(`${DEFAULT_PREFIX}${PRICE_KEY_SUFFICE}`, {
+      defaultCurrency,
+    });
+  });
+  return {
+    defaultCurrency,
+    setDefaultCurrency,
+  };
 }
 
 export const PriceContainer = createContainer<
   UsePriceInnerType,
-  { apiKey: string; chainId: ChainId }
+  UsePriceInnerProps
 >(usePricesInner);
-
-export const useTokenPrices = () => {
-  const { prices } = PriceContainer.useContainer();
-  return prices;
-};
-
-export const useTokenPrice = (address: Address) => {
-  const { prices } = PriceContainer.useContainer();
-  const tokenPrice = prices?.[address.toLowerCase()];
-  return React.useMemo(() => tokenPrice, [tokenPrice]);
-};
 
 export const useSetDefaultCurrency = () => {
   const { setDefaultCurrency } = PriceContainer.useContainer();

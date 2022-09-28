@@ -130,9 +130,7 @@ export const usePricedBalances = (
                   ...accum,
                   [addr]: new TokenAmount(
                     tokAmount.token,
-                    tokAmount.raw.multipliedBy(
-                      prices[addr.toLowerCase()]?.current ?? 1
-                    )
+                    tokAmount.raw.multipliedBy(prices[addr.toLowerCase()] ?? 1)
                   ),
                 }),
                 {}

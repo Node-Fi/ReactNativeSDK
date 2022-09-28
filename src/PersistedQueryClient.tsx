@@ -3,30 +3,36 @@ import { PaymentRequest } from '@node-fi/sdk-core/dist/src/PaymentRequest/Paymen
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { DEFAULT_CACHE_TIME } from './utils';
 import React from 'react';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      cacheTime: DEFAULT_CACHE_TIME, // 24 hours
+      cacheTime: 1000000000000000, // 24 hours
     },
   },
 });
 
 const asyncStoragePersister = createAsyncStoragePersister({
+  key: '@node-fi/async-storage/cache',
   storage: AsyncStorage,
-  serialize: JSON.stringify,
-  deserialize: (str) =>
-    JSON.parse(str, (_, v) => {
+  serialize: (c) => {
+    return JSON.stringify(c);
+  },
+  deserialize: (str) => {
+    return JSON.parse(str, (_, v) => {
+      if (!v) return v;
+
       if (Token.isSerializedToken(v)) return Token.parseJson(v);
       if (TokenAmount.isSerializedTokenAmount(v))
         return TokenAmount.parseJson(v);
       if (PaymentRequest.isSerializedPaymentRequest(v))
         return PaymentRequest.parseJson(v);
+
       return v;
-    }),
+    });
+  },
 });
 
 const queryClientNoAsyncPersistance = new QueryClient();

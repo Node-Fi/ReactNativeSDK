@@ -7,7 +7,7 @@ import {
 } from '@node-fi/sdk-core';
 import { createContainer } from 'unstated-next';
 import { useWalletAddress } from './WalletContext';
-import { useQueryClient } from 'react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { TRANSACTION_HISTORY_QUERY_KEY } from './hooks/useTransactionHistory';
 import { PORTFOLIO_QUERY_KEY } from './hooks';
 import { TOKEN_BALANCE_QUERY_KEY } from './hooks/useBalances';
@@ -57,8 +57,8 @@ function useTokensInner(props?: UseTokensInnerProps) {
           TOKEN_BALANCE_QUERY_KEY,
           token.toLowerCase(),
         ]);
-        queryClient.invalidateQueries(TRANSACTION_HISTORY_QUERY_KEY);
-        queryClient.invalidateQueries(PORTFOLIO_QUERY_KEY);
+        queryClient.invalidateQueries([TRANSACTION_HISTORY_QUERY_KEY]);
+        queryClient.invalidateQueries([PORTFOLIO_QUERY_KEY]);
       }
     );
 

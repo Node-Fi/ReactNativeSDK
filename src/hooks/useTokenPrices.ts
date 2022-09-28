@@ -9,10 +9,7 @@ import {
 } from '..';
 
 export interface PriceMap {
-  [address: Address]: {
-    current: number;
-    yesterday: number;
-  };
+  [address: Address]: number;
 }
 
 export const PRICE_QUERY_KEY = 'price';

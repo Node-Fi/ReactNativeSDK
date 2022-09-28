@@ -5,3 +5,4 @@ export * from './usePortfolioHistory';
 export * from './useTransactionHistory';
 export * from './useBalances';
 export * from './useTokenPrices';
+export * from './usePaymentRequest';

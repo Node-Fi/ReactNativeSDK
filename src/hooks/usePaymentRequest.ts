@@ -41,10 +41,8 @@ export const usePaymentRequestsForWallet = <
     }
   );
 
-  if (!data) return { fetchDetails };
-
   return {
-    ...data,
+    requests: data,
     fetchDetails,
   };
 };
@@ -80,14 +78,14 @@ export const useFulfillRequest = <
     ({ request, amount }) => wallet.fulfillPaymentRequest<T>(request, amount),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(PAYMENT_REQUEST_SINGLE_QUERY_KEY);
+        queryClient.invalidateQueries([PAYMENT_REQUEST_SINGLE_QUERY_KEY]);
       },
       ...mutationOptions,
     }
   );
 };
 
-export const useRequest = <
+export const usePaymentRequest = <
   T extends Record<string, unknown> = Record<string, unknown>
 >(
   requestId: number,

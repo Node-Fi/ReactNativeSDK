@@ -1,5 +1,5 @@
 import type { TokenTransactionBase } from '@node-fi/sdk-core/dist/src/Transactions/types';
-import { QueryOptions, useQuery } from 'react-query';
+import { QueryOptions, useQuery } from '@tanstack/react-query';
 import { useDefaultCurrency, useGetToken, useWallet } from '..';
 
 export const TRANSACTION_HISTORY_QUERY_KEY = 'transaction_history';

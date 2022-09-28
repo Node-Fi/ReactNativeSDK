@@ -1,6 +1,6 @@
 import { Address, getBalances, Token, TokenAmount } from '@node-fi/sdk-core';
 import React from 'react';
-import { QueryOptions, useQuery } from 'react-query';
+import { QueryOptions, useQuery } from '@tanstack/react-query';
 import type { FetchDetails } from 'src/types';
 import { useTokens, useWallet } from '..';
 import { PriceMap, useTokenPrices } from './useTokenPrices';

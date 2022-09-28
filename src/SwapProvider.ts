@@ -9,7 +9,7 @@ import {
   RouterResponse,
 } from '@node-fi/sdk-core';
 import { createContainer } from 'unstated-next';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import type { TransactionConfig } from 'web3-eth';
 import { BigNumber } from 'bignumber.js';
 import { useTokens } from './TokensContext';

@@ -3,7 +3,7 @@ import {
   Interval,
   TimeFrame,
 } from '@node-fi/sdk-core';
-import { QueryOptions, useQuery } from 'react-query';
+import { QueryOptions, useQuery } from '@tanstack/react-query';
 import { useDefaultCurrency } from '../PriceContext';
 import { useWallet } from '../WalletContext';
 
@@ -38,7 +38,7 @@ export function usePortfolioHistory(
   };
 
   const { data, ...fetchDetails } = useQuery(
-    [PORTFOLIO_QUERY_KEY, interval, interval, defaultCurrency],
+    [PORTFOLIO_QUERY_KEY, range, interval, defaultCurrency],
     fetch,
     queryOpts
   );

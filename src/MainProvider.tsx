@@ -17,8 +17,7 @@ import {
 import { asyncReadObject } from './utils/asyncStorage';
 import { clearMnemonic, getMnemonic, saveMnemonic } from './utils/security';
 import { TokenContainer, UseTokensInnerProps } from './TokensContext';
-import DEFAULT_TOKENS from '@node-fi/default-token-list';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import DEFAULT_TOKENS from '@ubeswap/default-token-list/ubeswap-experimental.token-list.json';
 import {
   reduceArrayToMap,
   setPriceRefetchInterval,
@@ -26,6 +25,7 @@ import {
 } from './utils';
 import { SwapContainer, UseSwappInnerProps } from './SwapProvider';
 import type { CurrencyType } from './types';
+import DynamicQueryClient from './PersistedQueryClient';
 
 export type TokenConfig = {
   address: Address;
@@ -63,8 +63,6 @@ interface PersistedData {
   price?: UsePriceInnerProps;
   swap?: UseSwappInnerProps;
 }
-
-const queryClient = new QueryClient();
 
 export function NodeKitProvider(props: NodeKitProviderProps) {
   const {
@@ -130,7 +128,7 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
   return !loaded ? (
     loadingComponent ?? null
   ) : (
-    <QueryClientProvider client={queryClient}>
+    <DynamicQueryClient>
       <WalletContainer.Provider
         initialState={{
           apiKey,
@@ -194,6 +192,6 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
           </PriceContainer.Provider>
         </TokenContainer.Provider>
       </WalletContainer.Provider>
-    </QueryClientProvider>
+    </DynamicQueryClient>
   );
 }

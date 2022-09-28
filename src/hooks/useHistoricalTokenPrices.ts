@@ -5,7 +5,7 @@ import {
   formatHistoricalPricesQuery,
 } from '@node-fi/sdk-core';
 import axios from 'axios';
-import { QueryOptions, useQuery } from 'react-query';
+import { QueryOptions, useQuery } from '@tanstack/react-query';
 import { useDefaultCurrency } from '../PriceContext';
 
 export function useHistoricalTokenPrices(

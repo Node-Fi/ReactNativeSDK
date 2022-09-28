@@ -1,6 +1,6 @@
 import { Address, fetchPrices } from '@node-fi/sdk-core';
 import React from 'react';
-import { QueryOptions, useQuery } from 'react-query';
+import { QueryOptions, useQuery } from '@tanstack/react-query';
 import {
   PRICE_REFETCH_INTERVAL,
   useApiKey,

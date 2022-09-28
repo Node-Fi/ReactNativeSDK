@@ -6,7 +6,7 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from 'react-query';
+} from '@tanstack/react-query';
 import { useGetToken, useWallet } from '..';
 
 export const PAYMENT_REQUEST_GROUP_QUERY_KEY = 'node_sdk_payment_requests';

@@ -140,9 +140,12 @@
     "@types/react-dom": "17.0.1"
   },
   "dependencies": {
-    "@node-fi/default-token-list": "^4.1.81",
     "@node-fi/sdk-core": "file:../SDK_Core",
     "@react-native-async-storage/async-storage": "^1.17.3",
+    "@tanstack/query-async-storage-persister": "^4.7.1",
+    "@tanstack/react-query": "^4.7.1",
+    "@tanstack/react-query-persist-client": "^4.7.1",
+    "@ubeswap/default-token-list": "^4.1.56",
     "axios": "^0.27.2",
     "bignumber.js": "^9.0.2",
     "react-native-crypto": "^2.2.0",
@@ -150,7 +153,6 @@
     "react-native-get-random-values": "^1.8.0",
     "react-native-keychain": "^8.0.0",
     "react-native-securerandom": "^1.0.0",
-    "react-query": "^3.39.0",
     "tiny-invariant": "^1.2.0",
     "unstated-next": "^1.1.0"
   }

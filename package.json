@@ -1,6 +1,6 @@
 {
   "name": "@node-fi/react-native-sdk",
-  "version": "0.1.6-alpha-0.1",
+  "version": "0.1.6",
   "description": "A React Native wrapper for the Node Core SDK",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -140,7 +140,7 @@
     "@types/react-dom": "17.0.1"
   },
   "dependencies": {
-    "@node-fi/sdk-core": "file:../SDK_Core",
+    "@node-fi/sdk-core": "^0.0.25",
     "@react-native-async-storage/async-storage": "^1.17.3",
     "@tanstack/query-async-storage-persister": "^4.7.1",
     "@tanstack/react-query": "^4.7.1",

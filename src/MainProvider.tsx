@@ -49,7 +49,7 @@ export interface NodeKitProviderProps {
   tokenDetailsOverride?: TokenConfig[];
   tokenBlacklist?: Set<Address>;
   walletConfig?: WalletConfig & { opts?: WalletOptions };
-  eoaOnly?: boolean;
+  smartContractWallet?: boolean;
   loadingComponent?: React.ReactElement;
   apiKey: string;
   chainId?: ChainId;
@@ -67,7 +67,6 @@ interface PersistedData {
 export function NodeKitProvider(props: NodeKitProviderProps) {
   const {
     children,
-    eoaOnly,
     walletConfig,
     loadingComponent,
     apiKey,
@@ -75,6 +74,7 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
     tokenWhitelist,
     tokenBlacklist,
     customTokens,
+    smartContractWallet,
     chainId = ChainId.Celo,
     defaultCurrencyOverride,
     constantsOverride: {
@@ -134,7 +134,7 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
           apiKey,
           walletConfig: walletConfig ?? persistedData?.wallet,
           onWalletDeletion: () => clearMnemonic(storagePrefix),
-          noSmartWallet: eoaOnly,
+          noSmartWallet: !smartContractWallet,
           onMnemonicChanged: async (mnemonic: string) =>
             await saveMnemonic(storagePrefix, mnemonic),
           chainId,

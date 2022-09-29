@@ -1946,8 +1946,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@node-fi/sdk-core@file:../SDK_Core":
-  version "0.0.23"
+"@node-fi/sdk-core@^0.0.25":
+  version "0.0.25"
+  resolved "https://registry.yarnpkg.com/@node-fi/sdk-core/-/sdk-core-0.0.25.tgz#dd139ecd880fcd49376fdcfb5635bab801b1a694"
+  integrity sha512-a0iFo2Hb89kAdhOvKh5MR7HvUTN5ZhN+upgZ4lLxxugI+7NsJexMbfg5P2w3fM3MQVlw1BzbfG8rIqeOA8Ocsg==
   dependencies:
     "@babel/core" "^7.17.5"
     "@babel/preset-env" "^7.16.11"

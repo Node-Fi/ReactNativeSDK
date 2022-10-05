@@ -111,15 +111,26 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
         `${storagePrefix}${SWAP_KEY_SUFFIX}`
       )) as UseSwappInnerProps | undefined;
       if (persistedWalletConfig) {
-        setPersistedData({
-          wallet: {
-            ...persistedWalletConfig,
-            getMnemonic: () => getMnemonic(storagePrefix),
-          },
-          tokens: persistedTokens,
-          price: persistedPrice,
-          swap: persistedSwap,
-        });
+        if (persistedTokens && persistedTokens.chainId !== chainId) {
+          // indicates a chain id switch since last load
+          setPersistedData({
+            wallet: {
+              ...persistedWalletConfig,
+              getMnemonic: () => getMnemonic(storagePrefix),
+            },
+            swap: persistedSwap,
+          });
+        } else {
+          setPersistedData({
+            wallet: {
+              ...persistedWalletConfig,
+              getMnemonic: () => getMnemonic(storagePrefix),
+            },
+            tokens: persistedTokens,
+            price: persistedPrice,
+            swap: persistedSwap,
+          });
+        }
       }
       setLoaded(true);
     })();

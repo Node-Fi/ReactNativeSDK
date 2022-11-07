@@ -113,15 +113,15 @@ export const usePricedBalances = (
   const { prices, fetchDetails: priceFetchDetails } =
     useTokenPrices(queryOptsPrices ?? (queryOptsGeneral as any)) ?? {};
 
-  const fetchDetails = {
-    balanceFetchDetails,
-    priceFetchDetails,
-  };
-
   return React.useMemo(
     () =>
       !prices || !balances
-        ? { fetchDetails }
+        ? {
+            fetchDetails: {
+              balanceFetchDetails,
+              priceFetchDetails,
+            },
+          }
         : {
             pricedBalances: Object.entries(balances)
               .filter(([addr]) => prices?.[addr.toLowerCase()])
@@ -135,8 +135,11 @@ export const usePricedBalances = (
                 }),
                 {}
               ),
-            fetchDetails,
+            fetchDetails: {
+              balanceFetchDetails,
+              priceFetchDetails,
+            },
           },
-    [prices, fetchDetails, balances]
+    [prices, balanceFetchDetails, priceFetchDetails, balances]
   );
 };

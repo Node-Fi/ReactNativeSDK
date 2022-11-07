@@ -26,6 +26,7 @@ import {
 import { SwapContainer, UseSwappInnerProps } from './SwapProvider';
 import type { CurrencyType } from './types';
 import DynamicQueryClient from './PersistedQueryClient';
+import bip39 from '@node-fi/react-native-bip39';
 
 export type TokenConfig = {
   address: Address;
@@ -143,7 +144,11 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
       <WalletContainer.Provider
         initialState={{
           apiKey,
-          walletConfig: walletConfig ?? persistedData?.wallet,
+          walletConfig: {
+            ...(persistedData?.wallet ?? {}),
+            ...(walletConfig ?? {}),
+            bip39: bip39 as any,
+          },
           onWalletDeletion: () => clearMnemonic(storagePrefix),
           noSmartWallet: !smartContractWallet,
           onMnemonicChanged: async (mnemonic: string) =>

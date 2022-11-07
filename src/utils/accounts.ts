@@ -1,28 +1,17 @@
-import { generateSecureRandom } from 'react-native-securerandom';
-import * as bip39 from 'bip39';
+import bip39 from '@node-fi/react-native-bip39';
 import { ChainId, EOA, SmartWallet } from '@node-fi/sdk-core';
 
 export type MnemonicLanguageOption =
-  | 'chinese_simplified'
-  | 'chinese_traditional'
-  | 'czech'
   | 'english'
-  | 'french'
-  | 'italian'
   | 'japanese'
-  | 'korean'
+  | 'french'
   | 'portuguese'
   | 'spanish';
 
 export const SupportedMnemonicLanguages: MnemonicLanguageOption[] = [
-  'chinese_simplified',
-  'chinese_traditional',
-  'czech',
   'english',
-  'french',
-  'italian',
   'japanese',
-  'korean',
+  'french',
   'portuguese',
   'spanish',
 ];
@@ -301,15 +290,7 @@ export const SUPPORTED_BASE_CURRENCIES = [
 export const generateMnemonic = async (
   language: MnemonicLanguageOption = 'english'
 ) => {
-  const bytes = await generateSecureRandom(32);
-  let temp = '';
-  for (let i = 0; i < bytes.length; i++) {
-    const num = bytes[i].toString(16);
-    temp += num.length < 2 ? `0${num}` : num;
-  }
-
-  const mnemonic = bip39.entropyToMnemonic(temp, bip39.wordlists[language]);
-  return mnemonic;
+  return bip39.generateMnemonic(256, undefined, bip39.wordlists[language]);
 };
 
 export const createWallet = async (
@@ -323,7 +304,7 @@ export const createWallet = async (
   const wallet = smartWallet
     ? new SmartWallet(apiKey, chain)
     : new EOA(apiKey, chain);
-  await wallet._loadWallet({ mnemonic });
+  await wallet._loadWallet({ mnemonic, bip39: bip39 as any });
   await wallet.register();
 
   return { wallet, mnemonic };

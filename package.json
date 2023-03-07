@@ -1,6 +1,6 @@
 {
   "name": "@node-fi/react-native-sdk",
-  "version": "0.1.7",
+  "version": "0.1.71",
   "description": "A React Native wrapper for the Node Core SDK",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -50,6 +50,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
+    "@node-fi/sdk-core": "0.0.26",
     "@react-native-community/eslint-config": "^2.0.0",
     "@release-it/conventional-changelog": "^2.0.0",
     "@types/jest": "^26.0.0",
@@ -145,7 +146,6 @@
   },
   "dependencies": {
     "@node-fi/react-native-bip39": "2.2.4-patch",
-    "@node-fi/sdk-core": "0.0.26",
     "@react-native-async-storage/async-storage": "^1.17.3",
     "@tanstack/query-async-storage-persister": "^4.7.1",
     "@tanstack/react-query": "^4.7.1",

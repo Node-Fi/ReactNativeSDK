@@ -75,6 +75,7 @@ function useWalletInner(initialState: UseWalletProps | undefined) {
               walletConfig.opts
             );
         await newWallet._loadWallet(walletConfig);
+
         setWallet(newWallet);
         setInitialized(true);
       }

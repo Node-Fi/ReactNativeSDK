@@ -35,6 +35,7 @@ export type TokenConfig = {
   decimals?: number;
   newAddress?: Address;
   chainId?: ChainId;
+  logoURI?: string;
 };
 
 export type ConstantsOverride = Partial<{
@@ -161,8 +162,18 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
             chainId,
             initialTokens: DEFAULT_TOKENS.tokens
               .filter(({ address }) => {
-                if (tokenBlacklist) return !tokenBlacklist.has(address);
-                if (tokenWhitelist) return tokenWhitelist.has(address);
+                const hasBlacklist = tokenBlacklist?.size !== undefined;
+                const hasWhitelist = tokenWhitelist?.size !== undefined;
+                if (hasBlacklist && hasWhitelist) {
+                  return (
+                    !tokenBlacklist.has(address.toLowerCase()) &&
+                    tokenWhitelist.has(address.toLowerCase())
+                  );
+                }
+                if (hasBlacklist) return !tokenBlacklist.has(address);
+                if (hasWhitelist) {
+                  return tokenWhitelist.has(address);
+                }
                 return true;
               })
               .map((t) => {
@@ -177,7 +188,7 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
                 } = {
                   ...t,
                   ...tokenOverride[t.address],
-                } as TokenConfig & { chainId: number; logoURI: string };
+                } as TokenConfig & { chainId: number };
                 return new Token(
                   tokenChainId,
                   newAddress ?? address,

@@ -98,7 +98,13 @@ export function useSwapQuote(
     [inputToken, inputAmount, outputToken, swapMaster]
   );
   const {
-    data: { details, routerAddress, error, expectedOut, ...dataRest } = {},
+    data: {
+      details,
+      routerAddress,
+      error,
+      expectedOut: rawExpectedOut,
+      ...dataRest
+    } = {},
     ...swapQueryDetails
   } = useQuery(
     [
@@ -116,6 +122,10 @@ export function useSwapQuote(
   );
 
   return React.useMemo(() => {
+    const expectedOut =
+      typeof rawExpectedOut === 'string'
+        ? new BigNumber(rawExpectedOut)
+        : rawExpectedOut;
     if (!details || !routerAddress || !expectedOut)
       return { fetchDetails: swapQueryDetails };
     return {
@@ -138,10 +148,11 @@ export function useSwapQuote(
   }, [
     routerAddress,
     error,
-    expectedOut?.toFixed(0),
+    rawExpectedOut,
     outputToken?.address,
     inputToken?.address,
     slippage,
+    swapQueryDetails,
   ]);
 }
 

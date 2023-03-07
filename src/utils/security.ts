@@ -6,7 +6,6 @@ import invariant from 'tiny-invariant';
 
 export const getMnemonic = async (
   storagePrefix: string = DEFAULT_PREFIX
-  // attempt = 0
 ): Promise<string | undefined> => {
   const biometrySupported = await Keychain.getSupportedBiometryType();
 
@@ -14,18 +13,7 @@ export const getMnemonic = async (
     KEYCHAIN_SETTINGS(storagePrefix, biometrySupported)
   );
   if (!existingCredentials) return undefined;
-  // if (Platform.OS === 'android') {
-  //   const auth = await LocalAuthentication.authenticateAsync();
-  //   if (!auth.success) {
-  //     if (attempt > 3) throw new Error('Unauthorized access');
-  //     return getMnemonic(service, attempt + 1);
-  //   }
-  // }
   const { mnemonic } = JSON.parse(existingCredentials.password);
-  // const mnemonic: string = await ECEncryption.decrypt({
-  //   data: mnemonicCipher,
-  //   label: SECURE_ENCLAVE_LABEL,
-  // });
   return mnemonic;
 };
 

@@ -1,6 +1,6 @@
 {
   "name": "@node-fi/react-native-sdk",
-  "version": "0.1.48-experimental",
+  "version": "0.1.71",
   "description": "A React Native wrapper for the Node Core SDK",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -25,11 +25,13 @@
     "test": "jest",
     "typescript": "tsc --noEmit",
     "lint": "eslint --fix \"**/*.{js,ts,tsx}\" ",
-    "prepare": "bob build",
+    "_prepare": "yarn patch && yarn build",
+    "build": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",
-    "bootstrap": "yarn && yarn example && yarn pods"
+    "bootstrap": "yarn && yarn example && yarn pods",
+    "patch": "patch-package"
   },
   "keywords": [
     "react-native",
@@ -48,6 +50,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
+    "@node-fi/sdk-core": "0.0.26",
     "@react-native-community/eslint-config": "^2.0.0",
     "@release-it/conventional-changelog": "^2.0.0",
     "@types/jest": "^26.0.0",
@@ -67,7 +70,9 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^6.0.0",
     "jest": "^26.0.1",
+    "patch-package": "^6.5.0",
     "pod-install": "^0.1.0",
+    "postinstall-prepare": "^2.0.0",
     "prettier": "^2.7.1",
     "react-native-builder-bob": "^0.18.2",
     "release-it": "^14.2.2",
@@ -77,8 +82,8 @@
     "@node-fi/sdk-core": "*",
     "react": ">=16.8.1 <=17.0.x",
     "react-native": ">=0.60.0-rc.0 <1.0.x",
-    "react-native-keychain": "*",
     "react-native-device-info": "*",
+    "react-native-keychain": "*",
     "react-native-securerandom": "*"
   },
   "jest": {
@@ -140,17 +145,19 @@
     "@types/react-dom": "17.0.1"
   },
   "dependencies": {
-    "@node-fi/default-token-list": "^4.1.81",
-    "@node-fi/sdk-core": "0.0.20-experimental",
+    "@node-fi/react-native-bip39": "2.2.4-patch",
     "@react-native-async-storage/async-storage": "^1.17.3",
+    "@tanstack/query-async-storage-persister": "^4.7.1",
+    "@tanstack/react-query": "^4.7.1",
+    "@tanstack/react-query-persist-client": "^4.7.1",
+    "@ubeswap/default-token-list": "^4.1.56",
     "axios": "^0.27.2",
-    "bignumber.js": "^9.0.2",
+    "bignumber.js": "^9.1.0",
     "react-native-crypto": "^2.2.0",
     "react-native-device-info": "^8.7.1",
     "react-native-get-random-values": "^1.8.0",
     "react-native-keychain": "^8.0.0",
     "react-native-securerandom": "^1.0.0",
-    "react-query": "^3.39.0",
     "tiny-invariant": "^1.2.0",
     "unstated-next": "^1.1.0"
   }

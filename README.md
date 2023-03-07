@@ -117,7 +117,7 @@ Creating a wallet can be done with one single function! The SDK currently suppor
 Create wallet takes an argument of type `WalletCreationOpts`, allowing to create a wallet from a mnemonic as well as set the defaul gas currency on wallet creation. Note that alternate gas currencies are only supported on Celo and Alfajores.
 
 ```ts
-import { useCreateWallet } from '@node-fi/react-native-wrapper';
+import { useCreateWallet } from '@node-fi/react-native-sdk';
 
 // Creating a wallet from scratch:
 const createWallet = useCreateWallet();
@@ -148,7 +148,7 @@ createWallet({ defaultGasCurrency }).then((wallet) => {
 Similar to creating a wallet, deleting one can be used with one single function call as well.
 
 ```ts
-import { useDeleteWallet } from '@node-fi/react-native-wrapper';
+import { useDeleteWallet } from '@node-fi/react-native-sdk';
 
 const deleteWallet = useDeleteWallet(); // Grab the function from the hook
 deleteWallet().then(() => {
@@ -184,7 +184,7 @@ function useHook() {
 Alternatively, if the only field required is the wallet address, there is a hook `useWalletAddress()`
 
 ```ts
-import { useWalletAddress } from '@node-fi/react-native-wrapper';
+import { useWalletAddress } from '@node-fi/react-native-sdk';
 
 function Component() {
   const walletAddress = useWalletAddress();
@@ -204,7 +204,7 @@ useSetGasToken returns a state variable and a setter for the current default gas
 The state variable is the address of the current gas token. The updater method takes as argument the address of a gas token. Note that the only check performed is that the provided string is a valid address. If the address of a non-accepted currency is provided, transactions will fail. Future iterations of the SDK will check for valid gas currencies.
 
 ```tsx
-import { useSetGasToken } from '@node-fi/react-native-wrapper';
+import { useSetGasToken } from '@node-fi/react-native-sdk';
 
 function Component() {
   const [currentGasToken, setGasToken]: [string, (s: String) => void] =
@@ -401,7 +401,7 @@ This hook will return a mapping of token addresses to the dollar value of the wa
 If a token does not have a subsequent balance in the mapping, then the user either has 0 balance or there is no price recorded for that token
 
 ```ts
-import { usePricedBalances } from '@node-fi/react-native-wrapper';
+import { usePricedBalances } from '@node-fi/react-native-sdk';
 
 function Component() {
   const pricedBalances = usePricedBalances();

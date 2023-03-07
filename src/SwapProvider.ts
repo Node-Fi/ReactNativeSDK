@@ -1,14 +1,24 @@
 import * as React from 'react';
-import { Address, SmartRouter, Token, TokenAmount } from '@node-fi/sdk-core';
+import {
+  Address,
+  SmartRouter,
+  Token,
+  TokenAmount,
+  RouterPayloadRequest,
+  SmartWallet,
+  RouterResponse,
+} from '@node-fi/sdk-core';
 import { createContainer } from 'unstated-next';
-import { useTokens } from './TokensContext';
-import useDebounce, { useWallet } from './hooks';
-import { WalletContainer } from './WalletContext';
-import { useQuery } from 'react-query';
-import type { TransactionReceipt } from 'web3-eth';
+import { useQuery } from '@tanstack/react-query';
+import type { TransactionConfig } from 'web3-eth';
 import { BigNumber } from 'bignumber.js';
+import { useTokens } from './TokensContext';
+import { useDebounce } from './hooks/index';
+import { useWallet, WalletContainer } from './WalletContext';
+import type { FetchDetails } from './types';
+import { SWAP_QUOTE_REFETCH_INTERVAL } from './utils';
 
-interface UseSwappInnerProps {
+export interface UseSwappInnerProps {
   slippage?: number;
 }
 
@@ -37,37 +47,6 @@ export function useSlippage() {
 
 /**
  *
- * @param inputAddress address of token being swapped
- * @param outputAddress address of token being swapped to
- * @param typedAmount input amount in human-readable format (not accounting for decimals)
- * @param recipient recipient for swap - defaults to current wallet
- * @param debounceDelayMs delay to refresh quote as typedAmount chages.  Increase for greater response at the cost of performance
- * @returns
- */
-export function useSwapTypedAmount(
-  inputAddress: Address = '',
-  outputAddress: Address = '',
-  typedAmount?: string | number,
-  recipient?: Address,
-  debounceDelayMs = 500
-) {
-  const tokens = useTokens();
-  const { [inputAddress]: inputToken, [outputAddress]: outputToken } = tokens;
-  const debouncedInput = useDebounce(typedAmount, debounceDelayMs);
-  const input =
-    inputToken && debouncedInput
-      ? new TokenAmount(
-          inputToken,
-          new BigNumber(debouncedInput).times(
-            new BigNumber(10).pow(inputToken.decimals)
-          )
-        )
-      : undefined;
-  return useSwapQuote(input, outputToken, recipient);
-}
-
-/**
- *
  * @param input input token amount
  * @param outputToken expected token received
  * @param recipient recipient to receive the tokens, defaults to wallet address
@@ -76,17 +55,25 @@ export function useSwapTypedAmount(
 export function useSwapQuote(
   input?: TokenAmount,
   outputToken?: Token,
-  recipient?: string
+  recipient?: string,
+  opts?: Partial<
+    Omit<RouterPayloadRequest, 'tokenIn' | 'tokenOut' | 'amountIn'>
+  >
 ): {
-  path?: string[];
-  output?: TokenAmount;
-  minimumOutput?: TokenAmount;
-  execute?: () => Promise<TransactionReceipt | void>;
-  error?: string;
-  loading?: boolean;
+  trade?: Partial<
+    Omit<RouterResponse, 'output' | 'minimumOutput' | 'priceImpact'>
+  > & {
+    output?: TokenAmount;
+    minimumOutput?: TokenAmount;
+    txn?: TransactionConfig;
+    priceImpact?: number;
+  };
+  fetchDetails: FetchDetails;
 } {
   const { slippage } = SwapContainer.useContainer();
   const wallet = useWallet();
+  const from =
+    wallet instanceof SmartWallet ? wallet.eoa?.address : wallet.address;
   const { apiKey } = WalletContainer.useContainer();
 
   const swapMaster = React.useMemo(
@@ -99,45 +86,110 @@ export function useSwapQuote(
   const fetch = React.useCallback(
     async () =>
       inputToken && inputAmount && outputToken
-        ? swapMaster.getRouteBase(inputToken, outputToken, inputAmount)
+        ? swapMaster.getRouteBase(inputToken, outputToken, inputAmount, {
+            slippage,
+            from,
+            to: recipient ?? wallet.address,
+            includeTxn: true,
+            priceImpact: true,
+            ...opts,
+          })
         : undefined,
     [inputToken, inputAmount, outputToken, swapMaster]
   );
-  const swapPayload = useQuery(
-    [inputToken?.address, inputAmount?.toFixed(0), outputToken],
-    fetch
-  );
-
-  const execute = React.useCallback(
-    async () =>
-      swapPayload.data?.details && (recipient || wallet?.address)
-        ? await swapMaster.performSwap(
-            swapPayload.data.details,
-            recipient ?? wallet.address ?? '',
-            slippage / 10000,
-            swapPayload.data.routerAddress ?? ''
-          )
-        : console.error('Cannot execute a swap that does not exist'),
-    [swapPayload, recipient, wallet, slippage, swapMaster]
+  const {
+    data: {
+      details,
+      routerAddress,
+      error,
+      expectedOut: rawExpectedOut,
+      ...dataRest
+    } = {},
+    ...swapQueryDetails
+  } = useQuery(
+    [
+      'swap',
+      inputToken?.address,
+      inputAmount?.toFixed(0),
+      outputToken,
+      opts?.slippage,
+    ],
+    fetch,
+    {
+      keepPreviousData: true,
+      refetchInterval: SWAP_QUOTE_REFETCH_INTERVAL,
+    }
   );
 
   return React.useMemo(() => {
-    if (swapPayload.isLoading) return { loading: true };
-    if (!swapPayload.data) return {};
-    const { details, error, expectedOut } = swapPayload.data;
+    const expectedOut =
+      typeof rawExpectedOut === 'string'
+        ? new BigNumber(rawExpectedOut)
+        : rawExpectedOut;
+    if (!details || !routerAddress || !expectedOut)
+      return { fetchDetails: swapQueryDetails };
     return {
-      execute,
-      path: details?.path,
-      output: expectedOut
-        ? new TokenAmount(outputToken as Token, expectedOut)
-        : undefined,
-      minimumOutput: expectedOut
-        ? new TokenAmount(
-            outputToken as Token,
-            expectedOut.minus(expectedOut.multipliedBy(slippage).div(10000))
-          )
-        : undefined,
-      error,
+      trade: {
+        details,
+        output: expectedOut
+          ? new TokenAmount(outputToken as Token, expectedOut)
+          : undefined,
+        minimumOutput: expectedOut
+          ? new TokenAmount(
+              outputToken as Token,
+              expectedOut.minus(expectedOut.multipliedBy(slippage).div(10000))
+            )
+          : undefined,
+        routerAddress,
+        ...dataRest,
+      },
+      fetchDetails: swapQueryDetails,
     };
-  }, [swapPayload, execute, outputToken, slippage]);
+  }, [
+    routerAddress,
+    error,
+    rawExpectedOut,
+    outputToken?.address,
+    inputToken?.address,
+    slippage,
+    swapQueryDetails,
+  ]);
+}
+
+/**
+ *
+ * @param inputAddress address of token being swapped
+ * @param outputAddress address of token being swapped to
+ * @param typedAmount input amount in human-readable format (not accounting for decimals)
+ * @param recipient recipient for swap - defaults to current wallet
+ * @param debounceDelayMs delay to refresh quote as typedAmount chages.  Increase for greater response at the cost of performance
+ * @returns
+ */
+export function useSwapTypedAmount(
+  inputAddress?: Address,
+  outputAddress?: Address,
+  typedAmount?: string | number,
+  recipient?: Address,
+  opts?: Partial<
+    Omit<RouterPayloadRequest, 'tokenIn' | 'tokenOut' | 'amountIn'> & {
+      debounceDelayMs: number;
+    }
+  >
+) {
+  const tokens = useTokens();
+  const {
+    [inputAddress?.toLowerCase() ?? '']: inputToken,
+    [outputAddress?.toLowerCase() ?? '']: outputToken,
+  } = tokens;
+  const debouncedInput = useDebounce(typedAmount, opts?.debounceDelayMs ?? 500);
+  const input =
+    inputToken && debouncedInput
+      ? new TokenAmount(
+          inputToken,
+          new BigNumber(debouncedInput).times(
+            new BigNumber(10).pow(inputToken.decimals)
+          )
+        )
+      : undefined;
+  return useSwapQuote(input, outputToken, recipient, opts);
 }

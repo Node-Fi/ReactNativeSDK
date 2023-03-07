@@ -1,20 +1,32 @@
-// @ts-ignore
 import * as React from 'react';
 import { WalletContainer } from './WalletContext';
-import { PriceContainer } from './PriceContext';
+import { PriceContainer, UsePriceInnerProps } from './PriceContext';
 import { Address, ChainId, Token } from '@node-fi/sdk-core';
 import type {
   WalletConfig,
   WalletOptions,
 } from '@node-fi/sdk-core/dist/src/wallet/Wallet';
-import { DEFAULT_PREFIX, WALLET_KEY_SUFFIX } from './utils/storageKeys';
+import {
+  DEFAULT_PREFIX,
+  PRICE_KEY_SUFFICE,
+  setStoragePrefix,
+  SWAP_KEY_SUFFIX,
+  TOKENS_KEY_SUFFIX,
+  WALLET_KEY_SUFFIX,
+} from './utils/storageKeys';
 import { asyncReadObject } from './utils/asyncStorage';
 import { clearMnemonic, getMnemonic, saveMnemonic } from './utils/security';
-import { TokenContainer } from './TokensContext';
-import DEFAULT_TOKENS from '@node-fi/default-token-list';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { reduceArrayToMap } from './utils';
-import { SwapContainer } from './SwapProvider';
+import { TokenContainer, UseTokensInnerProps } from './TokensContext';
+import DEFAULT_TOKENS from '@ubeswap/default-token-list/ubeswap-experimental.token-list.json';
+import {
+  reduceArrayToMap,
+  setPriceRefetchInterval,
+  setSwapQuoteRefetchInterval,
+} from './utils';
+import { SwapContainer, UseSwappInnerProps } from './SwapProvider';
+import type { CurrencyType } from './types';
+import DynamicQueryClient from './PersistedQueryClient';
+import bip39 from '@node-fi/react-native-bip39';
 
 export type TokenConfig = {
   address: Address;
@@ -23,33 +35,40 @@ export type TokenConfig = {
   decimals?: number;
   newAddress?: Address;
   chainId?: ChainId;
+  logoURI?: string;
 };
+
+export type ConstantsOverride = Partial<{
+  storagePrefix: string;
+  priceRefetchPeriod: number;
+  swapQuoteRefetchPeriod: number;
+}>;
 
 export interface NodeKitProviderProps {
   children: React.ReactElement | React.ReactElement[];
-  customTokens: Token[];
+  customTokens?: Token[];
   tokenWhitelist?: Set<Address>;
   tokenDetailsOverride?: TokenConfig[];
   tokenBlacklist?: Set<Address>;
-  storagePrefix?: string;
   walletConfig?: WalletConfig & { opts?: WalletOptions };
-  eoaOnly?: boolean;
+  smartContractWallet?: boolean;
   loadingComponent?: React.ReactElement;
   apiKey: string;
   chainId?: ChainId;
+  constantsOverride?: ConstantsOverride;
+  defaultCurrencyOverride?: CurrencyType;
 }
 
 interface PersistedData {
   wallet: WalletConfig;
+  tokens?: UseTokensInnerProps;
+  price?: UsePriceInnerProps;
+  swap?: UseSwappInnerProps;
 }
-
-const queryClient = new QueryClient();
 
 export function NodeKitProvider(props: NodeKitProviderProps) {
   const {
     children,
-    storagePrefix = DEFAULT_PREFIX,
-    eoaOnly,
     walletConfig,
     loadingComponent,
     apiKey,
@@ -57,7 +76,14 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
     tokenWhitelist,
     tokenBlacklist,
     customTokens,
+    smartContractWallet,
     chainId = ChainId.Celo,
+    defaultCurrencyOverride,
+    constantsOverride: {
+      storagePrefix = DEFAULT_PREFIX,
+      swapQuoteRefetchPeriod,
+      priceRefetchPeriod,
+    } = {},
   } = props;
   const [persistedData, setPersistedData] = React.useState<PersistedData>();
   const [loaded, setLoaded] = React.useState(false);
@@ -68,32 +94,64 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
   );
 
   React.useEffect(() => {
+    if (storagePrefix !== DEFAULT_PREFIX) setStoragePrefix(storagePrefix);
+    if (swapQuoteRefetchPeriod)
+      setSwapQuoteRefetchInterval(swapQuoteRefetchPeriod);
+    if (priceRefetchPeriod) setPriceRefetchInterval(priceRefetchPeriod);
+
     (async () => {
       const persistedWalletConfig = (await asyncReadObject(
         `${storagePrefix}${WALLET_KEY_SUFFIX}`
       )) as WalletConfig;
+      const persistedTokens = (await asyncReadObject(
+        `${storagePrefix}${TOKENS_KEY_SUFFIX}`
+      )) as UseTokensInnerProps | undefined;
+      const persistedPrice = (await asyncReadObject(
+        `${storagePrefix}${PRICE_KEY_SUFFICE}`
+      )) as UsePriceInnerProps | undefined;
+      const persistedSwap = (await asyncReadObject(
+        `${storagePrefix}${SWAP_KEY_SUFFIX}`
+      )) as UseSwappInnerProps | undefined;
       if (persistedWalletConfig) {
-        setPersistedData({
-          wallet: {
-            ...persistedWalletConfig,
-            getMnemonic: () => getMnemonic(storagePrefix),
-          },
-        });
+        if (persistedTokens && persistedTokens.chainId !== chainId) {
+          // indicates a chain id switch since last load
+          setPersistedData({
+            wallet: {
+              ...persistedWalletConfig,
+              getMnemonic: () => getMnemonic(storagePrefix),
+            },
+            swap: persistedSwap,
+          });
+        } else {
+          setPersistedData({
+            wallet: {
+              ...persistedWalletConfig,
+              getMnemonic: () => getMnemonic(storagePrefix),
+            },
+            tokens: persistedTokens,
+            price: persistedPrice,
+            swap: persistedSwap,
+          });
+        }
       }
       setLoaded(true);
     })();
-  }, [setLoaded, storagePrefix]);
+  }, [setLoaded, storagePrefix, swapQuoteRefetchPeriod, priceRefetchPeriod]);
 
   return !loaded ? (
     loadingComponent ?? null
   ) : (
-    <QueryClientProvider client={queryClient}>
+    <DynamicQueryClient>
       <WalletContainer.Provider
         initialState={{
           apiKey,
-          walletConfig: walletConfig ?? persistedData?.wallet,
+          walletConfig: {
+            ...(persistedData?.wallet ?? {}),
+            ...(walletConfig ?? {}),
+            bip39: bip39 as any,
+          },
           onWalletDeletion: () => clearMnemonic(storagePrefix),
-          noSmartWallet: eoaOnly,
+          noSmartWallet: !smartContractWallet,
           onMnemonicChanged: async (mnemonic: string) =>
             await saveMnemonic(storagePrefix, mnemonic),
           chainId,
@@ -104,8 +162,18 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
             chainId,
             initialTokens: DEFAULT_TOKENS.tokens
               .filter(({ address }) => {
-                if (tokenBlacklist) return !tokenBlacklist.has(address);
-                if (tokenWhitelist) return tokenWhitelist.has(address);
+                const hasBlacklist = tokenBlacklist?.size !== undefined;
+                const hasWhitelist = tokenWhitelist?.size !== undefined;
+                if (hasBlacklist && hasWhitelist) {
+                  return (
+                    !tokenBlacklist.has(address.toLowerCase()) &&
+                    tokenWhitelist.has(address.toLowerCase())
+                  );
+                }
+                if (hasBlacklist) return !tokenBlacklist.has(address);
+                if (hasWhitelist) {
+                  return tokenWhitelist.has(address);
+                }
                 return true;
               })
               .map((t) => {
@@ -120,7 +188,7 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
                 } = {
                   ...t,
                   ...tokenOverride[t.address],
-                } as TokenConfig & { chainId: number; logoURI: string };
+                } as TokenConfig & { chainId: number };
                 return new Token(
                   tokenChainId,
                   newAddress ?? address,
@@ -132,13 +200,25 @@ export function NodeKitProvider(props: NodeKitProviderProps) {
               })
               .concat(customTokens ?? [])
               .filter((el) => el.chainId === chainId),
+            ...persistedData?.tokens,
           }}
         >
-          <PriceContainer.Provider initialState={{ apiKey, chainId }}>
-            <SwapContainer.Provider>{children}</SwapContainer.Provider>
+          <PriceContainer.Provider
+            initialState={{
+              apiKey,
+              chainId,
+              ...persistedData?.price,
+              defaultCurrency:
+                persistedData?.price?.defaultCurrency ??
+                defaultCurrencyOverride,
+            }}
+          >
+            <SwapContainer.Provider initialState={persistedData?.swap}>
+              {children}
+            </SwapContainer.Provider>
           </PriceContainer.Provider>
         </TokenContainer.Provider>
       </WalletContainer.Provider>
-    </QueryClientProvider>
+    </DynamicQueryClient>
   );
 }
